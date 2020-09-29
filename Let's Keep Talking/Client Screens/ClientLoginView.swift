@@ -8,6 +8,8 @@
 import SwiftUI
 
 import Alamofire
+import Foundation
+
 
 struct ClientLoginView: View {
     @State private var isOn: Bool = false
@@ -30,11 +32,21 @@ struct ClientLoginView: View {
     @State private var isLoading: Bool = false
     @State private var formError: String = ""
     
+    @State private var loginError: Bool = false
+    @State private var loginErrorText: String = ""
+    
+    @State private var loginDetails: LoginStruct = LoginStruct(phoneNo: "", password: "")
+    @State private var createAccDetails: CreateAccStruct = CreateAccStruct(phoneNo: "", password: "", gender: "", genderPref: false, ethnicity: "", ethnicPref: false)
+    
+    @Binding var isLoggedIn: Bool
+    
+    
     var body: some View {
         ZStack{
             
             VStack {
                 HStack {
+                    
                     Toggle(isOn: $isOn, label: {
                         if(isOn) {
                             Text("Switch to Login").frame(maxWidth: .infinity, alignment: .trailing)
@@ -42,9 +54,15 @@ struct ClientLoginView: View {
                             Text("Switch to Account Creation").frame(maxWidth: .infinity, alignment: .trailing)
                         }
                     })
+                    .disabled(isLoading)
                     .padding(.trailing)
                     
                 }
+                Spacer()
+            }
+            VStack {
+                
+                
                 
                 Spacer()
                 
@@ -55,7 +73,8 @@ struct ClientLoginView: View {
                 }
                 
                 if(isOn) {
-                    HStack{
+                    
+                    HStack {
                         Text("* Required")
                             .font(.footnote)
                             .foregroundColor(.gray)
@@ -147,6 +166,7 @@ struct ClientLoginView: View {
                     
                     
                 } else {
+                    
                     TextField("Phone Number", text: $phoneNo)
                         .padding()
                         .keyboardType(.numberPad)
@@ -154,6 +174,16 @@ struct ClientLoginView: View {
                     SecureField("Password", text: $password)
                         .padding()
                 }
+                
+                
+                
+                Spacer()
+            }
+            
+            VStack {
+                
+                Spacer()
+                Spacer()
                 
                 Button(action: onClick, label: {
                     if(isOn) {
@@ -163,16 +193,22 @@ struct ClientLoginView: View {
                     }
                 })
                 .padding()
+                .alert(isPresented: $loginError) {
+                    Alert(title: Text("Error"), message: Text(loginErrorText), dismissButton: .default(Text("Got it!")))
+                }
                 
                 Spacer()
             }
             
-            if(isLoading){
+            if(isLoading) {
                 ProgressView()
             }
+            
         }
         
     }
+    
+    
     
     func onClick() {
         isLoading = true
@@ -185,9 +221,11 @@ struct ClientLoginView: View {
             
             if(!phoneNo.elementsEqual(phoneConf)) {
                 formError = "Phone numbers do not match"
+                isLoading = false
                 return
             } else if(!password.elementsEqual(passwordConf)){
                 formError = "Passwords do not match"
+                isLoading = false
                 return
             }
         }
@@ -195,25 +233,15 @@ struct ClientLoginView: View {
         if(isValidForm(requiredFields)) {
             
             if(isOn){
-                let url = APIEndpoints.CREATE_ACC
+                createAcc()
                 
-                let parameters = CreateStruct(phoneNo: phoneNo, password: password, gender: gender, genderPref: genderPref, ethnicity: ethnicity, ethnicPref: ethnicPref)
-                
-                AF.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).response { response in
-                    debugPrint(response)
-                }
             } else {
-                let url = APIEndpoints.CLIENT_LOGIN
-                
-                let parameters = LoginStruct(phoneNo: phoneNo, password: password)
-                
-                AF.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).response { response in
-                    debugPrint(response)
-                }
+                login()
             }
+        } else {
+            formError = "Please fill all required fields"
+            isLoading = false
         }
-        
-        isLoading = false
     }
     
     func isValidForm(_ requiredFields: [String]) -> Bool {
@@ -224,26 +252,85 @@ struct ClientLoginView: View {
         }
         return true
     }
-}
+    
+    func createAcc() {
+        let url = APIEndpoints.CREATE_ACC
+        
+        let parameters = CreateAccStruct(phoneNo: phoneNo, password: password, gender: gender, genderPref: genderPref, ethnicity: ethnicity, ethnicPref: ethnicPref)
+        
+        AF.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).responseJSON { response in
+        }
+    }
+    
+    func login() -> Void{
+        let url = APIEndpoints.CLIENT_LOGIN
+        
+        loginDetails = LoginStruct(phoneNo: phoneNo, password: password)
+        
+        AF.request(url, method: .post, parameters: loginDetails, encoder: JSONParameterEncoder.default).responseJSON { response in
+            
+            switch response.result {
+            case let .success(value):
+                
+                // Try casting the response to a JSON
+                if let JSON = value as? [String: Any] {
+                    
+                    // Try casting the "status" field to a boolean (if this fails, the response is from AWS, not the API)
+                    if let status = JSON["status"] as? Bool {
+                        
+                        if(status) {
+                            if let client = JSON["result"] as? [String: Any] {
+                                handleLoginResponse(true, "", client)
+                            } else {
+                                handleLoginResponse(false, "Error \(#line)", NSNull())
+                            }
+                        } else {
+                            if let error = JSON["error"] as? String {
+                                if(error.elementsEqual("IncorrectPassword")) {
+                                    handleLoginResponse(false, "Incorrect Password. Please try again", NSNull())
+                                } else if(error.elementsEqual("NoUser")) {
+                                    handleLoginResponse(false, "No user exists with that phone number, please create an account", NSNull())
+                                }
+                            } else {
+                                handleLoginResponse(false, "Error \(#line)", NSNull())
+                            }
+                        }
+                    }
+                } else {
+                    handleLoginResponse(false, "Error \(#line)", NSNull())
+                }
+                
+                
+                
+            case let .failure(error):
+                handleLoginResponse(false, "Network Error \(#line)", error)
+            }
+        }
+    }
+    
+    
+    func handleLoginResponse(_ status: Bool, _ message: String, _ result: Any?) -> Void{
+        if(status) {
+            if let client = result as? [String: Any] {
+                // TODO: Add keychain support
 
-struct LoginStruct: Encodable {
-    let phoneNo: String
-    let password: String
-}
-
-struct CreateStruct: Encodable {
-    let phoneNo: String
-    let password: String
-    let gender: String
-    let genderPref: Bool
-    let ethnicity: String
-    let ethnicPref: Bool
+                UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+                UserDefaults.standard.set("client", forKey: "userType")
+                
+                UserDefaults.standard.set(client["_id"], forKey: "id")
+                
+                isLoggedIn = true
+            }
+        } else {
+            loginError = true
+            loginErrorText = message
+        }
+        isLoading = false
+    }
 }
 
 struct ClientLoginView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            ClientLoginView()
-        }
+        ClientLoginView(isLoggedIn: .constant(false))
     }
 }

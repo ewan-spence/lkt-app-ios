@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LandingView: View {    
     var body: some View {
-        NavigationView{
+        NavigationView {
             VStack {
                 
                 Text("Welcome to the Let's Keep Talking App")
@@ -18,10 +18,15 @@ struct LandingView: View {
                     .padding(.horizontal)
                 Spacer()
                 
-
+                
                 VStack {
-                    NavigationLink(destination: ClientLoginView()){
-                        Text("Client Login")
+                    let isLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
+                    
+                    let isLoggedInClient = isLoggedInClientFunc(isLoggedIn)
+                    let isLoggedInCaller = isLoggedInCallerFunc(isLoggedIn)
+                    
+                    NavigationLink(destination: ClientView(isLoggedIn: isLoggedInClient)){
+                        Text("Client Access")
                             .font(.system(size: 20))
                     }
                     .padding()
@@ -33,8 +38,8 @@ struct LandingView: View {
                     
                     Spacer().frame(height: 100)
                     
-                    NavigationLink(destination: CallerLoginView()) {
-                        Text("Caller Login")
+                    NavigationLink(destination: CallerView(isLoggedIn: isLoggedInCaller)) {
+                        Text("Caller Access")
                             .font(.system(size: 20))
                     }
                     .padding()
@@ -48,12 +53,26 @@ struct LandingView: View {
                 Spacer()
                 
             }
-
+            
         }
-        .frame(maxHeight: .infinity)
-        .colorScheme(.dark)
+        
     }
     
+    func isLoggedInClientFunc(_ isLoggedIn: Bool) -> Bool {
+        if let userType = UserDefaults.standard.string(forKey: "userType") {
+            return (isLoggedIn && (userType.elementsEqual("client")))
+        }
+        return false
+        
+    }
+    
+    func isLoggedInCallerFunc(_ isLoggedIn: Bool) -> Bool{
+        if let userType = UserDefaults.standard.string(forKey: "userType") {
+            return (isLoggedIn && (userType.elementsEqual("caller")))
+        }
+        return false
+        
+    }
     
 }
 

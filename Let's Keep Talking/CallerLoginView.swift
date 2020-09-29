@@ -6,15 +6,123 @@
 //
 
 import SwiftUI
+import Alamofire
 
 struct CallerLoginView: View {
+    @State private var phoneNo: String = ""
+    @State private var password: String = ""
+    
+    @State private var loginError: Bool = false
+    @State private var loginErrorText: String = ""
+    
+    @State private var isLoading: Bool = false
+    
+    @Binding var isLoggedIn: Bool
+    
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            VStack {
+                Spacer()
+                
+                
+                TextField("Phone Number", text: $phoneNo).padding()
+                SecureField("Password", text: $password).padding()
+                
+                
+                
+                Spacer()
+            }
+            
+            VStack{
+                Spacer()
+                Spacer()
+                Button("Sign In", action: onClick).padding()
+                    .disabled(!(phoneNo.isEmpty || password.isEmpty))
+                    .alert(isPresented: $loginError) {
+                        Alert(title: Text("Error"), message: Text(loginErrorText), dismissButton: .default(Text("Got it!")))
+                    }
+                Spacer()
+            }
+            
+            if(isLoading) {
+                ProgressView()
+            }
+        }
     }
+    
+    
+    func onClick() -> Void {
+        let creds = LoginStruct(phoneNo: phoneNo, password: password)
+        let URL = APIEndpoints.CALLER_LOGIN
+        
+        AF.request(URL, method: .post, parameters: creds, encoder: JSONParameterEncoder.default).responseJSON { response in
+            
+            switch response.result {
+            case let .success(value):
+                
+                // Try casting the response to a JSON
+                if let JSON = value as? [String: Any] {
+                    
+                    // Try casting the "status" field to a boolean (if this fails, the response is from AWS, not the API)
+                    if let status = JSON["status"] as? Bool {
+                        
+                        if(status) {
+                            if let client = JSON["result"] as? [String: Any] {
+                                handleLoginResponse(true, "", client)
+                            } else {
+                                handleLoginResponse(false, "Error \(#line)", NSNull())
+                            }
+                        } else {
+                            if let error = JSON["error"] as? String {
+                                if(error.elementsEqual("IncorrectPassword")) {
+                                    handleLoginResponse(false, "Incorrect Password. Please try again", NSNull())
+                                } else if(error.elementsEqual("NoUser")) {
+                                    handleLoginResponse(false, "No user exists with that phone number, please create an account", NSNull())
+                                }
+                            } else {
+                                handleLoginResponse(false, "Error \(#line)", NSNull())
+                            }
+                        }
+                    }
+                } else {
+                    handleLoginResponse(false, "Error \(#line)", NSNull())
+                }
+                
+                
+                
+            case let .failure(error):
+                handleLoginResponse(false, "Network Error \(#line)", error)
+            }
+        }
+    }
+    
+    
+    func handleLoginResponse(_ status: Bool, _ message: String, _ result: Any?) -> Void{
+        if(status) {
+            if let caller = result as? [String: Any] {
+                
+                // TODO: Add keychain support
+                
+                UserDefaults.standard.setValue(true, forKey: "isUserLoggedIn")
+                UserDefaults.standard.setValue("caller", forKey: "userType")
+                UserDefaults.standard.setValue(caller, forKey: "caller")
+                
+                isLoggedIn = true
+            }
+        } else {
+            loginError = true
+            loginErrorText = message
+        }
+        isLoading = false
+    }
+    
+    
 }
 
 struct CallerLoginView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        CallerLoginView()
+        CallerLoginView(isLoggedIn: .constant(false))
     }
 }
