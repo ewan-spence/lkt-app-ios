@@ -7,7 +7,11 @@
 
 import SwiftUI
 
-struct LandingView: View {    
+struct LandingView: View {
+    @State var isLoggedIn: Bool = false
+    @State var isLoggedInClient: Bool = false
+    @State var isLoggedInCaller: Bool = false
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -20,10 +24,7 @@ struct LandingView: View {
                 
                 
                 VStack {
-                    let isLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
                     
-                    let isLoggedInClient = isLoggedInClientFunc(isLoggedIn)
-                    let isLoggedInCaller = isLoggedInCallerFunc(isLoggedIn)
                     
                     NavigationLink(destination: ClientView(isLoggedIn: isLoggedInClient)){
                         Text("Client Access")
@@ -54,7 +55,17 @@ struct LandingView: View {
                 
             }
             
-        }
+        }.onAppear(perform: {
+            update()
+        })
+        
+    }
+    
+    func update() -> Void {
+        isLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
+        
+        isLoggedInClient = isLoggedInClientFunc(isLoggedIn)
+        isLoggedInCaller = isLoggedInCallerFunc(isLoggedIn)
         
     }
     

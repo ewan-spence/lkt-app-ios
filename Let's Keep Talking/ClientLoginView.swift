@@ -22,7 +22,7 @@ struct ClientLoginView: View {
     
     @State private var gender: String = ""
     @State private var genderOptOut: Bool = false
-    @State private var genderPref: Bool = false
+    @State private var genderPref: String = ""
     
     @State private var ethnicity: String = ""
     @State private var ethnicOptOut: Bool = false
@@ -36,14 +36,13 @@ struct ClientLoginView: View {
     @State private var loginErrorText: String = ""
     
     @State private var loginDetails: LoginStruct = LoginStruct(phoneNo: "", password: "")
-    @State private var createAccDetails: CreateAccStruct = CreateAccStruct(phoneNo: "", password: "", gender: "", genderPref: false, ethnicity: "", ethnicPref: false)
+    @State private var createAccDetails: CreateAccStruct = CreateAccStruct(phoneNo: "", password: "", gender: "", genderPref: "", ethnicity: "", ethnicPref: false)
     
     @Binding var isLoggedIn: Bool
     
     
     var body: some View {
         ZStack{
-            
             VStack {
                 HStack {
                     
@@ -60,9 +59,8 @@ struct ClientLoginView: View {
                 }
                 Spacer()
             }
+            
             VStack {
-                
-                
                 
                 Spacer()
                 
@@ -74,95 +72,9 @@ struct ClientLoginView: View {
                 
                 if(isOn) {
                     
-                    HStack {
-                        Text("* Required")
-                            .font(.footnote)
-                            .foregroundColor(.gray)
-                            .padding(.leading)
-                        
-                        Spacer()
-                    }
-                    TextField("Full Name *", text: $fullName)
-                        .padding()
+                    Spacer()
                     
-                    
-                    TextField("Phone Number *", text: $phoneNo)
-                        .padding()
-                        .keyboardType(.numberPad)
-                    
-                    TextField("Confirm Phone Number *", text: $phoneConf)
-                        .padding()
-                        .keyboardType(.numberPad)
-                    
-                    
-                    SecureField("Password *", text: $password)
-                        .padding()
-                    
-                    SecureField("Confirm Password *", text: $passwordConf)
-                        .padding()
-                    
-                    
-                    HStack {
-                        TextField("Gender", text: $gender)
-                            .padding()
-                            .disabled(genderOptOut)
-                            .onChange(of: genderOptOut, perform: { value in
-                                if(value) {
-                                    self.gender = ""
-                                }
-                            })
-                        
-                        Spacer()
-                        
-                        Toggle(isOn: $genderOptOut, label: {
-                            Text("Prefer not to Specify")
-                                .foregroundColor(.gray)
-                        })
-                        .padding(.trailing)
-                    }
-                    
-                    if(!gender.isEmpty){
-                        Toggle(isOn: $genderPref, label: {
-                            Text("I would like a caller of the same gender")
-                                .foregroundColor(.gray)
-                        })
-                        .padding()
-                    }
-                    
-                    HStack {
-                        TextField("Ethnicity", text: $ethnicity)
-                            .padding()
-                            .disabled(ethnicOptOut)
-                            .onChange(of: ethnicOptOut, perform: { value in
-                                if(value) {
-                                    self.ethnicity = ""
-                                }
-                            })
-                        
-                        Spacer()
-                        
-                        Toggle(isOn: $ethnicOptOut, label: {
-                            Text("Prefer not to Specify")
-                                .foregroundColor(.gray)
-                        })
-                        .padding(.trailing)
-                    }
-                    
-                    if(!ethnicity.isEmpty){
-                        Toggle(isOn: $bme, label: {
-                            Text("I identify as an ethnic minority")
-                                .foregroundColor(.gray)
-                        })
-                        .padding()
-                        
-                        if(bme) {
-                            Toggle(isOn: $ethnicPref, label: {
-                                Text("I would like an ethnic minority caller")
-                                    .foregroundColor(.gray)
-                            })
-                            .padding()
-                        }
-                    }
+                    CreateAccFormView(fullName: $fullName, phoneNo: $phoneNo, phoneConf: $phoneConf, password: $password, passwordConf: $passwordConf, gender: $gender, genderOptOut: $genderOptOut, genderPref: $genderPref, ethnicity: $ethnicity, ethnicOptOut: $ethnicOptOut, bme: $bme, ethnicPref: $ethnicPref, showHelp: false)
                     
                     
                 } else {
@@ -175,15 +87,6 @@ struct ClientLoginView: View {
                         .padding()
                 }
                 
-                
-                
-                Spacer()
-            }
-            
-            VStack {
-                
-                Spacer()
-                Spacer()
                 
                 Button(action: onClick, label: {
                     if(isOn) {
@@ -198,6 +101,7 @@ struct ClientLoginView: View {
                 }
                 
                 Spacer()
+                
             }
             
             if(isLoading) {
@@ -259,6 +163,36 @@ struct ClientLoginView: View {
         let parameters = CreateAccStruct(phoneNo: phoneNo, password: password, gender: gender, genderPref: genderPref, ethnicity: ethnicity, ethnicPref: ethnicPref)
         
         AF.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).responseJSON { response in
+            
+            switch response.result {
+            case let .success(value):
+                if let JSON = value as? [String: Any] {
+                    
+                    if let status = JSON["status"] as? Bool {
+                        if(status) {
+                            if let client = JSON["result"] as? [String: Any] {
+                                handleNetworkResponse(true, "", client)
+                            } else {
+                                handleNetworkResponse(false, "Error \(#line)", NSNull())
+                            }
+                        } else {
+                            if let error = JSON["error"] as? String {
+                                if(error.elementsEqual("ExistingUserError")) {
+                                    handleNetworkResponse(false, "A User with phone number already exists. Please sign in or contact support", NSNull())
+                                }
+                            } else {
+                                handleNetworkResponse(false, "Error \(#line)", NSNull())
+                            }
+                        }
+                    } else {
+                        handleNetworkResponse(false, "Error \(#line)", NSNull())
+                    }
+                } else {
+                    handleNetworkResponse(false, "Error \(#line)", NSNull())
+                }
+            case let .failure(error):
+                handleNetworkResponse(false, "Network Error \(#line)", error)
+            }
         }
     }
     
@@ -280,47 +214,51 @@ struct ClientLoginView: View {
                         
                         if(status) {
                             if let client = JSON["result"] as? [String: Any] {
-                                handleLoginResponse(true, "", client)
+                                handleNetworkResponse(true, "", client)
                             } else {
-                                handleLoginResponse(false, "Error \(#line)", NSNull())
+                                handleNetworkResponse(false, "Error \(#line)", NSNull())
                             }
                         } else {
                             if let error = JSON["error"] as? String {
                                 if(error.elementsEqual("IncorrectPassword")) {
-                                    handleLoginResponse(false, "Incorrect Password. Please try again", NSNull())
+                                    handleNetworkResponse(false, "Incorrect Password. Please try again", NSNull())
                                 } else if(error.elementsEqual("NoUser")) {
-                                    handleLoginResponse(false, "No user exists with that phone number, please create an account", NSNull())
+                                    handleNetworkResponse(false, "No user exists with that phone number, please create an account", NSNull())
                                 }
                             } else {
-                                handleLoginResponse(false, "Error \(#line)", NSNull())
+                                handleNetworkResponse(false, "Error \(#line)", NSNull())
                             }
                         }
                     }
                 } else {
-                    handleLoginResponse(false, "Error \(#line)", NSNull())
+                    handleNetworkResponse(false, "Error \(#line)", NSNull())
                 }
                 
                 
                 
             case let .failure(error):
-                handleLoginResponse(false, "Network Error \(#line)", error)
+                handleNetworkResponse(false, "Network Error \(#line)", error)
             }
         }
     }
     
     
-    func handleLoginResponse(_ status: Bool, _ message: String, _ result: Any?) -> Void{
+    func handleNetworkResponse(_ status: Bool, _ message: String, _ result: Any?) -> Void{
         if(status) {
+            
+            
+            UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+            UserDefaults.standard.set("client", forKey: "userType")
+            
             if let client = result as? [String: Any] {
-                // TODO: Add keychain support
-
-                UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
-                UserDefaults.standard.set("client", forKey: "userType")
-                
                 UserDefaults.standard.set(client["_id"], forKey: "id")
+                UserDefaults.standard.set(!(client["calls"] as! [Any]).isEmpty, forKey: "hasCalls")
                 
                 isLoggedIn = true
+            } else {
+                handleNetworkResponse(false, "Error \(#line)", NSNull())
             }
+            
         } else {
             loginError = true
             loginErrorText = message
@@ -328,6 +266,8 @@ struct ClientLoginView: View {
         isLoading = false
     }
 }
+
+
 
 struct ClientLoginView_Previews: PreviewProvider {
     static var previews: some View {

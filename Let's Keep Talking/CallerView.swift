@@ -12,7 +12,7 @@ struct CallerView: View {
     
     var body: some View {
         if(isLoggedIn) {
-            ClientLandingView(isLoggedIn: $isLoggedIn)
+            CallerLandingView(isLoggedIn: $isLoggedIn)
         } else {
             CallerLoginView(isLoggedIn: $isLoggedIn)
         }
