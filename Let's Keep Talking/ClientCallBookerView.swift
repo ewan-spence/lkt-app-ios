@@ -14,12 +14,23 @@ struct ClientCallBookerView: View {
     
     @State var callers: [String] = ["No Preference"]
     
-    @State var calls: [[String: String]]
+    @State var displayCalls: [[String: String]] = []
     
     @State var callsShown: Bool = false
     
+    @State var isAlerting: Bool = false
+    @State var alertText: String = ""
+    
     @State var isLoading: Bool = false
     @State var loadingText: String = "Loading Callers"
+    
+    @Binding var userHasCalls: Bool
+    
+    @Binding var callDate: String?
+    @Binding var callTime: String?
+    @Binding var callCaller: String?
+    
+    @Binding var userCalls: [[String: String]]?
     
     var body: some View {
         ZStack {
@@ -36,18 +47,25 @@ struct ClientCallBookerView: View {
                     Dropdown(displayText: "Pick a caller", options: $callers, selectedItem: $callerSelected)
                         .disabled(isLoading)
                     
-                    
-                }.overlay(RoundedRectangle(cornerRadius: 15).stroke()).padding(.horizontal)
+                }
+                .overlay(RoundedRectangle(cornerRadius: 15).stroke())
+                .padding(.horizontal)
                 
                 Button("Show Appointments", action: {
                     getCalls()
                     
-                }).padding(.top, 30)
+                })
+                .alert(isPresented: $isAlerting) {
+                    Alert(title: Text("Error"), message: Text(alertText), dismissButton: .default(Text("Okay")))
+                }
+                .padding(.top, 30)
                 .disabled(callerSelected.isEmpty || isLoading)
                 
-                if(callsShown && (!calls.isEmpty)) {
-                    ForEach(calls, id: \.self) { call in
-                        AppointmentRowView(callerName: call["callerName"]!, callDate: call["date"]!, callTime: call["time"]!)
+                if(callsShown && (!displayCalls.isEmpty)) {
+                    ScrollView {
+                        ForEach(displayCalls, id: \.self) { call in
+                            AppointmentRowBookerView(call: call, isLoading: $isLoading, loadingText: $loadingText, userHasCalls: $userHasCalls, nextCallDate: $callDate, nextCallTime: $callTime, nextCallCaller: $callCaller, calls: $userCalls)
+                        }
                     }
                 }
                 Spacer()
@@ -87,7 +105,6 @@ struct ClientCallBookerView: View {
                     handleCallerResponse(false, "Error \(#line)", NSNull())
                     return
                 }
-                
                 
                 let data: Data? = body.data(using: .utf8)
                 
@@ -153,7 +170,7 @@ struct ClientCallBookerView: View {
         isLoading = true
         loadingText = "Loading Appointments"
         
-        let url = APIEndpoints.GET_AVAILABILITY
+        let url = APIEndpoints.GET_APPOINTMENTS
         
         let parameters = AvailStruct(callerSelected : !(callerSelected.isEmpty || callerSelected.elementsEqual("No Preference")), callerName : callerSelected, clientId : UserDefaults.standard.string(forKey: "id") ?? "")
         
@@ -180,10 +197,10 @@ struct ClientCallBookerView: View {
                         return
                     }
                     
-                
-                    calls = handleCallResponse(true, "", result)!
+                    
+                    handleCallResponse(true, nil, result)
                 } else {
-                    let _ = handleCallResponse(false, "Unable to get Caller details. Please try again later", [String: Any]())
+                    let _ = handleCallResponse(false, "Unable to get Call details. Please try again later", [String: Any]())
                 }
                 
             case let .failure(error):
@@ -194,15 +211,16 @@ struct ClientCallBookerView: View {
         
     }
     
-    func handleCallResponse(_ status: Bool, _ message: String, _ result: [String: Any]) -> [[String: String]]? {
-        
-        var calls: [[String: String]]? = nil
+    func handleCallResponse(_ status: Bool, _ message: String?, _ result: [String: Any]) {
         
         if(status) {
             
+            // Result returned will be a dict of the format {date : [caller : [time] ]}
+            // i.e, each date has an associated dict of callers, each of whom has an associated list of times
+            
             let dates = result.keys
             
-            calls = []
+            displayCalls = []
             
             dates.forEach { date in
                 guard let callersAvail = result[date] as? [String: [String]] else {
@@ -214,26 +232,42 @@ struct ClientCallBookerView: View {
                     let callerTimes = (callersAvail[name] ?? [])
                     
                     callerTimes.forEach { time in
-                        let call = ["date" : date, "callerName": name, "time": time]
                         
+                        if(isInFuture(date, time)) {
+                            let call = ["date" : date, "callerName": name, "time": time]
+                            
+                            displayCalls.append(call)
+                        }
                         
-                        calls?.append(call)
-                                           
                     }
                 }
             }
             
             callsShown = true
             
+        } else {
+            
         }
         
         isLoading = false
-        return calls ?? nil
+    }
+    
+    func isInFuture(_ date: String, _ time: String) -> Bool {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_GB")
+        formatter.dateFormat = "dd/MM/yyyy HH:mm"
+        
+        let fullDate = date + " " + time
+        let dateAsObj = formatter.date(from: fullDate)
+        
+        let today = Date(timeIntervalSinceNow: 0)
+        
+        return dateAsObj?.timeIntervalSince(today) ?? 0 > 0
     }
 }
 
-struct ClientCallBookerView_Previews: PreviewProvider {
-    static var previews: some View {
-        ClientCallBookerView(calls: [])
-    }
-}
+//struct ClientCallBookerView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ClientCallBookerView(userHasCalls: .constant(false))
+//    }
+//}

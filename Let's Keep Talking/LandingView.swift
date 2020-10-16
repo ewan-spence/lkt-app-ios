@@ -26,7 +26,7 @@ struct LandingView: View {
                 VStack {
                     
                     
-                    NavigationLink(destination: ClientView(isLoggedIn: isLoggedInClient)){
+                    NavigationLink(destination: ClientView(hasDetailsSaved: isLoggedInClient)){
                         Text("Client Access")
                             .font(.system(size: 20))
                     }
@@ -39,7 +39,7 @@ struct LandingView: View {
                     
                     Spacer().frame(height: 100)
                     
-                    NavigationLink(destination: CallerView(isLoggedIn: isLoggedInCaller)) {
+                    NavigationLink(destination: CallerView(hasDetailsSaved: isLoggedInCaller)) {
                         Text("Caller Access")
                             .font(.system(size: 20))
                     }
@@ -66,7 +66,6 @@ struct LandingView: View {
         
         isLoggedInClient = isLoggedInClientFunc(isLoggedIn)
         isLoggedInCaller = isLoggedInCallerFunc(isLoggedIn)
-        
     }
     
     func isLoggedInClientFunc(_ isLoggedIn: Bool) -> Bool {

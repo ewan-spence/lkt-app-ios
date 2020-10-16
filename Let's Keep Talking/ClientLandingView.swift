@@ -11,11 +11,12 @@ struct ClientLandingView: View {
     
     @State var isOnView1 = false
     @State var isOnView2 = true
-    @State var isOnView3 = false
     
     @State var menuShown = false
     
     @State var isLoading = false
+    
+    @Binding var calls: [[String: String]]?
     
     @Binding var isLoggedIn: Bool
     
@@ -27,7 +28,6 @@ struct ClientLandingView: View {
                         .padding()
                         .onTapGesture(perform: {
                             menuShown.toggle()
-                            
                         })
                     
                     if(menuShown) {
@@ -35,6 +35,9 @@ struct ClientLandingView: View {
                             Button("Log Out", action: {
                                 UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
                                 UserDefaults.standard.removeObject(forKey: "userType")
+                                UserDefaults.standard.removeObject(forKey: "phoneNo")
+                                UserDefaults.standard.removeObject(forKey: "password")
+                                UserDefaults.standard.removeObject(forKey: "id")
                                 UserDefaults.standard.synchronize()
                                 
                                 isLoggedIn = false
@@ -44,19 +47,19 @@ struct ClientLandingView: View {
                     
                     Spacer()
                 }
-                
-                Spacer()
-                
+                                
                 if(isOnView1) {
-                    ClientFragmentViewOne()
+                    ClientCallLogView(calls: $calls)
                 }
                 
                 if(isOnView2) {
-                    ClientFragmentViewTwo()
-                }
-                
-                if(isOnView3) {
-                    ClientFragmentViewThree()
+                    let latestCall = calls?.last
+                    
+                    let latestCallDate = latestCall?["date"]
+                    let callTime = latestCall?["time"]
+                    let callCaller = latestCall?["callerName"]
+                    
+                    ClientHomeScreenView(callDate: latestCallDate, callTime: callTime, callCaller: callCaller, calls: $calls)
                 }
                 
                 Spacer()
@@ -65,12 +68,11 @@ struct ClientLandingView: View {
                     Spacer()
                     
                     let viewOneIcon = ZStack {
-                        Image(systemName: "calendar")
+                        Image(systemName: "phone")
                             .font(.system(size: 40))
                             .onTapGesture(perform: {
                                 self.isOnView1 = true
                                 self.isOnView2 = false
-                                self.isOnView3 = false
                                 self.menuShown = false
                             })
                     }.padding()
@@ -92,7 +94,6 @@ struct ClientLandingView: View {
                             .onTapGesture(perform: {
                                 self.isOnView1 = false
                                 self.isOnView2 = true
-                                self.isOnView3 = false
                                 self.menuShown = false
                             })
                         
@@ -104,27 +105,6 @@ struct ClientLandingView: View {
                                 .stroke(Color.gray, lineWidth: 5))
                     } else {
                         viewTwoIcon
-                    }
-                    
-                    Spacer()
-                    
-                    let viewThreeIcon = ZStack {
-                        Image(systemName: "phone")
-                            .font(.system(size: 40))
-                            .onTapGesture(perform: {
-                                self.isOnView1 = false
-                                self.isOnView2 = false
-                                self.isOnView3 = true
-                                self.menuShown = false
-                            })
-                    }.padding()
-                    
-                    if(isOnView3) {
-                        viewThreeIcon.overlay(
-                            RoundedRectangle(cornerRadius: 15)
-                                .stroke(Color.gray, lineWidth: 5))
-                    } else {
-                        viewThreeIcon
                     }
                     
                     Spacer()
@@ -141,6 +121,6 @@ struct ClientLandingView: View {
 
 struct ClientLandingView_Previews: PreviewProvider {
     static var previews: some View {
-        ClientLandingView(isLoggedIn: .constant(true))
+        ClientLandingView(calls: .constant([[:]]), isLoggedIn: .constant(true))
     }
 }

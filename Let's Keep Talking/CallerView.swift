@@ -8,19 +8,26 @@
 import SwiftUI
 
 struct CallerView: View {
-    @State var isLoggedIn: Bool
+    @State var isLoggedIn: Bool = false
+
+    @State var hasDetailsSaved: Bool
+    
+    @State var calls: [[String: String]]?
+    @State var availability: [String: [String]]?
     
     var body: some View {
         if(isLoggedIn) {
-            CallerLandingView(isLoggedIn: $isLoggedIn)
+            CallerLandingView(isLoggedIn: $isLoggedIn, calls: $calls, availability: $availability)
+                .navigationBarHidden(true)
+                .navigationTitle("")
         } else {
-            CallerLoginView(isLoggedIn: $isLoggedIn)
+            CallerLoginView(hasDetailsSaved: hasDetailsSaved, isLoggedIn: $isLoggedIn, calls: $calls, availability: $availability)
         }
     }
 }
 
 struct CallerView_Previews: PreviewProvider {
     static var previews: some View {
-        CallerView(isLoggedIn: false)
+        CallerView(hasDetailsSaved: false)
     }
 }

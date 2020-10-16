@@ -7,11 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9407CAA125310AEC00708B79 /* AppointmentRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9407CAA025310AEC00708B79 /* AppointmentRowView.swift */; };
+		9407CAA425310BF700708B79 /* CallRaterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9407CAA325310BF700708B79 /* CallRaterView.swift */; };
 		9457BF582521531A0039A3B4 /* Structs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9457BF572521531A0039A3B4 /* Structs.swift */; };
+		945A0F222534B4FF00C2AF0F /* CallerCallLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945A0F212534B4FF00C2AF0F /* CallerCallLogView.swift */; };
+		945A0F252535FFF200C2AF0F /* CallerHomeScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945A0F242535FFF200C2AF0F /* CallerHomeScreenView.swift */; };
 		946D4C03251EB25200371E8A /* ClientLandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D4C02251EB25200371E8A /* ClientLandingView.swift */; };
-		946D4C0A251EB32700371E8A /* ClientFragmentViewOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D4C09251EB32700371E8A /* ClientFragmentViewOne.swift */; };
-		946D4C0E251EB35E00371E8A /* ClientFragmentViewTwo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D4C0D251EB35E00371E8A /* ClientFragmentViewTwo.swift */; };
-		946D4C11251EB3BA00371E8A /* ClientFragmentViewThree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D4C10251EB3BA00371E8A /* ClientFragmentViewThree.swift */; };
+		946D4C0A251EB32700371E8A /* ClientCallLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D4C09251EB32700371E8A /* ClientCallLogView.swift */; };
+		946D4C0E251EB35E00371E8A /* ClientHomeScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D4C0D251EB35E00371E8A /* ClientHomeScreenView.swift */; };
 		947D13FC252388DE00D6E77B /* CallerLandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947D13FB252388DE00D6E77B /* CallerLandingView.swift */; };
 		949ADD1525239D1E006A40A2 /* ClientCallBookerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949ADD1425239D1E006A40A2 /* ClientCallBookerView.swift */; };
 		949ADD1C2524BB81006A40A2 /* CreateAccFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949ADD1B2524BB81006A40A2 /* CreateAccFormView.swift */; };
@@ -22,7 +25,11 @@
 		949E61582516386F0013690E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 949E61572516386F0013690E /* Preview Assets.xcassets */; };
 		94B705B52518FBC600972DEC /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 94B705B42518FBC600972DEC /* Alamofire */; };
 		94B705B82519054E00972DEC /* APIEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B705B72519054E00972DEC /* APIEndpoints.swift */; };
-		94B87D71252C8B72004A3E54 /* AppointmentRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B87D70252C8B72004A3E54 /* AppointmentRowView.swift */; };
+		94B87D71252C8B72004A3E54 /* AppointmentRowBookerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B87D70252C8B72004A3E54 /* AppointmentRowBookerView.swift */; };
+		94B8E2852538D69D0092E247 /* CallerAvailabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8E2842538D69D0092E247 /* CallerAvailabilityView.swift */; };
+		94B8E2882538D8970092E247 /* AvailabilityCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8E2872538D8970092E247 /* AvailabilityCellView.swift */; };
+		94B8E28F2538E64E0092E247 /* AvailabilityColView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8E28E2538E64E0092E247 /* AvailabilityColView.swift */; };
+		94B8E2922538F11C0092E247 /* WeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8E2912538F11C0092E247 /* WeekView.swift */; };
 		94BFEC28251FF0BD00DABF79 /* ClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BFEC27251FF0BD00DABF79 /* ClientView.swift */; };
 		94BFEC2C2520C88500DABF79 /* CallerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BFEC2B2520C88500DABF79 /* CallerView.swift */; };
 		94C1E8262516647C001654CD /* ClientLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C1E8252516647C001654CD /* ClientLoginView.swift */; };
@@ -30,11 +37,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9407CAA025310AEC00708B79 /* AppointmentRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentRowView.swift; sourceTree = "<group>"; };
+		9407CAA325310BF700708B79 /* CallRaterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallRaterView.swift; sourceTree = "<group>"; };
 		9457BF572521531A0039A3B4 /* Structs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Structs.swift; sourceTree = "<group>"; };
+		945A0F212534B4FF00C2AF0F /* CallerCallLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerCallLogView.swift; sourceTree = "<group>"; };
+		945A0F242535FFF200C2AF0F /* CallerHomeScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerHomeScreenView.swift; sourceTree = "<group>"; };
 		946D4C02251EB25200371E8A /* ClientLandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientLandingView.swift; sourceTree = "<group>"; };
-		946D4C09251EB32700371E8A /* ClientFragmentViewOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientFragmentViewOne.swift; sourceTree = "<group>"; };
-		946D4C0D251EB35E00371E8A /* ClientFragmentViewTwo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientFragmentViewTwo.swift; sourceTree = "<group>"; };
-		946D4C10251EB3BA00371E8A /* ClientFragmentViewThree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientFragmentViewThree.swift; sourceTree = "<group>"; };
+		946D4C09251EB32700371E8A /* ClientCallLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientCallLogView.swift; sourceTree = "<group>"; };
+		946D4C0D251EB35E00371E8A /* ClientHomeScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientHomeScreenView.swift; sourceTree = "<group>"; };
 		947D13FB252388DE00D6E77B /* CallerLandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerLandingView.swift; sourceTree = "<group>"; };
 		949ADD1425239D1E006A40A2 /* ClientCallBookerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientCallBookerView.swift; sourceTree = "<group>"; };
 		949ADD1B2524BB81006A40A2 /* CreateAccFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccFormView.swift; sourceTree = "<group>"; };
@@ -46,7 +56,11 @@
 		949E61572516386F0013690E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		949E615C2516386F0013690E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		94B705B72519054E00972DEC /* APIEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIEndpoints.swift; sourceTree = "<group>"; };
-		94B87D70252C8B72004A3E54 /* AppointmentRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentRowView.swift; sourceTree = "<group>"; };
+		94B87D70252C8B72004A3E54 /* AppointmentRowBookerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentRowBookerView.swift; sourceTree = "<group>"; };
+		94B8E2842538D69D0092E247 /* CallerAvailabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerAvailabilityView.swift; sourceTree = "<group>"; };
+		94B8E2872538D8970092E247 /* AvailabilityCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailabilityCellView.swift; sourceTree = "<group>"; };
+		94B8E28E2538E64E0092E247 /* AvailabilityColView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailabilityColView.swift; sourceTree = "<group>"; };
+		94B8E2912538F11C0092E247 /* WeekView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeekView.swift; sourceTree = "<group>"; };
 		94BFEC27251FF0BD00DABF79 /* ClientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientView.swift; sourceTree = "<group>"; };
 		94BFEC2B2520C88500DABF79 /* CallerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerView.swift; sourceTree = "<group>"; };
 		94C1E8252516647C001654CD /* ClientLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientLoginView.swift; sourceTree = "<group>"; };
@@ -68,9 +82,15 @@
 		947D13F62523881C00D6E77B /* Caller Screens */ = {
 			isa = PBXGroup;
 			children = (
+				945A0F212534B4FF00C2AF0F /* CallerCallLogView.swift */,
 				94BFEC2B2520C88500DABF79 /* CallerView.swift */,
 				947D13FB252388DE00D6E77B /* CallerLandingView.swift */,
+				945A0F242535FFF200C2AF0F /* CallerHomeScreenView.swift */,
 				94C1E8282516652D001654CD /* CallerLoginView.swift */,
+				94B8E2842538D69D0092E247 /* CallerAvailabilityView.swift */,
+				94B8E28E2538E64E0092E247 /* AvailabilityColView.swift */,
+				94B8E2912538F11C0092E247 /* WeekView.swift */,
+				94B8E2872538D8970092E247 /* AvailabilityCellView.swift */,
 			);
 			name = "Caller Screens";
 			sourceTree = "<group>";
@@ -78,13 +98,15 @@
 		947D140025238A6400D6E77B /* Client Screens */ = {
 			isa = PBXGroup;
 			children = (
+				9407CAA025310AEC00708B79 /* AppointmentRowView.swift */,
+				94B87D70252C8B72004A3E54 /* AppointmentRowBookerView.swift */,
+				9407CAA325310BF700708B79 /* CallRaterView.swift */,
 				949ADD1B2524BB81006A40A2 /* CreateAccFormView.swift */,
 				94C1E8252516647C001654CD /* ClientLoginView.swift */,
 				94BFEC27251FF0BD00DABF79 /* ClientView.swift */,
 				946D4C02251EB25200371E8A /* ClientLandingView.swift */,
-				946D4C10251EB3BA00371E8A /* ClientFragmentViewThree.swift */,
-				946D4C09251EB32700371E8A /* ClientFragmentViewOne.swift */,
-				946D4C0D251EB35E00371E8A /* ClientFragmentViewTwo.swift */,
+				946D4C09251EB32700371E8A /* ClientCallLogView.swift */,
+				946D4C0D251EB35E00371E8A /* ClientHomeScreenView.swift */,
 				949ADD1425239D1E006A40A2 /* ClientCallBookerView.swift */,
 			);
 			name = "Client Screens";
@@ -119,7 +141,6 @@
 				9457BF572521531A0039A3B4 /* Structs.swift */,
 				949E615C2516386F0013690E /* Info.plist */,
 				949E61562516386F0013690E /* Preview Content */,
-				94B87D70252C8B72004A3E54 /* AppointmentRowView.swift */,
 			);
 			path = "Let's Keep Talking";
 			sourceTree = "<group>";
@@ -207,23 +228,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				946D4C11251EB3BA00371E8A /* ClientFragmentViewThree.swift in Sources */,
+				94B8E2922538F11C0092E247 /* WeekView.swift in Sources */,
+				94B8E28F2538E64E0092E247 /* AvailabilityColView.swift in Sources */,
+				94B8E2852538D69D0092E247 /* CallerAvailabilityView.swift in Sources */,
 				949E614F2516386E0013690E /* AppDelegate.swift in Sources */,
 				9457BF582521531A0039A3B4 /* Structs.swift in Sources */,
+				945A0F252535FFF200C2AF0F /* CallerHomeScreenView.swift in Sources */,
 				949E61512516386E0013690E /* SceneDelegate.swift in Sources */,
 				949E61532516386E0013690E /* LandingView.swift in Sources */,
-				94B87D71252C8B72004A3E54 /* AppointmentRowView.swift in Sources */,
+				945A0F222534B4FF00C2AF0F /* CallerCallLogView.swift in Sources */,
+				94B87D71252C8B72004A3E54 /* AppointmentRowBookerView.swift in Sources */,
 				94BFEC28251FF0BD00DABF79 /* ClientView.swift in Sources */,
 				946D4C03251EB25200371E8A /* ClientLandingView.swift in Sources */,
 				947D13FC252388DE00D6E77B /* CallerLandingView.swift in Sources */,
 				949ADD1525239D1E006A40A2 /* ClientCallBookerView.swift in Sources */,
 				94B705B82519054E00972DEC /* APIEndpoints.swift in Sources */,
 				94C1E8262516647C001654CD /* ClientLoginView.swift in Sources */,
-				946D4C0A251EB32700371E8A /* ClientFragmentViewOne.swift in Sources */,
+				9407CAA425310BF700708B79 /* CallRaterView.swift in Sources */,
+				946D4C0A251EB32700371E8A /* ClientCallLogView.swift in Sources */,
+				94B8E2882538D8970092E247 /* AvailabilityCellView.swift in Sources */,
 				949ADD1C2524BB81006A40A2 /* CreateAccFormView.swift in Sources */,
 				94BFEC2C2520C88500DABF79 /* CallerView.swift in Sources */,
-				946D4C0E251EB35E00371E8A /* ClientFragmentViewTwo.swift in Sources */,
+				946D4C0E251EB35E00371E8A /* ClientHomeScreenView.swift in Sources */,
 				94C1E8292516652D001654CD /* CallerLoginView.swift in Sources */,
+				9407CAA125310AEC00708B79 /* AppointmentRowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

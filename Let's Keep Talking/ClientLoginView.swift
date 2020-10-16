@@ -12,34 +12,37 @@ import Foundation
 
 
 struct ClientLoginView: View {
-    @State private var isOn: Bool = false
+    @State var isOn: Bool = false
     
-    @State private var fullName: String = ""
-    @State private var phoneNo: String = ""
-    @State private var phoneConf: String = ""
-    @State private var password: String = ""
-    @State private var passwordConf: String = ""
+    @State var hasDetailsSaved: Bool
     
-    @State private var gender: String = ""
-    @State private var genderOptOut: Bool = false
-    @State private var genderPref: String = ""
+    @State var fullName: String = ""
+    @State var phoneNo: String = ""
+    @State var phoneConf: String = ""
+    @State var password: String = ""
+    @State var passwordConf: String = ""
     
-    @State private var ethnicity: String = ""
-    @State private var ethnicOptOut: Bool = false
-    @State private var bme: Bool = false
-    @State private var ethnicPref: Bool = false
+    @State var gender: String = ""
+    @State var genderOptOut: Bool = false
+    @State var genderPref: String = ""
     
-    @State private var isLoading: Bool = false
-    @State private var formError: String = ""
+    @State var ethnicity: String = ""
+    @State var ethnicOptOut: Bool = false
+    @State var bme: Bool = false
+    @State var ethnicPref: Bool = false
     
-    @State private var loginError: Bool = false
-    @State private var loginErrorText: String = ""
+    @State var isLoading: Bool = false
+    @State var formError: String = ""
     
-    @State private var loginDetails: LoginStruct = LoginStruct(phoneNo: "", password: "")
-    @State private var createAccDetails: CreateAccStruct = CreateAccStruct(phoneNo: "", password: "", gender: "", genderPref: "", ethnicity: "", ethnicPref: false)
+    @State var loginError: Bool = false
+    @State var loginErrorText: String = ""
+    
+    @Binding var calls: [[String: String]]?
+    
+    @State var loginDetails: LoginStruct = LoginStruct(phoneNo: "", password: "")
+    @State var createAccDetails: CreateAccStruct = CreateAccStruct(phoneNo: "", password: "", gender: "", genderPref: "", ethnicity: "", ethnicPref: false)
     
     @Binding var isLoggedIn: Bool
-    
     
     var body: some View {
         ZStack{
@@ -108,11 +111,18 @@ struct ClientLoginView: View {
                 ProgressView()
             }
             
-        }
+        }.onAppear(perform: {
+            if(hasDetailsSaved) {
+                phoneNo = UserDefaults.standard.string(forKey: "phoneNo") ?? ""
+                password = UserDefaults.standard.string(forKey: "password") ?? ""
+            }
+            
+            if(!(phoneNo.isEmpty || password.isEmpty)) {
+                onClick()
+            }
+        })
         
     }
-    
-    
     
     func onClick() {
         isLoading = true
@@ -140,7 +150,7 @@ struct ClientLoginView: View {
                 createAcc()
                 
             } else {
-                login()
+                login(phoneNo, password)
             }
         } else {
             formError = "Please fill all required fields"
@@ -196,7 +206,9 @@ struct ClientLoginView: View {
         }
     }
     
-    func login() -> Void{
+    public func login(_ phoneNo: String, _ password: String) -> Void{
+        isLoading = true
+        
         let url = APIEndpoints.CLIENT_LOGIN
         
         loginDetails = LoginStruct(phoneNo: phoneNo, password: password)
@@ -246,15 +258,37 @@ struct ClientLoginView: View {
     func handleNetworkResponse(_ status: Bool, _ message: String, _ result: Any?) -> Void{
         if(status) {
             
-            
-            UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
-            UserDefaults.standard.set("client", forKey: "userType")
-            
             if let client = result as? [String: Any] {
-                UserDefaults.standard.set(client["_id"], forKey: "id")
-                UserDefaults.standard.set(!(client["calls"] as! [Any]).isEmpty, forKey: "hasCalls")
+                guard let clientId = client["_id"] as? String else {
+                    return handleNetworkResponse(false, "Error \(#line)", NSNull())
+                }
                 
-                isLoggedIn = true
+                UserDefaults.standard.set(clientId, forKey: "id")
+                UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+                UserDefaults.standard.set(phoneNo, forKey: "phoneNo")
+                UserDefaults.standard.set(password, forKey: "password")
+                UserDefaults.standard.set("client", forKey: "userType")
+                
+                if let calls = client["calls"] as? [String] {
+                    
+                    if(!calls.isEmpty) {
+                        UserDefaults.standard.set(true, forKey: "hasCalls")
+                        
+                        
+                        getCallInfo(clientId)
+                        
+                    } else {
+                        
+                        UserDefaults.standard.set(false, forKey: "hasCalls")
+                        
+                        self.calls = []
+                        
+                        isLoggedIn = true
+                        isLoading = false
+                        
+                    }
+                    
+                }
             } else {
                 handleNetworkResponse(false, "Error \(#line)", NSNull())
             }
@@ -263,14 +297,85 @@ struct ClientLoginView: View {
             loginError = true
             loginErrorText = message
         }
+    }
+    
+    func getCallInfo(_ clientId: String?) {
+        AF.request(APIEndpoints.GET_CLIENT_CALLS, method: .post, parameters: ["id" : clientId], encoder: JSONParameterEncoder.default).responseJSON { response in
+            switch response.result {
+            case let .success(value):
+                
+                guard let dict = value as? [String: Any] else  {
+                    return handleGetCallsResponse(false, "Error \(#line)", nil)
+
+                }
+                
+                guard let status = dict["status"] as? Bool else {
+                    return handleGetCallsResponse(false, "Error \(#line)", nil)
+                }
+                
+                if(status) {
+                    
+                    
+                    guard let callDicts = dict["result"] as? [[String:Any]] else {
+                        return handleGetCallsResponse(false, "Error \(#line)", nil)
+                    }
+                    
+                    var funcCalls: [[String: String]] = []
+                    
+                    callDicts.forEach { callDict in
+                        
+                        guard let callTimeString = callDict["time"] as? String else {
+                            return handleGetCallsResponse(false, "Error \(#line)", nil)
+                        }
+                        
+                        guard let callDateString = callDict["date"] as? String else {
+                            return handleGetCallsResponse(false, "Error \(#line)", nil)
+                        }
+                        
+                        guard let callIdString = callDict["_id"] as? String else {
+                            return handleGetCallsResponse(false, "Error \(#line)", nil)
+                        }
+                        
+                        guard let callCallerDict = callDict["caller"] as? [String: String]  else{
+                            return handleGetCallsResponse(false, "Error \(#line)", nil)
+                        }
+                        
+                        guard let callCallerString = callCallerDict["fullName"] else {
+                            return handleGetCallsResponse(false, "Error \(#line)", nil)
+                        }
+                        
+                        funcCalls.append(["date" : callDateString , "time" : callTimeString , "callerName" : callCallerString, "id" : callIdString])
+                    }
+                    
+                    handleGetCallsResponse(true, nil, funcCalls)
+                    
+                } else {
+                    return handleGetCallsResponse(false, "Error \(#line)", nil)
+                }
+                
+                
+            case .failure(_):
+                return handleGetCallsResponse(false, "Error \(#line)", nil)
+            }
+        }
+    }
+    
+    func handleGetCallsResponse(_ status: Bool, _ message: String?, _ result: [[String: String]]?) {
+        if(status) {
+            calls = result
+        }
+        
+        isLoggedIn = true
         isLoading = false
     }
+    
+    
 }
 
 
 
-struct ClientLoginView_Previews: PreviewProvider {
-    static var previews: some View {
-        ClientLoginView(isLoggedIn: .constant(false))
-    }
-}
+//struct ClientLoginView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ClientLoginView(phoneNo: "", password: "", isLoggedIn: .constant(false))
+//    }
+//}
