@@ -15,9 +15,16 @@ struct AvailabilityColView: View {
     
     var body: some View {
         VStack {
-            Text(day)
-                .padding()
-            
+            VStack {
+                
+                Text(Helpers.getDayOfWeek(dateString: day))
+                
+                Text(day)
+                    .padding()
+                
+                
+                
+            }
             Divider()
             
             let dayDict = week[day]

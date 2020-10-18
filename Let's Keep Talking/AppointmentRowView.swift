@@ -16,62 +16,68 @@ struct AppointmentRowView: View {
     @State var isOnCallLog: Bool?
     @State var addTimeIsOpen: Bool = false
     
-    @State var callLength: String = ""
+    @State var callLength: String? = ""
     
     @State var isAlerting: Bool = false
     @State var alertTitle: String = ""
     @State var alertText: String = ""
     
+    @State var isAddingCallLength: Bool = false
+    
+    @State var isLoading: Bool = false
+    
     var body: some View {
-        HStack {
-            VStack {
-                Text(call["date"] ?? "")
-                Text(call["time"] ?? "")
-            }.padding()
-            
-            Spacer()
-            
-            if(isClient) {
-                NavigationLink("Rate Call", destination: CallRaterView())
-                    .disabled(isInFuture(call["date"]!, call["time"]!))
+        ZStack {
+            HStack {
+                VStack {
+                    Text(Helpers.getDayOfWeek(dateString: call["date"]!))
+                    Text(call["date"] ?? "")
+                    Text(call["time"] ?? "")
+                }.padding()
+                
                 Spacer()
-                Text(call["callerName"]!).padding(.trailing)
                 
-                
-            } else if(isOnCallLog!){
-                
-                Menu {
-                    Button("Submit", action: {
-                            addCallLength(callLength)
-                    })
-                        .alert(isPresented: $isAlerting, content: {
-                                Alert(title: Text(alertTitle), message: Text(alertText), dismissButton: .default(Text("No Problem")))
+                if(isClient) {
+                    NavigationLink("Rate Call", destination: CallRaterView())
+                        .disabled(isInFuture(call["date"]!, call["time"]!))
+                    Spacer()
+                    Text(call["callerName"]!).padding(.trailing)
+                    
+                    
+                } else if(isOnCallLog!){
+                    
+                    Button("Add Call Length", action: {isAddingCallLength = true})
+                        .textFieldAlert(isPresented: $isAddingCallLength, content: {
+                            TextFieldAlert(title: "Add Call Length", message: nil, text: $callLength, action: {
+                                addCallLength(callLength!)
+                            })
                         })
+                        .alert(isPresented: $isAlerting, content: {
+                            Alert(title: Text(alertTitle), message: Text(alertText), dismissButton: .default(Text("Okay")))
+                        })
+                        .disabled(isInFuture(call["date"]!, call["time"]!) || !((call["length"]?.isEmpty) ?? false))
                     
-                    TextField("Time in Minutes", text: $callLength)
-                        .keyboardType(.numberPad)
+                    Spacer()
+                    Text(call["clientName"]!).padding(.trailing)
                     
-                } label : {
-                    Text("Add Call Length")
-                }.disabled(isInFuture(call["date"]!, call["time"]!))
+                } else {
+                    
+                    Button("Call Client", action: {
+                        let prefix = "tel://"
+                        
+                        let formattedPhoneNo = prefix + call["clientNo"]!
+                        
+                        UIApplication.shared.open(URL(string: formattedPhoneNo)!)
+                    })
+                    
+                    Spacer()
+                    Text(call["clientName"]!).padding(.trailing)
+                }
                 
-                Spacer()
-                Text(call["clientName"]!).padding(.trailing)
-                
-            } else {
-                
-                Button("Call Client", action: {
-                    let prefix = "tel://"
-                    
-                    let formattedPhoneNo = prefix + call["clientNo"]!
-                    
-                    UIApplication.shared.open(URL(string: formattedPhoneNo)!)
-                })
-                .disabled(isInFuture(call["date"]!, call["time"]!))
-                Spacer()
-                Text(call["clientName"]!).padding(.trailing)
             }
-            
+            if(isLoading) {
+                ProgressView()
+            }
         }
         .onAppear(perform: {
             callLength = call["length"] ?? ""
@@ -79,6 +85,8 @@ struct AppointmentRowView: View {
     }
     
     func addCallLength(_ length: String) {
+        isLoading = true
+        
         let url = APIEndpoints.ADD_CALL_LENGTH
         
         guard let callId = call["id"] else {
@@ -123,6 +131,7 @@ struct AppointmentRowView: View {
             alertText = "There was an error - please reload the app.\nIf this error persists please contact support with code 0" + String(lineNo!)
         }
         isAlerting = true
+        isLoading = false
     }
     
     func isInFuture(_ date: String, _ time: String) -> Bool {

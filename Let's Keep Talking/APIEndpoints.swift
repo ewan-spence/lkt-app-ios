@@ -16,6 +16,7 @@ public class APIEndpoints {
     public static var GET_CALLERS = CLIENT_ROOT + "get-callers/"
     public static var GET_APPOINTMENTS = CLIENT_ROOT + "get-appointments/"
     public static var BOOK_CALL = CLIENT_ROOT + "book/"
+    public static var CANCEL_CALL = CLIENT_ROOT + "cancel/"
     public static var GET_CLIENT_CALLS = CLIENT_ROOT + "get-calls/"
     
     public static var CALLER_LOGIN = CALLER_ROOT + "login/"

@@ -99,6 +99,9 @@ struct CallerAvailabilityView: View {
                 Spacer()
                 
                 Button("Submit", action: setAvailability)
+                    .alert(isPresented: $isAlerting, content: {
+                        Alert(title: Text(alertTitle), message: Text(alertText), dismissButton: .default(Text(alertButton)))
+                    })
             }
             
             if(isLoading) {
@@ -106,9 +109,6 @@ struct CallerAvailabilityView: View {
             }
             
         }
-        .alert(isPresented: $isAlerting, content: {
-            Alert(title: Text(alertTitle), message: Text(alertText), dismissButton: .default(Text(alertButton)))
-        })
         .onAppear(perform: {
             getAvailability()
         })
@@ -154,113 +154,25 @@ struct CallerAvailabilityView: View {
                 return handleAvailGetResponse(false, #line, nil)
             }
             
-            let possTimes = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00"]
+            let day = Date()
             
-            var availOne: [String: [String: [String: Bool]]] = [:]
-            var availTwo: [String: [String: [String: Bool]]] = [:]
-            
-            var day = Date()
-            
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: "en_GB")
-            formatter.dateFormat = "dd/MM/yyyy"
-            
-            let midDate = Calendar.current.date(byAdding: .day, value: 7, to: day)!
-            
-            while day <= midDate {
-                var hasCall = false
-                
-                day = Calendar.current.date(byAdding: .day, value: 1, to: day)!
-                
-                // Check for each call if the call is one of the dates we're checking
-                for call in dbCalls {
-                    guard let callDateString = call["date"] as? String else {
-                        return handleAvailGetResponse(false, #line, nil)
-                    }
-                    
-                    let callDate = formatter.date(from: callDateString)
-                    
-                    if(callDate == day) {
-                        hasCall = true
-                        break
-                    }
-                }
-                
-                let newDayString = formatter.string(from: day)
-                
-                // Check if the database availability has the day we're checking
-                if(dbAvailability.keys.contains(newDayString)) {
-                    
-                    // If it does,
-                    var dayAvailability: [String: [String: Bool]] = [:]
-                    
-                    for time in possTimes {
-                        let isAvail = dbAvailability[newDayString]!.contains(time)
-                        
-                        dayAvailability[time] = [:]
-                        
-                        dayAvailability[time]!["isAvail"] = isAvail
-                        dayAvailability[time]!["hasCall"] = hasCall
-                        
-                    }
-                    
-                    availOne[newDayString] = dayAvailability
-                } else {
-                    availOne[newDayString] = [:]
-                    
-                    for time in possTimes {
-                        availOne[newDayString]![time] = ["hasCall" : false, "isAvail" : false]
-                    }
-                }
+            guard let midDate1 = Calendar.current.date(byAdding: .day, value: 7, to: day) else {
+                return handleAvailGetResponse(false, #line, nil)
             }
             
-            let endDate = Calendar.current.date(byAdding: .day, value: 14, to: day)!
+            guard let midDate2 = Calendar.current.date(byAdding: .day, value: 1, to: midDate1) else {
+                return handleAvailGetResponse(false, #line, nil)
+            }
             
+            guard let endDate = Calendar.current.date(byAdding: .day, value: 14, to: day) else {
+                return handleAvailGetResponse(false, #line, nil)
+            }
             
-            while day < endDate {
-                day = Calendar.current.date(byAdding: .day, value: 1, to: day)!
-                
-                var hasCall = false
-                
-                for call in dbCalls {
-                    guard let callDateString = call["date"] as? String else {
-                        return handleAvailGetResponse(false, #line, nil)
-                    }
-                    
-                    let callDate = formatter.date(from: callDateString)
-                    
-                    if(callDate == day) {
-                        hasCall = true
-                        break
-                    }
-                }
-                
-                let newDayString = formatter.string(from: day)
-                
-                // Check if the database availability has the day we're checking
-                if(dbAvailability.keys.contains(newDayString)) {
-                    
-                    // If it does,
-                    var dayAvailability: [String: [String: Bool]] = [:]
-                    
-                    for time in possTimes {
-                        let isAvail = dbAvailability[newDayString]!.contains(time)
-                        
-                        if(hasCall || dbAvailability[newDayString]!.contains(time)) {
-                            dayAvailability[time] = [:]
-                            dayAvailability[time]!["isAvail"] = isAvail
-                            dayAvailability[time]!["hasCall"] = hasCall
-                        }
-                    }
-                    
-                    availTwo[newDayString] = dayAvailability
-                } else {
-                    availTwo[newDayString] = [:]
-                    
-                    for time in possTimes {
-                        availTwo[newDayString]![time] = ["hasCall" : false, "isAvail" : false]
-                    }
-                }
+            guard let availOne = getWeekAvailability(day, midDate1, dbAvailability, dbCalls) else {
+                return handleAvailGetResponse(false, #line, nil)
+            }
+            guard let availTwo = getWeekAvailability(midDate2, endDate, dbAvailability, dbCalls) else {
+                return handleAvailGetResponse(false, #line, nil)
             }
             
             weekOne = availOne
@@ -276,6 +188,81 @@ struct CallerAvailabilityView: View {
         
         return
     }
+    
+    func getWeekAvailability(_ date1: Date, _ date2: Date, _ dbAvailability: [String : [String]], _ dbCalls: [[String: Any]]) -> [String: [String: [String: Bool]]]?{
+        var avail: [String: [String: [String: Bool]]] = [:]
+        
+        let possTimes = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00"]
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_GB")
+        dateFormatter.dateFormat = "dd/MM/yyyy"
+        
+        let dateAndTimeFormatter = DateFormatter()
+        dateAndTimeFormatter.locale = Locale(identifier: "en_GB")
+        dateAndTimeFormatter.dateFormat = "dd/MM/yyyy HH:mm"
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.locale = Locale(identifier: "en_GB")
+        timeFormatter.dateFormat = "HH:mm"
+        
+        let cal = Calendar(identifier: .gregorian)
+        
+        var date1Var = Calendar.current.date(byAdding: .day, value: 1, to: date1)!
+        
+        while date1Var <= date2 {            
+            var dayAvail: [String: [String: Bool]] = [:]
+            
+            let dateString = dateFormatter.string(from: date1Var)
+            
+            for (day, timeList) in dbAvailability {
+                if(day == dateString) {
+                    for time in possTimes {
+                        dayAvail[time] = ["isAvail" : timeList.contains(time)]
+                    }
+                    
+                    break
+                }
+            }
+            
+            if(dayAvail == [:]) {
+                for time in possTimes {
+                    dayAvail[time] = ["isAvail" : false]
+                }
+            }
+            
+            for call in dbCalls {
+                
+                
+                for timeString in possTimes {
+                    
+                    if(!(dayAvail[timeString]?.keys.contains("hasCall"))!) {
+                        
+                        guard let callDateString = call["date"] as? String else {
+                            handleAvailGetResponse(false, #line, nil)
+                            return nil
+                        }
+                        
+                        guard let callTimeString = call["time"] as? String else {
+                            handleAvailGetResponse(false, #line, nil)
+                            return nil
+                        }
+                        
+                        let callAsDateObj = dateAndTimeFormatter.date(from: callDateString + " " + callTimeString)!
+                        
+                        dayAvail[timeString]?["hasCall"] = (cal.isDate(callAsDateObj, inSameDayAs: date1Var)) && (callTimeString == timeString)
+                    }
+                }
+            }
+            
+            avail[dateString] = dayAvail
+            
+            date1Var = Calendar.current.date(byAdding: .day, value: 1, to: date1Var)!
+        }
+        return avail
+        
+    }
+    
     
     func setAvailability() -> Void {
         isLoading = true
@@ -314,27 +301,27 @@ struct CallerAvailabilityView: View {
             switch (response.result) {
             case let .success(value):
                 guard let json = value as? [String: Any] else {
-                    return handleSetAvailResponse(false, #line)
+                    return handleAvailSetResponse(false, #line)
                 }
                 
                 guard let status = json["status"] as? Bool else {
-                    return handleSetAvailResponse(false, #line)
+                    return handleAvailSetResponse(false, #line)
                 }
                 
                 if (status) {
-                    return handleSetAvailResponse(true, nil)
+                    return handleAvailSetResponse(true, nil)
                 } else {
-                    return handleSetAvailResponse(false, #line)
+                    return handleAvailSetResponse(false, #line)
                 }
             case let .failure(error):
                 debugPrint(error)
-                return handleSetAvailResponse(false, #line)
+                return handleAvailSetResponse(false, #line)
             }
         }
         
     }
     
-    func handleSetAvailResponse(_ status: Bool, _ lineNo: Int?) {
+    func handleAvailSetResponse(_ status: Bool, _ lineNo: Int?) {
         
         
         if(status) {

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		9407CAA125310AEC00708B79 /* AppointmentRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9407CAA025310AEC00708B79 /* AppointmentRowView.swift */; };
 		9407CAA425310BF700708B79 /* CallRaterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9407CAA325310BF700708B79 /* CallRaterView.swift */; };
-		9457BF582521531A0039A3B4 /* Structs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9457BF572521531A0039A3B4 /* Structs.swift */; };
+		9457BF582521531A0039A3B4 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9457BF572521531A0039A3B4 /* Helpers.swift */; };
 		945A0F222534B4FF00C2AF0F /* CallerCallLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945A0F212534B4FF00C2AF0F /* CallerCallLogView.swift */; };
 		945A0F252535FFF200C2AF0F /* CallerHomeScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945A0F242535FFF200C2AF0F /* CallerHomeScreenView.swift */; };
 		946D4C03251EB25200371E8A /* ClientLandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D4C02251EB25200371E8A /* ClientLandingView.swift */; };
@@ -34,12 +34,13 @@
 		94BFEC2C2520C88500DABF79 /* CallerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BFEC2B2520C88500DABF79 /* CallerView.swift */; };
 		94C1E8262516647C001654CD /* ClientLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C1E8252516647C001654CD /* ClientLoginView.swift */; };
 		94C1E8292516652D001654CD /* CallerLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C1E8282516652D001654CD /* CallerLoginView.swift */; };
+		94D5FC34253C4A33009F5E79 /* TextFieldAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D5FC33253C4A33009F5E79 /* TextFieldAlertViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		9407CAA025310AEC00708B79 /* AppointmentRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentRowView.swift; sourceTree = "<group>"; };
 		9407CAA325310BF700708B79 /* CallRaterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallRaterView.swift; sourceTree = "<group>"; };
-		9457BF572521531A0039A3B4 /* Structs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Structs.swift; sourceTree = "<group>"; };
+		9457BF572521531A0039A3B4 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		945A0F212534B4FF00C2AF0F /* CallerCallLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerCallLogView.swift; sourceTree = "<group>"; };
 		945A0F242535FFF200C2AF0F /* CallerHomeScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerHomeScreenView.swift; sourceTree = "<group>"; };
 		946D4C02251EB25200371E8A /* ClientLandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientLandingView.swift; sourceTree = "<group>"; };
@@ -65,6 +66,7 @@
 		94BFEC2B2520C88500DABF79 /* CallerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerView.swift; sourceTree = "<group>"; };
 		94C1E8252516647C001654CD /* ClientLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientLoginView.swift; sourceTree = "<group>"; };
 		94C1E8282516652D001654CD /* CallerLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerLoginView.swift; sourceTree = "<group>"; };
+		94D5FC33253C4A33009F5E79 /* TextFieldAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlertViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,7 +100,6 @@
 		947D140025238A6400D6E77B /* Client Screens */ = {
 			isa = PBXGroup;
 			children = (
-				9407CAA025310AEC00708B79 /* AppointmentRowView.swift */,
 				94B87D70252C8B72004A3E54 /* AppointmentRowBookerView.swift */,
 				9407CAA325310BF700708B79 /* CallRaterView.swift */,
 				949ADD1B2524BB81006A40A2 /* CreateAccFormView.swift */,
@@ -131,14 +132,16 @@
 		949E614D2516386E0013690E /* Let's Keep Talking */ = {
 			isa = PBXGroup;
 			children = (
+				94D5FC33253C4A33009F5E79 /* TextFieldAlertViewController.swift */,
 				94B705B72519054E00972DEC /* APIEndpoints.swift */,
 				949E614E2516386E0013690E /* AppDelegate.swift */,
 				949E61542516386F0013690E /* Assets.xcassets */,
+				9407CAA025310AEC00708B79 /* AppointmentRowView.swift */,
 				947D140025238A6400D6E77B /* Client Screens */,
 				947D13F62523881C00D6E77B /* Caller Screens */,
 				949E61522516386E0013690E /* LandingView.swift */,
 				949E61502516386E0013690E /* SceneDelegate.swift */,
-				9457BF572521531A0039A3B4 /* Structs.swift */,
+				9457BF572521531A0039A3B4 /* Helpers.swift */,
 				949E615C2516386F0013690E /* Info.plist */,
 				949E61562516386F0013690E /* Preview Content */,
 			);
@@ -232,7 +235,7 @@
 				94B8E28F2538E64E0092E247 /* AvailabilityColView.swift in Sources */,
 				94B8E2852538D69D0092E247 /* CallerAvailabilityView.swift in Sources */,
 				949E614F2516386E0013690E /* AppDelegate.swift in Sources */,
-				9457BF582521531A0039A3B4 /* Structs.swift in Sources */,
+				9457BF582521531A0039A3B4 /* Helpers.swift in Sources */,
 				945A0F252535FFF200C2AF0F /* CallerHomeScreenView.swift in Sources */,
 				949E61512516386E0013690E /* SceneDelegate.swift in Sources */,
 				949E61532516386E0013690E /* LandingView.swift in Sources */,
@@ -248,6 +251,7 @@
 				946D4C0A251EB32700371E8A /* ClientCallLogView.swift in Sources */,
 				94B8E2882538D8970092E247 /* AvailabilityCellView.swift in Sources */,
 				949ADD1C2524BB81006A40A2 /* CreateAccFormView.swift in Sources */,
+				94D5FC34253C4A33009F5E79 /* TextFieldAlertViewController.swift in Sources */,
 				94BFEC2C2520C88500DABF79 /* CallerView.swift in Sources */,
 				946D4C0E251EB35E00371E8A /* ClientHomeScreenView.swift in Sources */,
 				94C1E8292516652D001654CD /* CallerLoginView.swift in Sources */,
@@ -384,6 +388,7 @@
 				DEVELOPMENT_TEAM = 7M5B76294D;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Let's Keep Talking/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -405,6 +410,7 @@
 				DEVELOPMENT_TEAM = 7M5B76294D;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Let's Keep Talking/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

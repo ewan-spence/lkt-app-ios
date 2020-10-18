@@ -27,7 +27,7 @@ struct CallerHomeScreenView: View {
                 VStack {
                     
                     Text("Today's Calls")
-                        .font(.title2)
+                        .font(.title)
                         .multilineTextAlignment(.center)
                         .padding()
                     

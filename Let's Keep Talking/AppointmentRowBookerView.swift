@@ -34,6 +34,7 @@ struct AppointmentRowBookerView: View {
         if(show) {
             HStack{
                 VStack {
+                    Text(Helpers.getDayOfWeek(dateString: call["date"]!))
                     Text(call["date"] ?? "")
                     Text(call["time"] ?? "")
                 }.padding()

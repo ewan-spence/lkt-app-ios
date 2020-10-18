@@ -21,7 +21,7 @@ struct CallerCallLogView: View {
                 Spacer()
                 
                 ScrollView {
-                    ForEach(calls ?? [], id: \.self) { call in
+                    ForEach((calls ?? []).sorted(by: Helpers.sortCalls), id: \.self) { call in
                         AppointmentRowView(call: call, isClient: false, isOnCallLog: true)
                     }
                 }

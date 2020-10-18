@@ -89,6 +89,10 @@ struct CreateAccFormView: View {
                             .foregroundColor(.gray)
                     })
                     .padding(.trailing)
+                    .onTapGesture {
+                        ethnicity = ""
+                        ethnicPref = false
+                    }
                 }
                 
                 if(!ethnicity.isEmpty){

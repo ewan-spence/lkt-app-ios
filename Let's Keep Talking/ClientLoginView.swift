@@ -40,7 +40,7 @@ struct ClientLoginView: View {
     @Binding var calls: [[String: String]]?
     
     @State var loginDetails: LoginStruct = LoginStruct(phoneNo: "", password: "")
-    @State var createAccDetails: CreateAccStruct = CreateAccStruct(phoneNo: "", password: "", gender: "", genderPref: "", ethnicity: "", ethnicPref: false)
+    @State var createAccDetails: CreateAccStruct = CreateAccStruct(fullName: "", phoneNo: "", password: "", gender: "", genderPref: "", ethnicity: "", ethnicPref: false)
     
     @Binding var isLoggedIn: Bool
     
@@ -170,7 +170,7 @@ struct ClientLoginView: View {
     func createAcc() {
         let url = APIEndpoints.CREATE_ACC
         
-        let parameters = CreateAccStruct(phoneNo: phoneNo, password: password, gender: gender, genderPref: genderPref, ethnicity: ethnicity, ethnicPref: ethnicPref)
+        let parameters = CreateAccStruct(fullName: fullName, phoneNo: phoneNo, password: password, gender: gender, genderPref: genderPref, ethnicity: ethnicity, ethnicPref: ethnicPref)
         
         AF.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).responseJSON { response in
             

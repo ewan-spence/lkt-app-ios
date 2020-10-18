@@ -24,8 +24,11 @@ struct AvailabilityCellView: View {
             Toggle(isOn: $isOn, label: {
                 if(isOn) {
                     Text("Remove Availability")
+                } else if(isDisabled){
+                    Text("Call Booked")
                 } else {
                     Text("Add Availability")
+
                 }
             })
             .disabled(isDisabled)

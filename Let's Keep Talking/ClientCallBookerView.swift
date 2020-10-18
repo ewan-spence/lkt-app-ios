@@ -63,6 +63,7 @@ struct ClientCallBookerView: View {
                 
                 if(callsShown && (!displayCalls.isEmpty)) {
                     ScrollView {
+                        
                         ForEach(displayCalls, id: \.self) { call in
                             AppointmentRowBookerView(call: call, isLoading: $isLoading, loadingText: $loadingText, userHasCalls: $userHasCalls, nextCallDate: $callDate, nextCallTime: $callTime, nextCallCaller: $callCaller, calls: $userCalls)
                         }
@@ -180,52 +181,48 @@ struct ClientCallBookerView: View {
             case let .success(value):
                 // Check that the response is in JSON Format
                 guard let JSON = value as? [String: Any] else {
-                    let _ = handleCallResponse(false, "Error \(#line)", [String: Any]())
-                    return
+                    return handleCallResponse(false, "Error \(#line)", nil)
                 }
                 
                 // Try casting the "status" field to a boolean (if this fails, the response is from AWS, not the API)
                 guard let status = JSON["status"] as? Bool else {
-                    let _ = handleCallResponse(false, "Network Error \(#line)", [String: Any]())
-                    return
+                    return handleCallResponse(false, "Network Error \(#line)", JSON)
                 }
                 
                 if(status) {
                     
                     guard let result = JSON["result"] as? [String: Any] else {
-                        let _ = handleCallResponse(false, "Error \(#line)", [String: Any]())
-                        return
+                        return handleCallResponse(false, "Error \(#line)", JSON)
                     }
                     
-                    
                     handleCallResponse(true, nil, result)
+                    
                 } else {
-                    let _ = handleCallResponse(false, "Unable to get Call details. Please try again later", [String: Any]())
+                    return handleCallResponse(false, "Unable to get Call details. Please try again later", [String: Any]())
                 }
                 
             case let .failure(error):
-                let _ = handleCallResponse(false, error.localizedDescription, [String: Any]())
+                return handleCallResponse(false, error.localizedDescription, [String: Any]())
             }
         }
         
         
     }
     
-    func handleCallResponse(_ status: Bool, _ message: String?, _ result: [String: Any]) {
+    func handleCallResponse(_ status: Bool, _ message: String?, _ result: [String: Any]?) {
         
         if(status) {
             
             // Result returned will be a dict of the format {date : [caller : [time] ]}
             // i.e, each date has an associated dict of callers, each of whom has an associated list of times
             
-            let dates = result.keys
+            let dates = result!.keys
             
             displayCalls = []
             
             dates.forEach { date in
-                guard let callersAvail = result[date] as? [String: [String]] else {
-                    let _ = handleCallResponse(false, "Error \(#line)", [String: Any]())
-                    return
+                guard let callersAvail = result![date] as? [String: [String]] else {
+                    return handleCallResponse(false, "Error \(#line)", [String: Any]())
                 }
                 
                 callersAvail.keys.forEach { name in
@@ -238,10 +235,11 @@ struct ClientCallBookerView: View {
                             
                             displayCalls.append(call)
                         }
-                        
                     }
                 }
             }
+            
+            displayCalls.sort(by: Helpers.sortCalls)
             
             callsShown = true
             
