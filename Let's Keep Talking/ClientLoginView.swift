@@ -81,13 +81,14 @@ struct ClientLoginView: View {
                     
                     
                 } else {
-                    
+
                     TextField("Phone Number", text: $phoneNo)
                         .padding()
                         .keyboardType(.numberPad)
                     
                     SecureField("Password", text: $password)
                         .padding()
+                    
                 }
                 
                 

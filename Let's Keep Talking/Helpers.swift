@@ -45,7 +45,67 @@ struct Helpers: View {
         
         let cal = Calendar(identifier: .gregorian)
         
-        return dateFormatter.weekdaySymbols[cal.component(.weekday, from: callDate) - 1]
+        return dateFormatter.shortWeekdaySymbols[cal.component(.weekday, from: callDate) - 1]
+    }
+    
+    public static func dateReadable(_ dateString: String) -> String {
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "en_GB")
+        
+        let monthList = df.monthSymbols!
+        
+        let dateList = dateString.split(separator: "/")
+        
+        let dayNo = Int(dateList[0])!
+        let monthNo = Int(dateList[1])!
+        
+        var daySuffix = ""
+        
+        if([1,21,31].contains(dayNo)) {
+            
+            daySuffix = "st"
+            
+        } else if([2,22].contains(dayNo)) {
+            
+            daySuffix = "nd"
+            
+        } else if([3,23].contains(dayNo)) {
+            
+            daySuffix = "rd"
+            
+        } else {
+            daySuffix = "th"
+        }
+        
+        let monthName = monthList[monthNo - 1]
+        
+        return Helpers.getDayOfWeek(dateString: dateString) + " " + String(dayNo) + String(daySuffix) + " " + String(monthName)
+    }
+    
+    public static func isInFuture(_ date: String, _ time: String) -> Bool {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_GB")
+        formatter.dateFormat = "dd/MM/yyyy HH:mm"
+        
+        let fullDate = date + " " + time
+        let dateAsObj = formatter.date(from: fullDate)
+        
+        let today = Date(timeIntervalSinceNow: 0)
+        
+        return dateAsObj?.timeIntervalSince(today) ?? 0 > 0
+    }
+    
+    public static func getDateSuffix(_ dayNo: Int) -> String {
+        switch dayNo {
+        case 11...13: return "th"
+        default:
+            switch dayNo % 10 {
+            case 1: return "st"
+            case 2: return "nd"
+            case 3: return "rd"
+            default: return "th"
+            }
+        }
     }
 }
 
@@ -70,57 +130,14 @@ struct AvailStruct: Encodable {
     let clientId: String
 }
 
-struct Dropdown: View {
-    @State var expand = false
-    @State var displayText: String
-    
-    @Binding var options: [String]
-    
-    @Binding var selectedItem: String
-    
-    var body: some View {
-        
-        VStack{
-            HStack {
-                Text(displayText)
-                    .foregroundColor(.blue)
-                
-                
-                if(expand) {
-                    Image(systemName: "arrow.up")
-                        .foregroundColor(.blue)
-                } else {
-                    Image(systemName: "arrow.down")
-                        .foregroundColor(.blue)
-                }
-                
-            }
-            .onTapGesture(perform: {
-                expand.toggle()
-            })
-            .padding()
-            
-            if(expand) {
-                
-                ForEach(options, id: \.self) { value in
-                    Text(value)
-                        .onTapGesture(perform: {
-                            displayText = value
-                            selectedItem = value
-                            expand = false
-                        })
-                        .padding(.bottom)
-                }
-                
-            }
-        }
-        
-    }
-}
-
-
 enum KeychainError: Error {
     case noPassword
     case unexpectedPasswordData
     case unhandledError(status: OSStatus)
+}
+
+struct Helpers_Previews: PreviewProvider {
+    static var previews: some View {
+        EmptyView()
+    }
 }

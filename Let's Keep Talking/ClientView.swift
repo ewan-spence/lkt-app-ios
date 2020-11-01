@@ -29,6 +29,6 @@ struct ClientView: View {
 
 struct ClientView_Previews: PreviewProvider {
     static var previews: some View {
-        ClientView(hasDetailsSaved: false)
+        ClientView(isLoggedIn: true, hasDetailsSaved: false)
     }
 }

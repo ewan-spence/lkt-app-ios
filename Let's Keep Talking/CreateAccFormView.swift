@@ -25,7 +25,7 @@ struct CreateAccFormView: View {
     
     var body: some View {
         VStack {
-            ScrollView(.vertical, showsIndicators: true, content: {
+            Form {
                 
                 HStack {
                     Text("* Required")
@@ -72,7 +72,11 @@ struct CreateAccFormView: View {
                     .padding(.trailing)
                 }
                 
-                Dropdown(displayText: "Gender Preference", options: .constant(["Male", "Female", "No Preference"]), selectedItem: $genderPref)
+                Picker("Caller Gender Preference", selection: $genderPref, content: {
+                    ForEach(["No Preference", "Male", "Female"], id: \.self) {opt in
+                        Text(opt)
+                    }
+                })
                 
                 HStack {
                     TextField("Ethnicity", text: $ethnicity)
@@ -116,7 +120,7 @@ struct CreateAccFormView: View {
                         
                     }
                 }
-            })
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ struct ClientCallLogView: View {
                 Spacer()
             
                 ScrollView {
-                    ForEach((calls ?? []).sorted(by: Helpers.sortCalls), id: \.self) { call in                        
+                    ForEach((calls ?? []).sorted(by: Helpers.sortCalls), id: \.self) { call in
                         AppointmentRowView(call: call, isClient: true, isOnCallLog: true)
                     }
                 }.padding()

@@ -12,21 +12,20 @@ struct CallerCallLogView: View {
     @Binding var calls: [[String: String]]?
     
     var body: some View {
-        NavigationView {
-            VStack {
-                Text("Call Log")
-                    .font(.title)
-                    .padding()
-                
-                Spacer()
-                
-                ScrollView {
-                    ForEach((calls ?? []).sorted(by: Helpers.sortCalls), id: \.self) { call in
-                        AppointmentRowView(call: call, isClient: false, isOnCallLog: true)
-                    }
+        VStack {
+            Text("Call Log")
+                .font(.title)
+                .padding()
+            
+            Spacer()
+            
+            ScrollView {
+                ForEach((calls ?? []).sorted(by: Helpers.sortCalls), id: \.self) { call in
+                    AppointmentRowView(call: call, isClient: false, isOnCallLog: true)
                 }
             }
         }
+        
     }
 }
 

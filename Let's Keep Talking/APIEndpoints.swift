@@ -15,7 +15,7 @@ public class APIEndpoints {
     public static var CLIENT_LOGIN = CLIENT_ROOT + "login/"
     public static var GET_CALLERS = CLIENT_ROOT + "get-callers/"
     public static var GET_APPOINTMENTS = CLIENT_ROOT + "get-appointments/"
-    public static var BOOK_CALL = CLIENT_ROOT + "book/"
+    public static var CLIENT_BOOK_CALL = CLIENT_ROOT + "book/"
     public static var CANCEL_CALL = CLIENT_ROOT + "cancel/"
     public static var GET_CLIENT_CALLS = CLIENT_ROOT + "get-calls/"
     
@@ -23,5 +23,6 @@ public class APIEndpoints {
     public static var GET_CALLER_CALLS = CALLER_ROOT + "get-calls/"
     public static var GET_AVAILABILITY = AVAIL_ROOT + "get/"
     public static var SET_AVAILABILITY = AVAIL_ROOT + "set/"
+    public static var CALLER_BOOK_CALL = CALLER_ROOT + "book/"
     public static var ADD_CALL_LENGTH = CALLER_ROOT + "add-call-length/"
 }

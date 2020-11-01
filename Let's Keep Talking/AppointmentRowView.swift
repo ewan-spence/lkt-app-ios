@@ -28,50 +28,64 @@ struct AppointmentRowView: View {
     
     var body: some View {
         ZStack {
-            HStack {
+            HStack(spacing: 0) {
                 VStack {
                     Text(Helpers.getDayOfWeek(dateString: call["date"]!))
                     Text(call["date"] ?? "")
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(1)
                     Text(call["time"] ?? "")
                 }.padding()
-                
-                Spacer()
+                .frame(minWidth: 0, maxWidth: .infinity)
                 
                 if(isClient) {
-                    NavigationLink("Rate Call", destination: CallRaterView())
-                        .disabled(isInFuture(call["date"]!, call["time"]!))
-                    Spacer()
-                    Text(call["callerName"]!).padding(.trailing)
+                    VStack {
+                        NavigationLink("Rate Call", destination: CallRaterView())
+                            .disabled(isInFuture(call["date"]!, call["time"]!))
+                    }.frame(minWidth: 0, maxWidth: .infinity)
+                    
+                    VStack {
+                        Text(call["callerName"]!).padding(.trailing)
+                    }.frame(minWidth: 0, maxWidth: .infinity)
+                    
                     
                     
                 } else if(isOnCallLog!){
                     
-                    Button("Add Call Length", action: {isAddingCallLength = true})
-                        .textFieldAlert(isPresented: $isAddingCallLength, content: {
-                            TextFieldAlert(title: "Add Call Length", message: nil, text: $callLength, action: {
-                                addCallLength(callLength!)
+                    VStack {
+                        Button("Add Call Length", action: {isAddingCallLength = true})
+                            .textFieldAlert(isPresented: $isAddingCallLength, content: {
+                                TextFieldAlert(title: "Add Call Length", message: nil, text: $callLength, action: {
+                                    addCallLength(callLength!)
+                                })
                             })
-                        })
-                        .alert(isPresented: $isAlerting, content: {
-                            Alert(title: Text(alertTitle), message: Text(alertText), dismissButton: .default(Text("Okay")))
-                        })
-                        .disabled(isInFuture(call["date"]!, call["time"]!) || !((call["length"]?.isEmpty) ?? false))
+                            .alert(isPresented: $isAlerting, content: {
+                                Alert(title: Text(alertTitle), message: Text(alertText), dismissButton: .default(Text("Okay")))
+                            })
+                            .disabled(isInFuture(call["date"]!, call["time"]!) || !((call["length"]?.isEmpty) ?? false))
+                    }.frame(minWidth: 0, maxWidth: .infinity)
                     
-                    Spacer()
-                    Text(call["clientName"]!).padding(.trailing)
+                    
+                    VStack {
+                        Text(call["clientName"]!).padding(.trailing)
+                    }.frame(minWidth: 0, maxWidth: .infinity)
                     
                 } else {
                     
-                    Button("Call Client", action: {
-                        let prefix = "tel://"
-                        
-                        let formattedPhoneNo = prefix + call["clientNo"]!
-                        
-                        UIApplication.shared.open(URL(string: formattedPhoneNo)!)
-                    })
+                    VStack {
+                        Button("Call Client", action: {
+                            let prefix = "tel://"
+                            
+                            let formattedPhoneNo = prefix + call["clientNo"]!
+                            
+                            UIApplication.shared.open(URL(string: formattedPhoneNo)!)
+                        })
+                    }.frame(minWidth: 0, maxWidth: .infinity)
                     
-                    Spacer()
-                    Text(call["clientName"]!).padding(.trailing)
+                    
+                    VStack {
+                        Text(call["clientName"]!).padding(.trailing)
+                    }.frame(minWidth: 0, maxWidth: .infinity)
                 }
                 
             }
@@ -154,6 +168,7 @@ struct AppointmentRowView: View {
 
 struct AppointmentRowView_Previews: PreviewProvider {
     static var previews: some View {
-        AppointmentRowView(call: ["date" : "19/10/2020", "time" : "14:00", "clientName" : "John Doe", "id" : "", "length" : "15"], isClient: false, isOnCallLog: true)
+        AppointmentRowView(call: ["date" : "19/10/2020", "time" : "14:00", "callerName" : "John Doe", "id" : "", "length" : "15"], isClient: true, isOnCallLog: true)
+            .previewDevice("iPhone SE (2nd generation)")
     }
 }

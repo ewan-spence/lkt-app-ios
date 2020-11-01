@@ -22,7 +22,6 @@ struct CallerHomeScreenView: View {
                     .padding()
                 
                 Divider()
-                    .padding()
                 
                 VStack {
                     
@@ -32,33 +31,46 @@ struct CallerHomeScreenView: View {
                         .padding()
                     
                     Divider()
-                        .padding()
                     
                     if(todayCalls == nil || todayCalls!.isEmpty) {
                         Spacer()
                         
                         Text("You do not currently have any calls booked today")
+                            .minimumScaleFactor(0.5)
+                            .lineLimit(1)
                             .multilineTextAlignment(.center)
                             .padding()
                         
                         Spacer()
-                        Spacer()
                         
                     } else {
+                        
                         ScrollView {
-                            
                             ForEach(todayCalls!, id: \.self) { call in
                                 AppointmentRowView(call: call, isClient: false, isOnCallLog: false)
                             }
                         }
+                        
                     }
+                    
+                    if(calls != nil) {
+                        
+                        Divider()
+                        
+                        Spacer()
+                        
+                        NavigationLink("Book New Call", destination: CallerCallBookerView(clients: [], calls: $calls))
+                        
+                        Spacer()
+                    }
+                    
                 }.padding()
                 
                 Spacer()
             }
         }.onAppear(perform: {
             todayCalls = calls?.filter { callIsToday($0) }
-
+            todayCalls?.sort(by: Helpers.sortCalls)
         })
     }
     
@@ -78,7 +90,15 @@ struct CallerHomeScreenView: View {
 
 struct CallerFragmentViewTwo_Previews: PreviewProvider {
     static var previews: some View {
-        CallerHomeScreenView(calls: .constant([]))
+        Group {
+            CallerHomeScreenView(calls: .constant([]))
+                .previewDevice(PreviewDevice(rawValue: "iPhone 7"))
+                .previewDisplayName("iPhone 7")
+            
+            CallerHomeScreenView(calls: .constant([]))
+                .previewDevice(PreviewDevice(rawValue: "iPhone XR"))
+                .previewDisplayName("iPhone XR")
+        }
     }
 }
 

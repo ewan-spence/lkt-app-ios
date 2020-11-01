@@ -156,22 +156,14 @@ struct CallerAvailabilityView: View {
             
             let day = Date()
             
-            guard let midDate1 = Calendar.current.date(byAdding: .day, value: 7, to: day) else {
-                return handleAvailGetResponse(false, #line, nil)
-            }
+            let midDate = Calendar.current.date(byAdding: .day, value: 7, to: day)!
             
-            guard let midDate2 = Calendar.current.date(byAdding: .day, value: 1, to: midDate1) else {
-                return handleAvailGetResponse(false, #line, nil)
-            }
+            let endDate = Calendar.current.date(byAdding: .day, value: 14, to: day)!
             
-            guard let endDate = Calendar.current.date(byAdding: .day, value: 14, to: day) else {
+            guard let availOne = getWeekAvailability(day, midDate, dbAvailability, dbCalls) else {
                 return handleAvailGetResponse(false, #line, nil)
             }
-            
-            guard let availOne = getWeekAvailability(day, midDate1, dbAvailability, dbCalls) else {
-                return handleAvailGetResponse(false, #line, nil)
-            }
-            guard let availTwo = getWeekAvailability(midDate2, endDate, dbAvailability, dbCalls) else {
+            guard let availTwo = getWeekAvailability(midDate, endDate, dbAvailability, dbCalls) else {
                 return handleAvailGetResponse(false, #line, nil)
             }
             
@@ -189,7 +181,7 @@ struct CallerAvailabilityView: View {
         return
     }
     
-    func getWeekAvailability(_ date1: Date, _ date2: Date, _ dbAvailability: [String : [String]], _ dbCalls: [[String: Any]]) -> [String: [String: [String: Bool]]]?{
+    func getWeekAvailability(_ date1: Date, _ date2: Date, _ dbAvailability: [String : [String]], _ dbCalls: [[String: Any]]) -> [String: [String: [String: Bool]]]? {
         var avail: [String: [String: [String: Bool]]] = [:]
         
         let possTimes = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00"]
@@ -231,30 +223,40 @@ struct CallerAvailabilityView: View {
                 }
             }
             
-            for call in dbCalls {
-                
-                
+            if(dbCalls.isEmpty) {
                 for timeString in possTimes {
                     
                     if(!(dayAvail[timeString]?.keys.contains("hasCall"))!) {
                         
-                        guard let callDateString = call["date"] as? String else {
-                            handleAvailGetResponse(false, #line, nil)
-                            return nil
-                        }
-                        
-                        guard let callTimeString = call["time"] as? String else {
-                            handleAvailGetResponse(false, #line, nil)
-                            return nil
-                        }
-                        
-                        let callAsDateObj = dateAndTimeFormatter.date(from: callDateString + " " + callTimeString)!
-                        
-                        dayAvail[timeString]?["hasCall"] = (cal.isDate(callAsDateObj, inSameDayAs: date1Var)) && (callTimeString == timeString)
+                        dayAvail[timeString]!["hasCall"] = false
                     }
                 }
             }
-            
+            else {
+                for call in dbCalls {
+                    
+                    
+                    for timeString in possTimes {
+                        
+                        if(!(dayAvail[timeString]?.keys.contains("hasCall"))!) {
+                            
+                            guard let callDateString = call["date"] as? String else {
+                                handleAvailGetResponse(false, #line, nil)
+                                return nil
+                            }
+                            
+                            guard let callTimeString = call["time"] as? String else {
+                                handleAvailGetResponse(false, #line, nil)
+                                return nil
+                            }
+                            
+                            let callAsDateObj = dateAndTimeFormatter.date(from: callDateString + " " + callTimeString)!
+                            
+                            dayAvail[timeString]!["hasCall"] = (cal.isDate(callAsDateObj, inSameDayAs: date1Var)) && (callTimeString == timeString)
+                        }
+                    }
+                }
+            }
             avail[dateString] = dayAvail
             
             date1Var = Calendar.current.date(byAdding: .day, value: 1, to: date1Var)!

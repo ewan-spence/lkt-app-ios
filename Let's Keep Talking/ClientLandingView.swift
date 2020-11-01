@@ -60,7 +60,7 @@ struct ClientLandingView: View {
                     let callCaller = latestCall?["callerName"]
                     let callId = latestCall?["id"]
                     
-                    ClientHomeScreenView(callDate: latestCallDate, callTime: callTime, callCaller: callCaller, callId: callId, calls: $calls)
+                    ClientHomeScreenView(callDate: latestCallDate ?? "", callTime: callTime ?? "", callCaller: callCaller ?? "", callId: callId ?? "", calls: $calls)
                 }
                 
                 Spacer()

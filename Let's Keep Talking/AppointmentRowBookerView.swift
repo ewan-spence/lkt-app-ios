@@ -24,9 +24,9 @@ struct AppointmentRowBookerView: View {
     @Binding var loadingText: String
     @Binding var userHasCalls: Bool
     
-    @Binding var nextCallDate: String?
-    @Binding var nextCallTime: String?
-    @Binding var nextCallCaller: String?
+    @Binding var nextCallDate: String
+    @Binding var nextCallTime: String
+    @Binding var nextCallCaller: String
     
     @Binding var calls: [[String : String]]?
         
@@ -38,13 +38,15 @@ struct AppointmentRowBookerView: View {
                     Text(call["date"] ?? "")
                     Text(call["time"] ?? "")
                 }.padding()
+                
                 Spacer()
                 
                 Button("Book Call", action: bookCall).alert(isPresented: $isAlerting) {
                     Alert(title: Text(alertTitle), message: Text(alertText), dismissButton: .default(Text(alertButton)))
-                }
+                }.foregroundColor(.blue)
                 
                 Spacer()
+                
                 Text(call["callerName"] ?? "").padding(.trailing)
                 
                 
@@ -58,7 +60,7 @@ struct AppointmentRowBookerView: View {
         
         let clientId = UserDefaults.standard.string(forKey: "id")
         let params = ["callerName" : call["callerName"], "clientId": clientId, "date": call["date"], "time": call["time"]]
-        let url = APIEndpoints.BOOK_CALL
+        let url = APIEndpoints.CLIENT_BOOK_CALL
         
         AF.request(url, method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseJSON { response in
             
@@ -87,7 +89,6 @@ struct AppointmentRowBookerView: View {
                     }
                     
                     if(error.elementsEqual("AvailabilityError")) {
-                        show = false
                         
                         return handleBookResponse(false, "Sorry, that appointment has been taken, please try another", nil)
                     }
@@ -166,9 +167,10 @@ struct AppointmentRowBookerView: View {
         isAlerting = true
     }
 }
-//
-//struct AppointmentRowBookerView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AppointmentRowBookerView(callerName: "John Doe", callDate: "12/10/2020", callTime: "15:00", isLoading: .constant(false), loadingText: .constant(""), userHasCalls: .constant(true), displayText: .constant(""))
-//    }
-//}
+
+struct AppointmentRowBookerView_Previews: PreviewProvider {
+    static var previews: some View {
+        AppointmentRowBookerView(call: ["date": "02/11/2020", "time": "12:30", "callerName" : "John Doe", "id" : ""], isLoading: .constant(false), loadingText: .constant(""), userHasCalls: .constant(false), nextCallDate: .constant("02/11/2020"), nextCallTime: .constant("12:30"), nextCallCaller: .constant("John Doe"), calls: .constant([]))
+    }
+}
+

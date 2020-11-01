@@ -28,6 +28,14 @@ struct CallerView: View {
 
 struct CallerView_Previews: PreviewProvider {
     static var previews: some View {
-        CallerView(hasDetailsSaved: false)
+        Group {
+            CallerView(isLoggedIn: true, hasDetailsSaved: false)
+                .previewDevice(PreviewDevice(rawValue: "iPhone 7"))
+                .previewDisplayName("iPhone 7")
+            
+            CallerView(isLoggedIn: true, hasDetailsSaved: false)
+                .previewDevice(PreviewDevice(rawValue: "iPhone 12"))
+                .previewDisplayName("iPhone 12")
+        }
     }
 }

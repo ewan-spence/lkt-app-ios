@@ -15,16 +15,14 @@ struct AvailabilityColView: View {
     
     var body: some View {
         VStack {
-            VStack {
-                
+            HStack {
                 Text(Helpers.getDayOfWeek(dateString: day))
                 
                 Text(day)
                     .padding()
-                
-                
-                
             }
+            
+            
             Divider()
             
             let dayDict = week[day]
@@ -32,9 +30,11 @@ struct AvailabilityColView: View {
             let timesList = dayDict?.keys.reversed()
             let sortedTimesList = sortTimes(timesList!)
             
-            ForEach(sortedTimesList, id: \.self) { time in
-                AvailabilityCellView(day: day, time: time, week: $week)
-                    .padding()
+            ScrollView {
+                ForEach(sortedTimesList, id: \.self) { time in
+                    AvailabilityCellView(day: day, time: time, week: $week)
+                        .padding()
+                }
             }
         }
     }

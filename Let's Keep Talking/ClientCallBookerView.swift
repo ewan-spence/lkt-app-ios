@@ -14,9 +14,8 @@ struct ClientCallBookerView: View {
     
     @State var callers: [String] = ["No Preference"]
     
-    @State var displayCalls: [[String: String]] = []
-    
-    @State var callsShown: Bool = false
+    @State var appointments: [[String: String]] = []
+    @State var apptsShown: Bool = false
     
     @State var isAlerting: Bool = false
     @State var alertText: String = ""
@@ -26,9 +25,9 @@ struct ClientCallBookerView: View {
     
     @Binding var userHasCalls: Bool
     
-    @Binding var callDate: String?
-    @Binding var callTime: String?
-    @Binding var callCaller: String?
+    @Binding var callDate: String
+    @Binding var callTime: String
+    @Binding var callCaller: String
     
     @Binding var userCalls: [[String: String]]?
     
@@ -40,19 +39,26 @@ struct ClientCallBookerView: View {
                     .padding()
                 Spacer()
                 
-                HStack {
-                    
-                    Text("Who?").padding()
-                    Spacer()
-                    Dropdown(displayText: "Pick a caller", options: $callers, selectedItem: $callerSelected)
-                        .disabled(isLoading)
+                Form {
+                    Picker("Pick a Caller", selection: $callerSelected, content: {
+                        ForEach(callers, id: \.self) { caller in
+                            Text(caller)
+                        }
+                    })
+                }
+                
+                Spacer()
+                
+                if(apptsShown && (!appointments.isEmpty)) {
+                    List(appointments, id: \.self) { call in
+                        AppointmentRowBookerView(call: call, isLoading: $isLoading, loadingText: $loadingText, userHasCalls: $userHasCalls, nextCallDate: $callDate, nextCallTime: $callTime, nextCallCaller: $callCaller, calls: $userCalls)
+                    }
                     
                 }
-                .overlay(RoundedRectangle(cornerRadius: 15).stroke())
-                .padding(.horizontal)
+                Spacer()
                 
                 Button("Show Appointments", action: {
-                    getCalls()
+                    getAppointments()
                     
                 })
                 .alert(isPresented: $isAlerting) {
@@ -60,16 +66,6 @@ struct ClientCallBookerView: View {
                 }
                 .padding(.top, 30)
                 .disabled(callerSelected.isEmpty || isLoading)
-                
-                if(callsShown && (!displayCalls.isEmpty)) {
-                    ScrollView {
-                        
-                        ForEach(displayCalls, id: \.self) { call in
-                            AppointmentRowBookerView(call: call, isLoading: $isLoading, loadingText: $loadingText, userHasCalls: $userHasCalls, nextCallDate: $callDate, nextCallTime: $callTime, nextCallCaller: $callCaller, calls: $userCalls)
-                        }
-                    }
-                }
-                Spacer()
             }
             
             if(isLoading) {
@@ -82,6 +78,10 @@ struct ClientCallBookerView: View {
     }
     
     func getCallers() {
+        if(callers.count > 1) {
+            return
+        }
+        
         isLoading = true
         loadingText = "Loading Callers"
         
@@ -167,7 +167,7 @@ struct ClientCallBookerView: View {
         
     }
     
-    func getCalls() {
+    func getAppointments() {
         isLoading = true
         loadingText = "Loading Appointments"
         
@@ -181,35 +181,33 @@ struct ClientCallBookerView: View {
             case let .success(value):
                 // Check that the response is in JSON Format
                 guard let JSON = value as? [String: Any] else {
-                    return handleCallResponse(false, "Error \(#line)", nil)
+                    return handleGetApptResponse(false, "Error \(#line)", nil)
                 }
                 
                 // Try casting the "status" field to a boolean (if this fails, the response is from AWS, not the API)
                 guard let status = JSON["status"] as? Bool else {
-                    return handleCallResponse(false, "Network Error \(#line)", JSON)
+                    return handleGetApptResponse(false, "Network Error \(#line)", JSON)
                 }
                 
                 if(status) {
                     
                     guard let result = JSON["result"] as? [String: Any] else {
-                        return handleCallResponse(false, "Error \(#line)", JSON)
+                        return handleGetApptResponse(false, "Error \(#line)", JSON)
                     }
                     
-                    handleCallResponse(true, nil, result)
+                    handleGetApptResponse(true, nil, result)
                     
                 } else {
-                    return handleCallResponse(false, "Unable to get Call details. Please try again later", [String: Any]())
+                    return handleGetApptResponse(false, "Unable to get Call details. Please try again later", [String: Any]())
                 }
                 
             case let .failure(error):
-                return handleCallResponse(false, error.localizedDescription, [String: Any]())
+                return handleGetApptResponse(false, error.localizedDescription, [String: Any]())
             }
         }
-        
-        
     }
     
-    func handleCallResponse(_ status: Bool, _ message: String?, _ result: [String: Any]?) {
+    func handleGetApptResponse(_ status: Bool, _ message: String?, _ result: [String: Any]?) {
         
         if(status) {
             
@@ -218,11 +216,16 @@ struct ClientCallBookerView: View {
             
             let dates = result!.keys
             
-            displayCalls = []
+            // Check that there are some available appointments
+            if(dates.count == 0) {
+                return handleGetApptResponse(false, "There are no calls available with that caller in the next week", nil)
+            }
+            
+            appointments = []
             
             dates.forEach { date in
                 guard let callersAvail = result![date] as? [String: [String]] else {
-                    return handleCallResponse(false, "Error \(#line)", [String: Any]())
+                    return handleGetApptResponse(false, "Error \(#line)", [String: Any]())
                 }
                 
                 callersAvail.keys.forEach { name in
@@ -233,18 +236,19 @@ struct ClientCallBookerView: View {
                         if(isInFuture(date, time)) {
                             let call = ["date" : date, "callerName": name, "time": time]
                             
-                            displayCalls.append(call)
+                            appointments.append(call)
                         }
                     }
                 }
             }
             
-            displayCalls.sort(by: Helpers.sortCalls)
+            appointments.sort(by: Helpers.sortCalls)
             
-            callsShown = true
+            apptsShown = true
             
         } else {
-            
+            isAlerting = true
+            alertText = message!
         }
         
         isLoading = false
@@ -264,8 +268,9 @@ struct ClientCallBookerView: View {
     }
 }
 
-//struct ClientCallBookerView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ClientCallBookerView(userHasCalls: .constant(false))
-//    }
-//}
+
+struct ClientCallBookerView_Previews: PreviewProvider {
+    static var previews: some View {
+        ClientCallBookerView(userHasCalls: .constant(false), callDate: .constant(""), callTime: .constant(""), callCaller: .constant(""), userCalls: .constant([]))
+    }
+}

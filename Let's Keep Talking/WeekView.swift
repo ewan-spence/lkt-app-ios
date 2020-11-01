@@ -11,9 +11,11 @@ struct WeekView: View {
     @Binding var week: [String: [String: [String: Bool]]]
     
     var body: some View {
-        ScrollView {
-            let days = week.map{$0.key}
-            let daysSorted = sortDays(days)
+        let days = week.map{$0.key}
+        let daysSorted = sortDays(days)
+        
+        VStack {
+        
             
             
             ScrollView(.horizontal) {
@@ -25,9 +27,10 @@ struct WeekView: View {
                     }
                 }
             }
-            
         }
+        
     }
+    
     
     func sortDays(_ days: [String]) -> [String] {
         let formatter = DateFormatter()
@@ -41,9 +44,11 @@ struct WeekView: View {
         return dates.map({ formatter.string(from: $0!)})
     }
 }
-//
-//struct WeekOneView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        WeekView(week: .constant(["Monday" : ["09:00" : true, "09:30" : false, "10:00" : false, "10:30" : false, "11:00" : true, "11:30" : false, "12:00" : false, "12:30" : false, "13:00" : true, "13:30" : true, "14:00" : true, "14:30" : false, "15:00" : true, "15:30" : false, "16:00" : true, "16:30" : false, "17:00" : false, "17:30" : true, "18:00" : false, "18:30" : false, "19:00" : false, "19:30" : true, "20:00" : true, "20:30" : false, "21:00" : true]]))
-//    }
-//}
+
+struct WeekOneView_Previews: PreviewProvider {
+    static var previews: some View {
+        let week = ["Monday" : ["09:00" : ["isAvail": true, "hasCall": false], "09:30" : ["isAvail": true, "hasCall": false], "10:00" : ["isAvail": true, "hasCall": false], "10:30" : ["isAvail": true, "hasCall": false], "11:00" : ["isAvail": true, "hasCall": false], "11:30" : ["isAvail": true, "hasCall": false], "12:00" : ["isAvail": true, "hasCall": false], "12:30" : ["isAvail": true, "hasCall": false], "13:00" : ["isAvail": true, "hasCall": false], "13:30" : ["isAvail": true, "hasCall": false], "14:00" : ["isAvail": true, "hasCall": false], "14:30" : ["isAvail": true, "hasCall": false], "15:00" : ["isAvail": true, "hasCall": false], "15:30" : ["isAvail": true, "hasCall": false], "16:00" : ["isAvail": true, "hasCall": false], "16:30" : ["isAvail": true, "hasCall": false], "17:00" : ["isAvail": true, "hasCall": false], "17:30" : ["isAvail": true, "hasCall": false], "18:00" : ["isAvail": true, "hasCall": false], "18:30" : ["isAvail": true, "hasCall": false], "19:00" : ["isAvail": true, "hasCall": false], "19:30" : ["isAvail": true, "hasCall": false], "20:00" : ["isAvail": true, "hasCall": false], "20:30" : ["isAvail": true, "hasCall": false], "21:00" : ["isAvail": true, "hasCall": false]]]
+        
+        WeekView(week: .constant(week))
+    }
+}
