@@ -31,11 +31,13 @@ struct CallerLoginView: View {
                 
                 TextField("Phone Number", text: $phoneNo).padding()
                     .keyboardType(.numberPad)
+                    .disabled(isLoading)
                 SecureField("Password", text: $password).padding()
+                    .disabled(isLoading)
                 
                 
                 Button("Sign In", action: onClick).padding()
-                    .disabled(phoneNo.isEmpty || password.isEmpty)
+                    .disabled(phoneNo.isEmpty || password.isEmpty || isLoading)
                     .alert(isPresented: $loginError) {
                         Alert(title: Text("Error"), message: Text(loginErrorText), dismissButton: .default(Text("Got it!")))
                     }
