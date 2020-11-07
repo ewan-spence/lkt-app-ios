@@ -23,11 +23,7 @@ struct CallerCallBookerView: View {
     @State var isSuccessAlerting: Bool = false
     
     @State var isAlerting: Bool = false
-    @State var alertTitle: String = ""
-    @State var alertText: String = ""
-    
-    @State var alert: Alert = Alert(title: Text(""))
-    
+        
     @State var clients: [String] = []
     @State var selectedClient: String = ""
     
@@ -305,38 +301,31 @@ struct CallerCallBookerView: View {
     func handleBookResponse(_ status: Bool, _ lineNo: Int?, _ result: [String: Any]?) {
         if(status) {
             guard let json = result else {
-                alertText = "Call booked - Error retrieving call details. Please reload the app.\nIf the error persists, contact support with code 4\(#line)"
-                return handleBookResponse(false, nil, nil)
+                return handleBookResponse(false, #line, nil)
             }
             
             guard let call = json["call"] as? [String: Any] else {
-                alertText = "Call booked - Error retrieving call details. Please reload the app.\nIf the error persists, contact support with code 4\(#line)"
-                return handleBookResponse(false, nil, nil)
+                return handleBookResponse(false, #line, nil)
             }
             
             guard let callId = call["_id"] as? String else {
-                alertText = "Call booked - Error retrieving call details. Please reload the app.\nIf the error persists, contact support with code 4\(#line)"
-                return handleBookResponse(false, nil, nil)
+                return handleBookResponse(false, #line, nil)
             }
             
             guard let callDate = call["date"] as? String else {
-                alertText = "Call booked - Error retrieving call details. Please reload the app.\nIf the error persists, contact support with code 4\(#line)"
-                return handleBookResponse(false, nil, nil)
+                return handleBookResponse(false, #line, nil)
             }
             
             guard let callTime = call["time"] as? String else {
-                alertText = "Call booked - Error retrieving call details. Please reload the app.\nIf the error persists, contact support with code 4\(#line)"
-                return handleBookResponse(false, nil, nil)
+                return handleBookResponse(false, #line, nil)
             }
             
             guard let client = call["client"] as? [String: String] else {
-                alertText = "Call booked - Error retrieving call details. Please reload the app.\nIf the error persists, contact support with code 4\(#line)"
-                return handleBookResponse(false, nil, nil)
+                return handleBookResponse(false, #line, nil)
             }
             
             guard let clientName = client["fullName"] else {
-                alertText = "Call booked - Error retrieving call details. Please reload the app.\nIf the error persists, contact support with code 4\(#line)"
-                return handleBookResponse(false, nil, nil)
+                return handleBookResponse(false, #line, nil)
             }
             
             let newCall = ["date": callDate, "time": callTime, "clientName": clientName, "id": callId]
@@ -348,6 +337,7 @@ struct CallerCallBookerView: View {
 
             isSuccessAlerting = true
         } else {
+            errorLineNo = lineNo!
             isErrorAlerting = true
         }
         
