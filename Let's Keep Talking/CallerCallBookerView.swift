@@ -15,12 +15,13 @@ struct CallerCallBookerView: View {
     @State var startDate: Date = Date()
     @State var endDate: Date = Date()
     
-    @State var isConfirming: Bool = false
-    @State var confirmationText: String = ""
+    @State var isLoading: Bool = false
     
     @State var isAlerting: Bool = false
     @State var alertTitle: String = ""
     @State var alertText: String = ""
+    
+    @State var alert: Alert = Alert(title: Text(""))
     
     @State var clients: [String] = []
     @State var selectedClient: String = ""
@@ -39,50 +40,50 @@ struct CallerCallBookerView: View {
     @Binding var calls: [[String: String]]?
     
     var body: some View {
-        VStack {
-            Text("Book Call")
-                .font(.largeTitle)
-            
-            Form {
-                Section {
-                    Picker("Select a Client", selection: $selectedClient) {
-                        ForEach(clients, id: \.self) { client in
-                            Text(client)
+        ZStack {
+            VStack {
+                Text("Book Call")
+                    .font(.largeTitle)
+                
+                Form {
+                    Section {
+                        Picker("Select a Client", selection: $selectedClient) {
+                            ForEach(clients, id: \.self) { client in
+                                Text(client)
+                            }
+                        }.padding()
+                        
+                        Picker("Select a Month", selection: $selectedMonth) {
+                            ForEach(months, id: \.self) { month in
+                                Text(month)
+                            }
+                        }.padding()
+                        
+                        Picker("Select a Date", selection: $selectedDate) {
+                            ForEach(possibleDates, id: \.self) { date in
+                                Text(date)
+                            }
                         }
-                    }.padding()
-                    
-                    Picker("Select a Month", selection: $selectedMonth) {
-                        ForEach(months, id: \.self) { month in
-                            Text(month)
+                        .padding()
+                        .disabled(selectedMonth.isEmpty)
+                        
+                        Picker("Select a Time", selection: $selectedTime) {
+                            ForEach(possibleTimes, id: \.self) { time in
+                                Text(time)
+                            }
                         }
-                    }.padding()
-                    
-                    Picker("Select a Date", selection: $selectedDate) {
-                        ForEach(possibleDates, id: \.self) { date in
-                            Text(date)
-                        }
+                        .padding()
+                        .disabled(selectedDate.isEmpty)
                     }
-                    .padding()
-                    .disabled(selectedMonth.isEmpty)
-                    
-                    Picker("Select a Time", selection: $selectedTime) {
-                        ForEach(possibleTimes, id: \.self) { time in
-                            Text(time)
-                        }
-                    }
-                    .padding()
-                    .disabled(selectedDate.isEmpty)
                 }
                 
                 Button("Book Call", action: {
-                    isConfirming = true
-                    confirmationText = "You would like to book a call for " + selectedTime + " on " + selectedDate + " with " + selectedClient
-                })
-                .alert(isPresented: $isConfirming, content: {
-                    Alert(title: Text("Confirm Call Booking"), message: Text(confirmationText), primaryButton: .default(Text("Yes"), action: bookCall), secondaryButton: .cancel())
+                    alert = Alert(title: Text("Confirm Call Booking"), message: Text("You would like to book a call for " + selectedTime + " on " + selectedDate + " " + selectedMonth + " with " + selectedClient), primaryButton: .default(Text("Yes"), action: bookCall), secondaryButton: .cancel())
+                    
+                    isAlerting = true
                 })
                 .alert(isPresented: $isAlerting, content: {
-                    Alert(title: Text("Error"), message: Text(alertText), dismissButton: .default(Text("Okay")))
+                    alert
                 })
                 
                 
@@ -100,23 +101,30 @@ struct CallerCallBookerView: View {
                 possibleTimes = times[fullDate] ?? []
                 selectedTime = ""
             })
+            
+            
+            if(isLoading) {
+                ProgressView()
+            }
         }
     }
     
     func getFormOptions() {
+        isLoading = true
         let today = Date(timeIntervalSinceNow: 0)
-        let tomorrow = cal.date(byAdding: .day, value: 1, to: today)!
         
-        startDate = cal.date(bySettingHour: 12, minute: 0, second: 0, of: tomorrow)!
+        startDate = cal.date(bySettingHour: 12, minute: 0, second: 0, of: today)!
         endDate = cal.date(byAdding: .month, value: 1, to: startDate)!
         
         getClientsNames()
         getPossibleMonths()
         getAllDates()
         getAllTimes()
+        isLoading = false
     }
     
     func getClientsNames() {
+        isLoading = true
         guard let calls = calls else {
             self.presentationMode.wrappedValue.dismiss()
             return
@@ -127,9 +135,11 @@ struct CallerCallBookerView: View {
         }
         
         clients = Array(Set(clients))
+        isLoading = false
     }
     
     func getPossibleMonths() {
+        isLoading = true
         let monthOneNum = cal.component(.month, from: startDate)
         let monthOne = cal.monthSymbols[monthOneNum - 1]
         dates[monthOne] = []
@@ -142,7 +152,7 @@ struct CallerCallBookerView: View {
     }
     
     func getAllDates() {
-        
+        isLoading = true
         cal.enumerateDates(startingAfter: startDate, matching: DateComponents(hour: 12, minute: 0, second: 0), matchingPolicy: .nextTime) { date, strict, stop in
             if let date = date {
                 
@@ -161,9 +171,11 @@ struct CallerCallBookerView: View {
                 }
             }
         }
+        isLoading = false
     }
     
     func getAllTimes() {
+        isLoading = true
         let fullTimeList = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00"]
         
         for month in months {
@@ -193,15 +205,50 @@ struct CallerCallBookerView: View {
             
             times[fullCallDateString]?.remove(at: (times[fullCallDateString]?.firstIndex(of: callTime))!)
         }
+        isLoading = false
+    }
+    
+    func readableToDate(_ date: String, _ month: String) -> String{
+        // date is in form (e.g) Friday 6th, Monday 10th, etc.
+        let dateAsList = date.split(separator: " ")
+        
+        var dateNum: String = String(dateAsList[1])
+        
+        dateNum.removeLast()
+        dateNum.removeLast()
+        
+        if(dateNum.count == 1) {
+            dateNum = "0" + dateNum
+        }
+        
+        
+        let monthNum: Int = cal.monthSymbols.firstIndex(of: month)! + 1
+        
+        var monthString = String(monthNum)
+        
+        if(monthString.count == 1) {
+            monthString = "0" + monthString
+        }
+        
+        var year = ""
+        
+        if(months.contains("December") && selectedMonth == "January") {
+            year = String(cal.component(.year, from: cal.date(byAdding: .year, value: 1, to: Date(timeIntervalSinceNow: 0))!))
+        } else {
+            year = String(cal.component(.year, from: Date(timeIntervalSinceNow: 0)))
+        }
+        
+        return dateNum + "/" + monthString + "/" + year
         
     }
     
     func bookCall() {
+        isLoading = true
         let url = APIEndpoints.CALLER_BOOK_CALL
         
         let callerId = UserDefaults.standard.string(forKey: "id")
         
-        let params = ["clientName" : selectedClient, "callerId": callerId, "date": selectedDate, "time": selectedTime]
+        let params = ["clientName" : selectedClient, "callerId": callerId, "date":  readableToDate(selectedDate, selectedMonth), "time": selectedTime]
         
         AF.request(url, method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseJSON { response in
             
@@ -230,7 +277,7 @@ struct CallerCallBookerView: View {
                 break
             case let .failure(error):
                 debugPrint(error)
-                break
+                return handleBookResponse(false, #line, nil)
             }
             
         }
@@ -281,12 +328,17 @@ struct CallerCallBookerView: View {
             
             calls?.append(newCall)
         } else {
-            isAlerting = true
+            alertTitle = "Error"
+
             if let lineNo = lineNo {
-                alertTitle = "Error"
                 alertText = "There has been an error booking this call.\nIf the error persists, contact support with code 4" + String(lineNo)
             }
         }
+        alert = Alert(title: Text("Error"), message: Text(alertText), dismissButton: .default(Text("Okay")))
+        
+        isAlerting = true
+        
+        isLoading = false
     }
 }
 

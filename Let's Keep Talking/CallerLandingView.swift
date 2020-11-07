@@ -13,7 +13,7 @@ struct CallerLandingView: View {
     @State var isOnViewOne = false
     @State var isOnViewTwo = true
     @State var isOnViewThree = false
-        
+    
     @Binding var isLoggedIn: Bool
     @Binding var calls: [[String: String]]?
     @Binding var availability: [String: [String]]?

@@ -154,16 +154,20 @@ struct CallerAvailabilityView: View {
                 return handleAvailGetResponse(false, #line, nil)
             }
             
+            let dbCallsInFuture = dbCalls.filter({call in
+                return Helpers.isInFuture(call["date"] as! String, call["time"] as! String)
+            })
+            
             let day = Date()
             
             let midDate = Calendar.current.date(byAdding: .day, value: 7, to: day)!
             
             let endDate = Calendar.current.date(byAdding: .day, value: 14, to: day)!
             
-            guard let availOne = getWeekAvailability(day, midDate, dbAvailability, dbCalls) else {
+            guard let availOne = getWeekAvailability(day, midDate, dbAvailability, dbCallsInFuture) else {
                 return handleAvailGetResponse(false, #line, nil)
             }
-            guard let availTwo = getWeekAvailability(midDate, endDate, dbAvailability, dbCalls) else {
+            guard let availTwo = getWeekAvailability(midDate, endDate, dbAvailability, dbCallsInFuture) else {
                 return handleAvailGetResponse(false, #line, nil)
             }
             
@@ -235,10 +239,9 @@ struct CallerAvailabilityView: View {
             else {
                 for call in dbCalls {
                     
-                    
                     for timeString in possTimes {
                         
-                        if(!(dayAvail[timeString]?.keys.contains("hasCall"))!) {
+                        if(!(dayAvail[timeString]!["hasCall"] ?? false)) {
                             
                             guard let callDateString = call["date"] as? String else {
                                 handleAvailGetResponse(false, #line, nil)
