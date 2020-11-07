@@ -17,6 +17,11 @@ struct CallerCallBookerView: View {
     
     @State var isLoading: Bool = false
     
+    @State var isConfirming: Bool = false
+    @State var isErrorAlerting: Bool = false
+    @State var errorLineNo: Int = 0
+    @State var isSuccessAlerting: Bool = false
+    
     @State var isAlerting: Bool = false
     @State var alertTitle: String = ""
     @State var alertText: String = ""
@@ -78,12 +83,23 @@ struct CallerCallBookerView: View {
                 }
                 
                 Button("Book Call", action: {
-                    alert = Alert(title: Text("Confirm Call Booking"), message: Text("You would like to book a call for " + selectedTime + " on " + selectedDate + " " + selectedMonth + " with " + selectedClient), primaryButton: .default(Text("Yes"), action: bookCall), secondaryButton: .cancel())
-                    
                     isAlerting = true
+                    isConfirming = true
                 })
                 .alert(isPresented: $isAlerting, content: {
-                    alert
+                    if(isConfirming) {
+                        return Alert(title: Text("Confirm Call Booking"), message: Text("You would like to book a call for " + selectedTime + " on " + selectedDate + " " + selectedMonth + " with " + selectedClient), primaryButton: .default(Text("Yes"), action: {isConfirming = false; bookCall()}), secondaryButton: .cancel())
+                    }
+                    if(isSuccessAlerting) {
+                        return Alert(title: Text("Call Booked!"), message: Text("Your call has been booked on " + selectedDate + " at " + selectedTime + " with " + selectedClient), dismissButton: .default(Text("Okay"), action: {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }))
+                        
+                    }
+                    if(isErrorAlerting) {
+                        return Alert(title: Text("Error"), message: Text("There has been an error booking this call.\nIf the error persists, contact support with code 4" + String(errorLineNo)), dismissButton: .default(Text("Okay")))
+                    }
+                    return Alert(title: Text("Yes"))
                 })
                 
                 
@@ -92,10 +108,12 @@ struct CallerCallBookerView: View {
                 
             }.onAppear(perform: getFormOptions)
             .onChange(of: selectedMonth, perform: { month in
+                getAllDates()
                 possibleDates = dates[month]!
                 selectedDate = ""
             })
             .onChange(of: selectedDate, perform: { date in
+                getAllTimes()
                 let fullDate = date + " " + selectedMonth
                 
                 possibleTimes = times[fullDate] ?? []
@@ -244,6 +262,7 @@ struct CallerCallBookerView: View {
     
     func bookCall() {
         isLoading = true
+        
         let url = APIEndpoints.CALLER_BOOK_CALL
         
         let callerId = UserDefaults.standard.string(forKey: "id")
@@ -320,21 +339,17 @@ struct CallerCallBookerView: View {
                 return handleBookResponse(false, nil, nil)
             }
             
-            alertTitle = "Call Booked!"
-            alertText = "Your call has been booked on " + callDate
-            alertText = alertText + " at " + callTime + " with " + clientName
-            
             let newCall = ["date": callDate, "time": callTime, "clientName": clientName, "id": callId]
             
             calls?.append(newCall)
-        } else {
-            alertTitle = "Error"
+            
+            getFormOptions()
+            possibleTimes = times[selectedDate + " " + selectedMonth] ?? []
 
-            if let lineNo = lineNo {
-                alertText = "There has been an error booking this call.\nIf the error persists, contact support with code 4" + String(lineNo)
-            }
+            isSuccessAlerting = true
+        } else {
+            isErrorAlerting = true
         }
-        alert = Alert(title: Text("Error"), message: Text(alertText), dismissButton: .default(Text("Okay")))
         
         isAlerting = true
         
