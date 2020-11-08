@@ -261,10 +261,15 @@ struct ClientLoginView: View {
             
             if let client = result as? [String: Any] {
                 guard let clientId = client["_id"] as? String else {
-                    return handleNetworkResponse(false, "Error \(#line)", NSNull())
+                    return handleNetworkResponse(false, "Error \(#line)", nil)
+                }
+                
+                guard let clientName = client["fullName"] as? String else {
+                    return handleNetworkResponse(false, "Error \(#line)", nil)
                 }
                 
                 UserDefaults.standard.set(clientId, forKey: "id")
+                UserDefaults.standard.set(clientName, forKey: "fullName")
                 UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
                 UserDefaults.standard.set(phoneNo, forKey: "phoneNo")
                 UserDefaults.standard.set(password, forKey: "password")

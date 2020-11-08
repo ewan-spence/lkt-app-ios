@@ -118,6 +118,10 @@ struct CallerLoginView: View {
                     return handleLoginResponse(false, "Error \(#line)", nil)
                 }
                 
+                guard let callerName = caller["fullName"] as? String else {
+                    return handleLoginResponse(false, "Error \(#line)", nil)
+                }
+                
                 availability = caller["availability"] as? [String : [String]]
                 
                 guard let dbCalls = caller["calls"] as? [String] else {
@@ -127,6 +131,7 @@ struct CallerLoginView: View {
                 // TODO: Add keychain support
                 
                 UserDefaults.standard.set(callerId, forKey: "id")
+                UserDefaults.standard.set(callerName, forKey: "fullName")
                 UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
                 UserDefaults.standard.set(phoneNo, forKey: "phoneNo")
                 UserDefaults.standard.set(password, forKey: "password")

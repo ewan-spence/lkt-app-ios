@@ -23,7 +23,7 @@ struct CallerHomeScreenView: View {
     var body: some View {
         ZStack {
             VStack {
-                Text("Welcome to the Let's Keep Talking App")
+                Text("Welcome to the Let's Keep Talking App, " + UserDefaults.standard.string(forKey: "fullName")!.split(separator: " ").first!)
                     .font(.title)
                     .multilineTextAlignment(.center)
                     .padding()
