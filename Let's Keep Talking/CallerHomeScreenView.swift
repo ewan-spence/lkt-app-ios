@@ -13,60 +13,74 @@ struct CallerHomeScreenView: View {
     
     @State var todayCalls: [[String: String]]?
     
+    @Binding var isAlerting: Bool
+    @Binding var alert: Alert
+    
+    @State var isConfirming: Bool = false
+    
+    @State var isAddingCallLength: Bool = false
+        
+    @State var isLoading: Bool = false
+    
     var body: some View {
         NavigationView {
-            VStack {
-                Text("Welcome to the Let's Keep Talking App")
-                    .font(.title)
-                    .multilineTextAlignment(.center)
-                    .padding()
-                
-                Divider()
-                
+            ZStack {
                 VStack {
-                    
-                    Text("Today's Calls")
+                    Text("Welcome to the Let's Keep Talking App")
                         .font(.title)
                         .multilineTextAlignment(.center)
                         .padding()
                     
                     Divider()
                     
-                    if(todayCalls == nil || todayCalls!.isEmpty) {
-                        Spacer()
+                    VStack {
                         
-                        Text("You do not currently have any calls booked today")
-                            .minimumScaleFactor(0.5)
-                            .lineLimit(1)
+                        Text("Today's Calls")
+                            .font(.title)
                             .multilineTextAlignment(.center)
                             .padding()
                         
-                        Spacer()
-                        
-                    } else {
-                        
-                        ScrollView {
-                            ForEach(todayCalls!, id: \.self) { call in
-                                AppointmentRowView(call: call, isClient: false, isOnCallLog: false)
-                            }
-                        }
-                        
-                    }
-                    
-                    if(calls != nil) {
-                        
                         Divider()
                         
-                        Spacer()
+                        if(todayCalls == nil || todayCalls!.isEmpty) {
+                            Spacer()
+                            
+                            Text("You do not currently have any calls booked today")
+                                .minimumScaleFactor(0.5)
+                                .lineLimit(1)
+                                .multilineTextAlignment(.center)
+                                .padding()
+                            
+                            Spacer()
+                            
+                        } else {
+                            
+                            ScrollView {
+                                ForEach(todayCalls!, id: \.self) { call in
+                                    AppointmentRowView(call: call, isClient: false, isOnCallLog: false, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: $isAddingCallLength, isLoading: $isLoading, calls: $calls)
+                                }
+                            }
+                            
+                        }
                         
-                        NavigationLink("Book New Call", destination: CallerCallBookerView(clients: [], calls: $calls))
+                        if(calls != nil) {
+                            
+                            Divider()
+                            
+                            Spacer()
+                            
+                            NavigationLink("Book New Call", destination: CallerCallBookerView(clients: [], calls: $calls))
+                            
+                            Spacer()
+                        }
                         
-                        Spacer()
-                    }
+                    }.padding()
                     
-                }.padding()
-                
-                Spacer()
+                    Spacer()
+                }
+                if(isLoading) {
+                    ProgressView()
+                }
             }
         }.onAppear(perform: {
             todayCalls = calls?.filter { callIsToday($0) }
@@ -88,17 +102,17 @@ struct CallerHomeScreenView: View {
     }
 }
 
-struct CallerFragmentViewTwo_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            CallerHomeScreenView(calls: .constant([]))
-                .previewDevice(PreviewDevice(rawValue: "iPhone 7"))
-                .previewDisplayName("iPhone 7")
-            
-            CallerHomeScreenView(calls: .constant([]))
-                .previewDevice(PreviewDevice(rawValue: "iPhone XR"))
-                .previewDisplayName("iPhone XR")
-        }
-    }
-}
+//struct CallerFragmentViewTwo_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Group {
+//            CallerHomeScreenView(calls: .constant([]))
+//                .previewDevice(PreviewDevice(rawValue: "iPhone 7"))
+//                .previewDisplayName("iPhone 7")
+//            
+//            CallerHomeScreenView(calls: .constant([]))
+//                .previewDevice(PreviewDevice(rawValue: "iPhone XR"))
+//                .previewDisplayName("iPhone XR")
+//        }
+//    }
+//}
 

@@ -11,12 +11,13 @@ public class APIEndpoints {
     private static var CALLER_ROOT = ROOT + "callers/"
     private static var AVAIL_ROOT = CALLER_ROOT + "availability/"
     
+    public static var CANCEL_CALL = ROOT + "cancel-call/"
+    
     public static var CREATE_ACC = CLIENT_ROOT + "create-acct/"
     public static var CLIENT_LOGIN = CLIENT_ROOT + "login/"
     public static var GET_CALLERS = CLIENT_ROOT + "get-callers/"
     public static var GET_APPOINTMENTS = CLIENT_ROOT + "get-appointments/"
     public static var CLIENT_BOOK_CALL = CLIENT_ROOT + "book/"
-    public static var CANCEL_CALL = CLIENT_ROOT + "cancel/"
     public static var GET_CLIENT_CALLS = CLIENT_ROOT + "get-calls/"
     
     public static var CALLER_LOGIN = CALLER_ROOT + "login/"
