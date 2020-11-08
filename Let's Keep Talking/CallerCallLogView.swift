@@ -19,9 +19,9 @@ struct CallerCallLogView: View {
     @Binding var isAddingCallLength: Bool
     @Binding var callLength: String?
     @Binding var callId: String
-        
+    
     @Binding var alert: Alert
-        
+    
     @Binding var calls: [[String: String]]?
     
     @State var selectedCall: [String: String] = [:]
@@ -29,12 +29,6 @@ struct CallerCallLogView: View {
     var body: some View {
         ZStack {
             VStack {
-                Text("Call Log")
-                    .font(.title)
-                    .padding()
-                
-                Spacer()
-                
                 HStack {
                     ZStack {
                         HStack {
@@ -93,6 +87,7 @@ struct CallerCallLogView: View {
                 ProgressView()
             }
         }
+        
         
     }
 }

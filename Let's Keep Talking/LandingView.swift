@@ -52,7 +52,6 @@ struct LandingView: View {
                 }
                 
                 Spacer()
-                
             }
             
         }.onAppear(perform: {

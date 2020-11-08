@@ -99,9 +99,12 @@ struct CallerAvailabilityView: View {
             }
             
         }
+        
         .onAppear(perform: {
             getAvailability()
         })
+        
+        
     }
     
     func getAvailability() -> Void {
@@ -315,8 +318,6 @@ struct CallerAvailabilityView: View {
     }
     
     func handleAvailSetResponse(_ status: Bool, _ lineNo: Int?) {
-        
-        
         if(status) {
             alert = Alert(title: Text("Availability Set"), message: Text("Your availability has been set"), dismissButton: .default(Text("Okay")))
             

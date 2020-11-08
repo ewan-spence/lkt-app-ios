@@ -17,69 +17,68 @@ struct CallerHomeScreenView: View {
     @Binding var alert: Alert
     
     @State var isConfirming: Bool = false
-            
+    
     @State var isLoading: Bool = false
     
     var body: some View {
-        NavigationView {
-            ZStack {
+        ZStack {
+            VStack {
+                Text("Welcome to the Let's Keep Talking App")
+                    .font(.title)
+                    .multilineTextAlignment(.center)
+                    .padding()
+                
+                Divider()
+                
                 VStack {
-                    Text("Welcome to the Let's Keep Talking App")
+                    
+                    Text("Today's Calls")
                         .font(.title)
                         .multilineTextAlignment(.center)
                         .padding()
                     
                     Divider()
                     
-                    VStack {
+                    if(todayCalls == nil || todayCalls!.isEmpty) {
+                        Spacer()
                         
-                        Text("Today's Calls")
-                            .font(.title)
+                        Text("You do not currently have any calls booked today")
+                            .minimumScaleFactor(0.5)
+                            .lineLimit(1)
                             .multilineTextAlignment(.center)
                             .padding()
                         
+                        Spacer()
+                        
+                    } else {
+                        
+                        ScrollView {
+                            ForEach(todayCalls!, id: \.self) { call in
+                                AppointmentRowView(call: call, isClient: false, isOnCallLog: false, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: .constant(false), callLength: .constant(""), callId: .constant(""), isLoading: $isLoading, calls: $calls)
+                            }
+                        }
+                        
+                    }
+                    
+                    if(calls != nil) {
+                        
                         Divider()
                         
-                        if(todayCalls == nil || todayCalls!.isEmpty) {
-                            Spacer()
-                            
-                            Text("You do not currently have any calls booked today")
-                                .minimumScaleFactor(0.5)
-                                .lineLimit(1)
-                                .multilineTextAlignment(.center)
-                                .padding()
-                            
-                            Spacer()
-                            
-                        } else {
-                            
-                            ScrollView {
-                                ForEach(todayCalls!, id: \.self) { call in
-                                    AppointmentRowView(call: call, isClient: false, isOnCallLog: false, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: .constant(false), callLength: .constant(""), callId: .constant(""), isLoading: $isLoading, calls: $calls)
-                                }
-                            }
-                            
-                        }
+                        Spacer()
                         
-                        if(calls != nil) {
-                            
-                            Divider()
-                            
-                            Spacer()
-                            
-                            NavigationLink("Book New Call", destination: CallerCallBookerView(clients: [], calls: $calls))
-                            
-                            Spacer()
-                        }
+                        NavigationLink("Book New Call", destination: CallerCallBookerView(clients: [], calls: $calls))
                         
-                    }.padding()
+                        Spacer()
+                    }
                     
-                    Spacer()
-                }
-                if(isLoading) {
-                    ProgressView()
-                }
+                }.padding()
+                
+                Spacer()
             }
+            if(isLoading) {
+                ProgressView()
+            }
+            
         }.onAppear(perform: {
             todayCalls = calls?.filter { callIsToday($0) }
             todayCalls?.sort(by: Helpers.sortCalls)
