@@ -144,8 +144,9 @@ struct CallerLoginView: View {
         } else {
             loginError = true
             loginErrorText = message!
-            isLoading = false
         }
+        isLoading = false
+
     }
     
     func getCalls(_ id: String) -> Void {
