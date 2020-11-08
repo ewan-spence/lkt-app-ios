@@ -15,13 +15,13 @@ struct AppointmentRowView: View {
     @State var isClient: Bool
     @State var isOnCallLog: Bool
     @State var addTimeIsOpen: Bool = false
-    
-    @State var callLength: String? = ""
-    
+        
     @Binding var isAlerting: Bool
     @Binding var alert: Alert
     
     @Binding var isAddingCallLength: Bool
+    @Binding var callLength: String?
+    @Binding var callId: String
         
     @Binding var isLoading: Bool
     
@@ -48,7 +48,7 @@ struct AppointmentRowView: View {
                     } else {
                         Button("Cancel Call", action: {
                             
-                            alert = Alert(title: Text("Confirm Cancellation"), message: Text("Are you sure you wish to cancell this call?"), primaryButton: .destructive(Text("Yes"), action: cancelCall), secondaryButton: .cancel(Text("No"), action: {isAlerting = false}))
+                            alert = Alert(title: Text("Confirm Cancellation"), message: Text("Are you sure you wish to cancell this call?"), primaryButton: .destructive(Text("Yes"), action: cancelCall), secondaryButton: .cancel(Text("No")))
                             
                             isAlerting = true
                         })
@@ -65,10 +65,20 @@ struct AppointmentRowView: View {
                     
                     VStack {
                         if(!Helpers.isInFuture(call["date"]!, call["time"]!)) {
-                            Button("Add Call Length", action: {
-                                isAddingCallLength = true
-                            })
-                            .disabled(Helpers.isInFuture(call["date"]!, call["time"]!) || !((call["length"]?.isEmpty) ?? false))
+                            
+                            if(call["length"] == nil || call["length"]!.isEmpty) {
+                                Button("Add Call Length", action: {
+                                    isAddingCallLength = true
+                                    callLength = call["length"] ?? ""
+                                    callId = call["id"]!
+                                })
+                            } else {
+                                Button("Edit Call Length", action: {
+                                    isAddingCallLength = true
+                                    callLength = call["length"]
+                                    callId = call["id"]!
+                                })
+                            }
                         } else {
                             Button("Cancel Call", action: {
                                 alert = Alert(title: Text("Confirm Cancellation"), message: Text("Are you sure you wish to cancell this call?"), primaryButton: .destructive(Text("Yes"), action: cancelCall), secondaryButton: .cancel(Text("No")))
@@ -81,6 +91,10 @@ struct AppointmentRowView: View {
                     
                     VStack {
                         Text(call["clientName"]!).padding(.trailing)
+                        
+                        if(call["length"] != nil && !(call["length"] == "")){
+                            Text(call["length"]! + " mins").padding(.trailing)
+                        }
                     }.frame(minWidth: 0, maxWidth: .infinity)
                     
                 } else {
@@ -105,6 +119,11 @@ struct AppointmentRowView: View {
         }
         .onAppear(perform: {
             callLength = call["length"] ?? ""
+        })
+        .onChange(of: callLength, perform: {length in
+            if(callId == call["id"]!) {
+                call["length"] = callLength
+            }
         })
     }
     

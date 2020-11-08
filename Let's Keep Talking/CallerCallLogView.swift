@@ -17,12 +17,11 @@ struct CallerCallLogView: View {
     @Binding var isAlerting: Bool
     
     @Binding var isAddingCallLength: Bool
+    @Binding var callLength: String?
+    @Binding var callId: String
         
     @Binding var alert: Alert
-    @State var textFieldAlert: TextFieldAlert?
-    
-    @State var callLength: String? = ""
-    
+        
     @Binding var calls: [[String: String]]?
     
     @State var selectedCall: [String: String] = [:]
@@ -78,17 +77,14 @@ struct CallerCallLogView: View {
                 ScrollView {
                     if(isOnAllCalls) {
                         ForEach(calls?.sorted(by: Helpers.sortCalls) ?? [], id: \.self) { call in
-                            AppointmentRowView(call: call, isClient: false, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: $isAddingCallLength, isLoading: $isLoading, calls: $calls)
-//                                .textFieldAlert(isPresented: $isAddingCallLength, content: {
-//                                    textFieldAlert!
-//                                })
+                            AppointmentRowView(call: call, isClient: false, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: $isAddingCallLength, callLength: $callLength, callId: $callId, isLoading: $isLoading, calls: $calls)
                         }
                     }
                     if(isOnFutureCalls) {
                         ForEach(calls?.filter({ call in
                             Helpers.isInFuture(call["date"]!, call["time"]!)
                         }).sorted(by: Helpers.sortCalls).reversed() ?? [], id: \.self) { call in
-                            AppointmentRowView(call: call, isClient: false, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: .constant(false), isLoading: $isLoading, calls: $calls)
+                            AppointmentRowView(call: call, isClient: false, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: .constant(false), callLength: .constant(""), callId: $callId, isLoading: $isLoading, calls: $calls)
                         }
                     }
                 }
