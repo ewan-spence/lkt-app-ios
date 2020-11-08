@@ -16,21 +16,14 @@ struct CallerAvailabilityView: View {
     
     @State var isLoading: Bool = false
     
-    @State var isAlerting: Bool = false
-    @State var alertTitle: String = ""
-    @State var alertText: String = ""
-    @State var alertButton: String = ""
-    
     @State var weekOneZoom: CGFloat = 1
     @State var weekTwoZoom: CGFloat = 1
     
     @Binding var isOnViewTwo: Bool
     @Binding var isOnViewThree: Bool
     
-    @Binding var isAlertingInSuper: Bool
-    @Binding var superAlertTitle: String
-    @Binding var superAlertText: String
-    @Binding var superAlertButton: String
+    @Binding var isAlerting: Bool
+    @Binding var alert: Alert
     
     var body: some View {
         ZStack {
@@ -99,9 +92,6 @@ struct CallerAvailabilityView: View {
                 Spacer()
                 
                 Button("Submit", action: setAvailability)
-                    .alert(isPresented: $isAlerting, content: {
-                        Alert(title: Text(alertTitle), message: Text(alertText), dismissButton: .default(Text(alertButton)))
-                    })
             }
             
             if(isLoading) {
@@ -175,10 +165,8 @@ struct CallerAvailabilityView: View {
             weekTwo = availTwo
             
         } else {
+            alert = Alert(title: Text("Error"), message: Text("There was an error retrieving your availability details - please reload the app.\nIf this error persists, please contact support with error code 1" + String(line!)), dismissButton: .default(Text("Okay")))
             isAlerting = true
-            alertTitle = "Error"
-            alertText = "There was an error retrieving your availability details - please reload the app.\nIf this error persists, please contact support with error code 1" + String(line!)
-            alertButton = "Okay"
         }
         isLoading = false
         
@@ -330,19 +318,17 @@ struct CallerAvailabilityView: View {
         
         
         if(status) {
-            isAlertingInSuper = true
-            superAlertTitle = "Availability Set"
-            superAlertText = "Your availability has been set"
-            superAlertButton = "Okay"
+            alert = Alert(title: Text("Availability Set"), message: Text("Your availability has been set"), dismissButton: .default(Text("Okay")))
             
             isOnViewTwo = true
             isOnViewThree = false
         } else {
-            isAlerting = true
-            alertButton = "Okay"
-            alertTitle = "Error"
-            alertText = "There was an error setting your availability - please reload the app or try again later.\nIf this problem persists, please contact support with code 2" + String(lineNo!)
+            alert = Alert(title: Text("Error"), message: Text("There was an error setting your availability - please reload the app or try again later.\nIf this problem persists, please contact support with code 2" + String(lineNo!)), dismissButton: .default(Text("Okay")))
+            
+            isOnViewTwo = true
+            isOnViewThree = false
         }
+        isAlerting = true
         
         isLoading = false
     }

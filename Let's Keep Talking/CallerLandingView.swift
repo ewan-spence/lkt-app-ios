@@ -19,9 +19,9 @@ struct CallerLandingView: View {
     @Binding var availability: [String: [String]]?
     
     @State var isAlerting: Bool = false
-    @State var alertTitle: String = ""
-    @State var alertText: String = ""
-    @State var alertButton: String = ""
+    @State var alert: Alert = Alert(title: Text("Unknown Error"))
+    
+    @State var isAddingCallLength: Bool = false
     
     var body: some View {
         VStack {
@@ -53,15 +53,15 @@ struct CallerLandingView: View {
             Spacer()
             
             if(isOnViewOne) {
-                CallerCallLogView(calls: $calls)
+                CallerCallLogView(isAlerting: $isAlerting, isAddingCallLength: $isAddingCallLength, alert: $alert, calls: $calls)
             }
             
             if(isOnViewTwo) {
-                CallerHomeScreenView(calls: $calls)
+                CallerHomeScreenView(calls: $calls, isAlerting: $isAlerting, alert: $alert)
             }
             
             if(isOnViewThree) {
-                CallerAvailabilityView(isOnViewTwo: $isOnViewTwo, isOnViewThree: $isOnViewThree, isAlertingInSuper: $isAlerting, superAlertTitle: $alertTitle, superAlertText: $alertText, superAlertButton: $alertButton)
+                CallerAvailabilityView(isOnViewTwo: $isOnViewTwo, isOnViewThree: $isOnViewThree, isAlerting: $isAlerting, alert: $alert)
             }
             
             Spacer()
@@ -136,8 +136,9 @@ struct CallerLandingView: View {
                 
                 Spacer()
             }
-        }.alert(isPresented: $isAlerting, content: {
-            Alert(title: Text(alertTitle), message: Text(alertText), dismissButton: .default(Text(alertButton)))
+        }
+        .alert(isPresented: $isAlerting, content: {
+            alert
         })
     }
 }

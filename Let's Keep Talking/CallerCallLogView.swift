@@ -6,82 +6,103 @@
 //
 
 import SwiftUI
+import Alamofire
 
 struct CallerCallLogView: View {
     @State var isOnAllCalls: Bool = true
     @State var isOnFutureCalls: Bool = false
     
+    @State var isLoading: Bool = false
+    
+    @Binding var isAlerting: Bool
+    
+    @Binding var isAddingCallLength: Bool
+        
+    @Binding var alert: Alert
+    @State var textFieldAlert: TextFieldAlert?
+    
+    @State var callLength: String? = ""
+    
     @Binding var calls: [[String: String]]?
     
+    @State var selectedCall: [String: String] = [:]
+    
     var body: some View {
-        VStack {
-            Text("Call Log")
-                .font(.title)
-                .padding()
-            
-            Spacer()
-            
-            HStack {
-                ZStack {
-                    HStack {
-                        Spacer()
-                        
-                        Text("All Calls")
-                            .onTapGesture(perform: {
-                                isOnAllCalls = true
-                                isOnFutureCalls = false
-                            })
-                        
-                        Spacer()
-                    }
-                    
-                    if(isOnAllCalls) {
-                        RoundedRectangle(cornerRadius: 15)
-                            .stroke(Color.green, lineWidth: 5)
-                    }
-                }.frame(height: 40, alignment: .center)
+        ZStack {
+            VStack {
+                Text("Call Log")
+                    .font(.title)
+                    .padding()
                 
-                ZStack {
-                    HStack {
-                        Spacer()
+                Spacer()
+                
+                HStack {
+                    ZStack {
+                        HStack {
+                            Spacer()
+                            
+                            Text("All Calls")
+                                .onTapGesture(perform: {
+                                    isOnAllCalls = true
+                                    isOnFutureCalls = false
+                                })
+                            
+                            Spacer()
+                        }
                         
-                        Text("Future Calls")
-                            .onTapGesture(perform: {
-                                isOnAllCalls = false
-                                isOnFutureCalls = true
-                            })
-                        
-                        Spacer()
+                        if(isOnAllCalls) {
+                            RoundedRectangle(cornerRadius: 15)
+                                .stroke(Color.green, lineWidth: 5)
+                        }
+                    }.frame(height: 40, alignment: .center)
+                    
+                    ZStack {
+                        HStack {
+                            Spacer()
+                            
+                            Text("Future Calls")
+                                .onTapGesture(perform: {
+                                    isOnAllCalls = false
+                                    isOnFutureCalls = true
+                                })
+                            
+                            Spacer()
+                        }
+                        if(isOnFutureCalls) {
+                            RoundedRectangle(cornerRadius: 15)
+                                .stroke(Color.green, lineWidth: 5)
+                        }
+                    }.frame(height: 40, alignment: .center)
+                }
+                
+                ScrollView {
+                    if(isOnAllCalls) {
+                        ForEach(calls?.sorted(by: Helpers.sortCalls) ?? [], id: \.self) { call in
+                            AppointmentRowView(call: call, isClient: false, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: $isAddingCallLength, isLoading: $isLoading, calls: $calls)
+//                                .textFieldAlert(isPresented: $isAddingCallLength, content: {
+//                                    textFieldAlert!
+//                                })
+                        }
                     }
                     if(isOnFutureCalls) {
-                        RoundedRectangle(cornerRadius: 15)
-                            .stroke(Color.green, lineWidth: 5)
-                    }
-                }.frame(height: 40, alignment: .center)
-            }
-                        
-            ScrollView {
-                if(isOnAllCalls) {
-                    ForEach((calls ?? []).sorted(by: Helpers.sortCalls), id: \.self) { call in
-                        AppointmentRowView(call: call, isClient: false, isOnCallLog: true)
-                    }
-                }
-                if(isOnFutureCalls) {
-                    ForEach((calls ?? []).filter({ call in
-                        Helpers.isInFuture(call["date"]!, call["time"]!)
-                    }).sorted(by: Helpers.sortCalls).reversed(), id: \.self) { call in
-                        AppointmentRowView(call: call, isClient: false, isOnCallLog: true)
+                        ForEach(calls?.filter({ call in
+                            Helpers.isInFuture(call["date"]!, call["time"]!)
+                        }).sorted(by: Helpers.sortCalls).reversed() ?? [], id: \.self) { call in
+                            AppointmentRowView(call: call, isClient: false, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: .constant(false), isLoading: $isLoading, calls: $calls)
+                        }
                     }
                 }
             }
-            
+            if(isLoading) {
+                ProgressView()
+            }
         }
         
     }
 }
 
-struct CallerFragmentViewOne_Previews: PreviewProvider {
-    static var previews: some View {
-        CallerCallLogView(calls: .constant([]))
-    }
-}
+//struct CallerFragmentViewOne_Previews: PreviewProvider {
+//    static var previews: some View {
+//        CallerCallLogView(calls: .constant([]))
+//    }
+//}

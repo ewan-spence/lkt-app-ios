@@ -13,18 +13,19 @@ struct AppointmentRowView: View {
     @State var call: [String: String]
     
     @State var isClient: Bool
-    @State var isOnCallLog: Bool?
+    @State var isOnCallLog: Bool
     @State var addTimeIsOpen: Bool = false
     
     @State var callLength: String? = ""
     
-    @State var isAlerting: Bool = false
-    @State var alertTitle: String = ""
-    @State var alertText: String = ""
+    @Binding var isAlerting: Bool
+    @Binding var alert: Alert
     
-    @State var isAddingCallLength: Bool = false
+    @Binding var isAddingCallLength: Bool
+        
+    @Binding var isLoading: Bool
     
-    @State var isLoading: Bool = false
+    @Binding var calls: [[String: String]]?
     
     var body: some View {
         ZStack {
@@ -39,10 +40,19 @@ struct AppointmentRowView: View {
                 .frame(minWidth: 0, maxWidth: .infinity)
                 
                 if(isClient) {
-                    VStack {
+                    
+                    if(!Helpers.isInFuture(call["date"]!, call["time"]!)) {
                         NavigationLink("Rate Call", destination: CallRaterView())
-                            .disabled(isInFuture(call["date"]!, call["time"]!))
-                    }.frame(minWidth: 0, maxWidth: .infinity)
+                            .disabled(Helpers.isInFuture(call["date"]!, call["time"]!))
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                    } else {
+                        Button("Cancel Call", action: {
+                            
+                            alert = Alert(title: Text("Confirm Cancellation"), message: Text("Are you sure you wish to cancell this call?"), primaryButton: .destructive(Text("Yes"), action: cancelCall), secondaryButton: .cancel(Text("No"), action: {isAlerting = false}))
+                            
+                            isAlerting = true
+                        })
+                    }
                     
                     VStack {
                         Text(call["callerName"]!).padding(.trailing)
@@ -50,19 +60,22 @@ struct AppointmentRowView: View {
                     
                     
                     
-                } else if(isOnCallLog!){
+                    
+                } else if(isOnCallLog){
                     
                     VStack {
-                        Button("Add Call Length", action: {isAddingCallLength = true})
-                            .textFieldAlert(isPresented: $isAddingCallLength, content: {
-                                TextFieldAlert(title: "Add Call Length", message: nil, text: $callLength, action: {
-                                    addCallLength(callLength!)
-                                })
+                        if(!Helpers.isInFuture(call["date"]!, call["time"]!)) {
+                            Button("Add Call Length", action: {
+                                isAddingCallLength = true
                             })
-                            .alert(isPresented: $isAlerting, content: {
-                                Alert(title: Text(alertTitle), message: Text(alertText), dismissButton: .default(Text("Okay")))
+                            .disabled(Helpers.isInFuture(call["date"]!, call["time"]!) || !((call["length"]?.isEmpty) ?? false))
+                        } else {
+                            Button("Cancel Call", action: {
+                                alert = Alert(title: Text("Confirm Cancellation"), message: Text("Are you sure you wish to cancell this call?"), primaryButton: .destructive(Text("Yes"), action: cancelCall), secondaryButton: .cancel(Text("No")))
+                                
+                                isAlerting = true
                             })
-                            .disabled(isInFuture(call["date"]!, call["time"]!) || !((call["length"]?.isEmpty) ?? false))
+                        }
                     }.frame(minWidth: 0, maxWidth: .infinity)
                     
                     
@@ -89,86 +102,59 @@ struct AppointmentRowView: View {
                 }
                 
             }
-            if(isLoading) {
-                ProgressView()
-            }
         }
         .onAppear(perform: {
             callLength = call["length"] ?? ""
         })
     }
     
-    func addCallLength(_ length: String) {
+    
+    func cancelCall() {
         isLoading = true
         
-        let url = APIEndpoints.ADD_CALL_LENGTH
+        let url = APIEndpoints.CANCEL_CALL
         
-        guard let callId = call["id"] else {
-            return addLengthResponse(false, #line, nil)
-        }
-        
-        let params = ["id" : callId, "length" : callLength]
-        
-        AF.request(url, method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseJSON { response in
+        AF.request(url, method: .post, parameters: call, encoder: JSONParameterEncoder.default).responseJSON { response in
             
-            switch(response.result) {
+            switch response.result {
             case let .success(value):
-                guard let json = value as? [String: Any] else {
-                    return addLengthResponse(false, #line, nil)
+                debugPrint(value)
+                
+                guard let json = value as? [String: Any?] else {
+                    return handleCancelResponse(false, #line)
                 }
                 
                 guard let status = json["status"] as? Bool else {
-                    return addLengthResponse(false, #line, nil)
+                    return handleCancelResponse(false, #line)
                 }
                 
-                guard let result = json["result"] as? [String: Any] else {
-                    return addLengthResponse(false, #line, nil)
-                }
+                return handleCancelResponse(status, #line)
                 
-                if(status) {
-                    return addLengthResponse(true, nil, result)
-                } else {
-                    return addLengthResponse(false, #line, nil)
-                }
-            case .failure(_):
-                return addLengthResponse(false, #line, nil)
+            case let .failure(error):
+                debugPrint(error)
+                
+                return handleCancelResponse(false, #line)
             }
         }
     }
     
-    func addLengthResponse(_ status: Bool, _ lineNo: Int?, _ result: [String: Any]?) {
+    func handleCancelResponse(_ status: Bool, _ line: Int) {
         if(status) {
-            alertTitle = "Length Added"
-            alertText = "Thank you for adding this call length"
+            
+            calls?.remove(at: (calls?.firstIndex(of: call))!)
+            
+            alert = Alert(title: Text("Call Cancelled"), message: Text("Your call with " + call["clientName"]! + " has been cancelled."), dismissButton: .default(Text("Okay")))
         } else {
-            alertTitle = "Error"
-            alertText = "There was an error - please reload the app.\nIf this error persists please contact support with code 0" + String(lineNo!)
+            alert = Alert(title: Text("Error"), message: Text("Error cancelling call. Please reload app and try again.\nIf this problem persists, contact support with error code 5" + String(line)), dismissButton: .default(Text("Okay")))
         }
-        isAlerting = true
         isLoading = false
-    }
-    
-    func isInFuture(_ date: String, _ time: String) -> Bool {
-        if(date.elementsEqual("") || time.elementsEqual("")) {
-            return true
-        }
-        
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_GB")
-        formatter.dateFormat = "dd/MM/yyyy HH:mm"
-        
-        let fullDate = date + " " + time
-        let dateAsObj = formatter.date(from: fullDate)
-        
-        let today = Date(timeIntervalSinceNow: 0)
-        
-        return dateAsObj?.timeIntervalSince(today) ?? 0 > 0
+        isAlerting = true
     }
 }
 
-struct AppointmentRowView_Previews: PreviewProvider {
-    static var previews: some View {
-        AppointmentRowView(call: ["date" : "19/10/2020", "time" : "14:00", "callerName" : "John Doe", "id" : "", "length" : "15"], isClient: true, isOnCallLog: true)
-            .previewDevice("iPhone SE (2nd generation)")
-    }
-}
+//struct AppointmentRowView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AppointmentRowView(call: ["date" : "19/10/2020", "time" : "14:00", "callerName" : "John Doe", "id" : "", "length" : "15"], isClient: true, isOnCallLog: true, addTimeIsOpen: .constant([]), callLength: .constant(true), alert: .constant(<#T##value: Bool##Bool#>))
+//            .previewDevice("iPhone SE (2nd generation)")
+//    }
+//}

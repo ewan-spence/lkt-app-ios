@@ -332,6 +332,8 @@ struct CallerCallBookerView: View {
             
             calls?.append(newCall)
             
+            calls?.sort(by: Helpers.sortCalls)
+            
             getFormOptions()
             possibleTimes = times[selectedDate + " " + selectedMonth] ?? []
 
