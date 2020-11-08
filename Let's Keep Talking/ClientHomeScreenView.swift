@@ -85,7 +85,9 @@ struct ClientHomeScreenView: View {
         
         let url = APIEndpoints.CANCEL_CALL
         
-        AF.request(url, method: .post, parameters: ["id" : callId], encoder: JSONParameterEncoder.default).responseJSON { response in
+        let call = ["id" : callId, "date" : callDate, "time" : callTime, "callerName" : callCaller]
+        
+        AF.request(url, method: .post, parameters: call, encoder: JSONParameterEncoder.default).responseJSON { response in
             
             switch response.result {
             case let .success(value):
