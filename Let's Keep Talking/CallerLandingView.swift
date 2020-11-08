@@ -68,12 +68,13 @@ struct CallerLandingView: View {
                 }
                 
                 if(isOnViewTwo) {
+                    
                     CallerHomeScreenView(calls: $calls, isAlerting: $isAlerting, alert: $alert)
                 }
                 
                 if(isOnViewThree) {
                     CallerAvailabilityView(isOnViewTwo: $isOnViewTwo, isOnViewThree: $isOnViewThree, isAlerting: $isAlerting, alert: $alert)
-                }
+                 }
                 
                 Spacer()
                 
@@ -106,10 +107,22 @@ struct CallerLandingView: View {
                         Image(systemName: "house.fill")
                             .font(.system(size: 40))
                             .onTapGesture(perform: {
-                                self.isOnViewOne = false
-                                self.isOnViewTwo = true
-                                self.isOnViewThree = false
-                                self.menuShown = false
+                                if(self.isOnViewThree) {
+                                    alert = Alert(title: Text("Discard Changes?"), message: Text("Would you like to discard your changes?"), primaryButton: .destructive(Text("Yes"), action: {
+                                        self.isOnViewOne = false
+                                        self.isOnViewTwo = true
+                                        self.isOnViewThree = false
+                                    }), secondaryButton: .cancel(Text("No, Go Back")))
+                                    
+                                    isAlerting = true
+                                    
+                                } else {
+                                    
+                                    self.isOnViewOne = false
+                                    self.isOnViewTwo = true
+                                    self.isOnViewThree = false
+                                    self.menuShown = false
+                                }
                             })
                         
                     }.padding()

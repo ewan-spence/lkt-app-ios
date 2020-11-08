@@ -19,9 +19,9 @@ struct CallerView: View {
         if(isLoggedIn) {
             CallerLandingView(isLoggedIn: $isLoggedIn, calls: $calls, availability: $availability)
                 .navigationBarHidden(true)
-                .navigationTitle("")
         } else {
             CallerLoginView(hasDetailsSaved: hasDetailsSaved, isLoggedIn: $isLoggedIn, calls: $calls, availability: $availability)
+                .navigationBarHidden(false)
         }
     }
 }

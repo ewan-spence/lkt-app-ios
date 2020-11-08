@@ -22,7 +22,6 @@ struct ClientCallLogView: View {
     @State var selectedCall: [String: String] = [:]
     
     var body: some View {
-        NavigationView {
             ZStack {
                 
                 VStack {
@@ -100,7 +99,7 @@ struct ClientCallLogView: View {
             }
         }
     }
-}
+
 //
 //struct ClientFragmentViewOne_Previews: PreviewProvider {
 //    static var previews: some View {
