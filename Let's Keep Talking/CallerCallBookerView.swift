@@ -16,13 +16,9 @@ struct CallerCallBookerView: View {
     @State var endDate: Date = Date()
     
     @State var isLoading: Bool = false
-    
-    @State var isConfirming: Bool = false
-    @State var isErrorAlerting: Bool = false
-    @State var errorLineNo: Int = 0
-    @State var isSuccessAlerting: Bool = false
-    
+        
     @State var isAlerting: Bool = false
+    @State var alert: Alert = Alert(title: Text("Unknown Error"))
         
     @State var clients: [String] = []
     @State var selectedClient: String = ""
@@ -80,22 +76,10 @@ struct CallerCallBookerView: View {
                 
                 Button("Book Call", action: {
                     isAlerting = true
-                    isConfirming = true
+                    alert = Alert(title: Text("Confirm Call Booking"), message: Text("You would like to book a call for " + selectedTime + " on " + selectedDate + " " + selectedMonth + " with " + selectedClient), primaryButton: .default(Text("Yes"), action: bookCall), secondaryButton: .cancel())
                 })
                 .alert(isPresented: $isAlerting, content: {
-                    if(isConfirming) {
-                        return Alert(title: Text("Confirm Call Booking"), message: Text("You would like to book a call for " + selectedTime + " on " + selectedDate + " " + selectedMonth + " with " + selectedClient), primaryButton: .default(Text("Yes"), action: {isConfirming = false; bookCall()}), secondaryButton: .cancel())
-                    }
-                    if(isSuccessAlerting) {
-                        return Alert(title: Text("Call Booked!"), message: Text("Your call has been booked on " + selectedDate + " at " + selectedTime + " with " + selectedClient), dismissButton: .default(Text("Okay"), action: {
-                            self.presentationMode.wrappedValue.dismiss()
-                        }))
-                        
-                    }
-                    if(isErrorAlerting) {
-                        return Alert(title: Text("Error"), message: Text("There has been an error booking this call.\nIf the error persists, contact support with code 4" + String(errorLineNo)), dismissButton: .default(Text("Okay")))
-                    }
-                    return Alert(title: Text("Yes"))
+                    alert
                 })
                 
                 
@@ -213,11 +197,16 @@ struct CallerCallBookerView: View {
             let callDay = cal.component(.day, from: callDate)
             let callMonth = cal.monthSymbols[cal.component(.month, from: callDate) - 1]
             
-            let fullCallDateString = callWeekDay + " " + String(callDay) + Helpers.getDateSuffix(callDay) + " " + callMonth
+            let fullCallDateString = "\(callWeekDay) \(String(callDay))\(Helpers.getDateSuffix(callDay)) \(callMonth)"
             
             let callTime = call["time"]!
             
-            times[fullCallDateString]?.remove(at: (times[fullCallDateString]?.firstIndex(of: callTime))!)
+            if let removeIndex = times[fullCallDateString]?.firstIndex(of: callTime) {
+                times[fullCallDateString]?.remove(at: (removeIndex))
+            } else {
+                alert = Alert(title: Text("Possible Error"), message: Text("There may be an error, please contact support with error code 7\(#line) if this error persists"), dismissButton: .default(Text("Okay")))
+            }
+            
         }
         isLoading = false
     }
@@ -337,10 +326,9 @@ struct CallerCallBookerView: View {
             getFormOptions()
             possibleTimes = times[selectedDate + " " + selectedMonth] ?? []
 
-            isSuccessAlerting = true
+            alert = Alert(title: Text("Call Booked!"), message: Text("Your call has been booked on " + selectedDate + " at " + selectedTime + " with " + selectedClient), dismissButton: .default(Text("Okay"), action: { self.presentationMode.wrappedValue.dismiss() }))
         } else {
-            errorLineNo = lineNo!
-            isErrorAlerting = true
+            alert = Alert(title: Text("Error"), message: Text("There has been an error booking this call.\nIf the error persists, contact support with code 4" + String(lineNo!)), dismissButton: .default(Text("Okay")))
         }
         
         isAlerting = true
