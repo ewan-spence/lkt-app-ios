@@ -45,10 +45,15 @@ struct ClientHomeScreenView: View {
                         .multilineTextAlignment(.center)
                         .padding(30)
                     
-                    Button("Cancel Call", action: {isAlerting = true})
-                        .alert(isPresented: $isAlerting, content: {
-                            alert!
-                        })
+                    Button("Cancel Call", action: {
+                        alert = Alert(title: Text("Confirmation"), message: Text("Are you sure you want to cancel this call?"), primaryButton: .destructive(Text("Cancel Call")) {
+                            cancelCall()
+                        }, secondaryButton: .cancel(Text("Back")))
+                        
+                        isAlerting = true
+
+                    })
+                        
                         .padding()
                     
                 } else {
@@ -72,10 +77,11 @@ struct ClientHomeScreenView: View {
             if(isLoading) {
                 ProgressView()
             }
-        }.onAppear(perform: {
-            alert = Alert(title: Text("Confirmation"), message: Text("Are you sure you want to cancel this call?"), primaryButton: .destructive(Text("Cancel Call")) {
-                cancelCall()
-            }, secondaryButton: .cancel(Text("Back")))
+        }.alert(isPresented: $isAlerting, content: {
+            alert!
+        })
+        .onAppear(perform: {
+            
         })
         
     }
@@ -130,11 +136,10 @@ struct ClientHomeScreenView: View {
                 
                 alert = Alert(title: Text("Error"), message: Text("There was an error cancelling your call - please try again.\nIf this error persists, contact support with error code 3" + String(errorLine!)), dismissButton: .default(Text("Okay")))
                 
-                isLoading = false
-                
-                
-                isAlerting = true
             }
+            
+            isLoading = false
+            isAlerting = true
         }
     }
 }
