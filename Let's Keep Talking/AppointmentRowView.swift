@@ -14,14 +14,13 @@ struct AppointmentRowView: View {
     
     @State var isClient: Bool
     @State var isOnCallLog: Bool
-    @State var addTimeIsOpen: Bool = false
         
     @Binding var isAlerting: Bool
     @Binding var alert: Alert
     
     @Binding var isAddingCallLength: Bool
     @Binding var callLength: String?
-    @Binding var callId: String
+    @State var callId: String
         
     @Binding var isLoading: Bool
     
@@ -42,8 +41,8 @@ struct AppointmentRowView: View {
                 if(isClient) {
                     
                     if(!Helpers.isInFuture(call["date"]!, call["time"]!)) {
-                        NavigationLink("Rate Call", destination: CallRaterView())
-                            .disabled(Helpers.isInFuture(call["date"]!, call["time"]!))
+                        NavigationLink("Rate Call", destination: CallRaterView(callId: callId, alert: $alert, isAlerting: $isAlerting, isLoading: $isLoading))
+                            .disabled(!call["hasRating"]!.isEmpty)
                             .frame(minWidth: 0, maxWidth: .infinity)
                     } else {
                         Button("Cancel Call", action: {
@@ -119,6 +118,7 @@ struct AppointmentRowView: View {
         }
         .onAppear(perform: {
             callLength = call["length"] ?? ""
+            callId = call["id"] ?? ""
         })
         .onChange(of: callLength, perform: {length in
             if(callId == call["id"]!) {
