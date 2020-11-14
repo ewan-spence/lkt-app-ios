@@ -350,7 +350,13 @@ struct ClientLoginView: View {
                             return handleGetCallsResponse(false, "Error \(#line)", nil)
                         }
                         
-                        funcCalls.append(["date" : callDateString , "time" : callTimeString , "callerName" : callCallerString, "id" : callIdString])
+                        var hasRatingString = ""
+                        
+                        if callDict["rating"] != nil {
+                            hasRatingString = "F"
+                        }
+                        
+                        funcCalls.append(["date" : callDateString , "time" : callTimeString , "callerName" : callCallerString, "id" : callIdString, "hasRating" : hasRatingString])
                     }
                     
                     handleGetCallsResponse(true, nil, funcCalls)

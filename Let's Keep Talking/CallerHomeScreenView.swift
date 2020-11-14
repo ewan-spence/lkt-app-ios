@@ -54,7 +54,7 @@ struct CallerHomeScreenView: View {
                         
                         ScrollView {
                             ForEach(todayCalls!, id: \.self) { call in
-                                AppointmentRowView(call: call, isClient: false, isOnCallLog: false, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: .constant(false), callLength: .constant(""), callId: .constant(""), isLoading: $isLoading, calls: $calls)
+                                AppointmentRowView(call: call, isClient: false, isOnCallLog: false, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: .constant(false), callLength: .constant(""), callId: call["id"]!, isLoading: $isLoading, calls: $calls)
                             }
                         }
                         
