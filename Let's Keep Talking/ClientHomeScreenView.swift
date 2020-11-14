@@ -51,10 +51,8 @@ struct ClientHomeScreenView: View {
                         }, secondaryButton: .cancel(Text("Back")))
                         
                         isAlerting = true
-
                     })
-                        
-                        .padding()
+                    .padding()
                     
                 } else {
                     

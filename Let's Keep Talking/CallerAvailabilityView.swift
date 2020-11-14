@@ -28,6 +28,9 @@ struct CallerAvailabilityView: View {
     var body: some View {
         ZStack {
             VStack {
+                Text("Availability")
+                    .font(.title)
+                    .padding()
                 
                 let weekOneTab = Button("Week 1", action: {
                     isOnWeek1 = true

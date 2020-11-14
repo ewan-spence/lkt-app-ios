@@ -29,6 +29,10 @@ struct CallerCallLogView: View {
     var body: some View {
         ZStack {
             VStack {
+                Text("Call Log")
+                    .font(.title)
+                    .padding()
+                
                 HStack {
                     ZStack {
                         HStack {
