@@ -17,6 +17,9 @@ struct CallerLandingView: View {
     
     @Binding var isLoggedIn: Bool
     @Binding var calls: [[String: String]]?
+    
+    @State var tempCalls: [[String: String]]?
+    
     @Binding var availability: [String: [String]]?
     
     @State var isAlerting: Bool = false
@@ -54,6 +57,12 @@ struct CallerLandingView: View {
                     }
                     
                     Spacer()
+                    
+                    Image(systemName: "arrow.clockwise").font(.system(size: 30))
+                        .padding()
+                        .onTapGesture(perform: {
+                            getCalls(UserDefaults.standard.string(forKey: "id")!)
+                        })
                 }
                 
                 Spacer()
@@ -205,9 +214,96 @@ struct CallerLandingView: View {
         if(status) {
             alert = Alert(title: Text("Call Length Added"), message: Text("The call has been edited successfully"), dismissButton: .default(Text("Okay")))
         } else {
-            alert = Alert(title: Text("Error"), message: Text("There was an error editing the call - please try again.\nIf this error persists, please contact support with error code 6" + String(lineNo!)), dismissButton: .default(Text("Okay")))
+            alert = Alert(title: Text("Error"), message: Text("There was an error editing the call - please try again.\nIf this error persists, please contact support with error code 6\(lineNo!)"), dismissButton: .default(Text("Okay")))
         }
         isAlerting = true
+        isLoading = false
+    }
+    
+    func getCalls(_ id: String) -> Void {
+        tempCalls = calls
+        calls = []
+        isLoading = true
+        
+        let url = APIEndpoints.GET_CALLER_CALLS
+        
+        let params = ["id" : id]
+        
+        AF.request(url, method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseJSON { response in
+            
+            switch(response.result) {
+            case let .success(value):
+                
+                guard let json = value as? [String: Any] else {
+                    return handleGetCallsResponse(false, #line, nil)
+                }
+                
+                guard let status = json["status"] as? Bool else {
+                    return handleGetCallsResponse(false, #line, nil)
+                }
+                
+                if(status) {
+                    guard let array = json["result"] as? [[String: Any]] else {
+                        return handleGetCallsResponse(false, #line, nil)
+                    }
+                    
+                    return handleGetCallsResponse(true, nil, array)
+                }
+                
+            case let .failure(error):
+                debugPrint(error)
+                return handleGetCallsResponse(false, #line, nil)
+            }
+        }
+    }
+    
+    func handleGetCallsResponse(_ status: Bool, _ lineNo: Int?, _ result: [[String: Any]]?) {
+        if(status) {
+            
+            result!.forEach { call in
+                guard let callId = call["_id"] as? String else {
+                    return handleGetCallsResponse(false, #line, nil)
+                }
+                
+                guard let callDate = call["date"] as? String else {
+                    return handleGetCallsResponse(false, #line, nil)
+                }
+                
+                guard let callTime = call["time"] as? String else {
+                    return handleGetCallsResponse(false, #line, nil)
+                }
+                
+                guard let callClient = call["client"] as? [String: String] else {
+                    return handleGetCallsResponse(false, #line, nil)
+                }
+                
+                guard let clientName = callClient["fullName"] else {
+                    return handleGetCallsResponse(false, #line, nil)
+                }
+                
+                guard let clientNumber = callClient["phoneNo"] else {
+                    return handleGetCallsResponse(false, #line, nil)
+                }
+                
+                var newCall = ["id" : callId, "date" : callDate, "time" : callTime, "clientName" : clientName, "clientNo" : clientNumber]
+                
+                if let callLength = call["length"] as? String {
+                    newCall["length"] = callLength
+                }
+                
+                calls?.append(newCall)
+                
+            }
+            
+            alert = Alert(title: Text("Successfully Refreshed"), message: Text("Your call log has been refreshed"), dismissButton: .default(Text("Okay")))
+            
+        } else {
+            calls = tempCalls
+            alert = Alert(title: Text("Error"), message: Text("Problem retrieving call details - please try again.\nIf this error persists, contact support with error code 6\(lineNo!)"), dismissButton: .default(Text("Okay")))
+        }
+        
+        isAlerting = true
+        tempCalls = nil
         isLoading = false
     }
 }
