@@ -100,7 +100,7 @@ struct AppointmentRowView: View {
                     
                     VStack {
                         Button("Call Client", action: {
-                            let prefix = "tel://"
+                            let prefix = "tel://141"
                             
                             let formattedPhoneNo = prefix + call["clientNo"]!
                             
