@@ -15,11 +15,17 @@ struct ClientView: View {
     
     @State var calls: [[String: String]]?
     
+    @State var alert: Alert = Alert(title: Text("Unknown Error"))
+    @State var isAlerting: Bool = false
+    
     var body: some View {
         if(isLoggedIn) {
-            ClientLandingView(calls: $calls, isLoggedIn: $isLoggedIn)
+            ClientLandingView(calls: $calls, isLoggedIn: $isLoggedIn, alert: $alert, isAlerting: $isAlerting)
                 .navigationBarHidden(true)
                 .navigationTitle("")
+                .alert(isPresented: $isAlerting, content: {
+                    alert
+                })
             
         } else {
             ClientLoginView(hasDetailsSaved: hasDetailsSaved, calls: $calls, isLoggedIn: $isLoggedIn)
