@@ -6,6 +6,7 @@
 //
 
 import Alamofire
+import os
 import SwiftUI
 
 struct CallerLandingView: View {
@@ -175,6 +176,15 @@ struct CallerLandingView: View {
                 ProgressView()
             }
         }
+        .onAppear(perform: {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                if success {
+                    debugPrint("All set!")
+                } else if let error = error {
+                    debugPrint(error.localizedDescription)
+                }
+            }
+        })
         .alert(isPresented: $isAlerting, content: {
             alert
         })
