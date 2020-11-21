@@ -74,7 +74,7 @@ struct ClientCallLogView: View {
                         
                         if(isOnAllCalls) {
                             ForEach((calls ?? []).sorted(by: Helpers.sortCalls), id: \.self) { call in
-                                AppointmentRowView(call: call, isClient: true, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: .constant(false), callLength: .constant(""), callId: call["id"]!, isLoading: $isLoading, calls: $calls)
+                                AppointmentRowView(call: call, isClient: true, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, callId: call["id"]!, isLoading: $isLoading, calls: $calls)
                                     .alert(isPresented: $isAlerting, content: {
                                         alert
                                     })
@@ -85,7 +85,7 @@ struct ClientCallLogView: View {
                             ForEach((calls ?? []).filter({call in
                                 Helpers.isInFuture(call["date"]!, call["time"]!)
                             }).sorted(by: Helpers.sortCalls), id: \.self) { call in
-                                AppointmentRowView(call: call, isClient: true, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: .constant(false), callLength: .constant(""), callId: "", isLoading: $isLoading, calls: $calls)
+                                AppointmentRowView(call: call, isClient: true, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, callId: "", isLoading: $isLoading, calls: $calls)
                                     .alert(isPresented: $isAlerting, content: {
                                         alert
                                     })
