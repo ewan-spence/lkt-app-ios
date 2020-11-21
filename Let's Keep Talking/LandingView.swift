@@ -65,6 +65,16 @@ struct LandingView: View {
         
         isLoggedInClient = isLoggedInClientFunc(isLoggedIn)
         isLoggedInCaller = isLoggedInCallerFunc(isLoggedIn)
+        
+        let callBookCategory = UNNotificationCategory(
+            identifier: "CALL_BOOK",
+            actions: [UNNotificationAction(identifier: "VIEW_CALL", title: "View Call", options: UNNotificationActionOptions(rawValue: 0))],
+            intentIdentifiers: [],
+            hiddenPreviewsBodyPlaceholder: "", options: .customDismissAction
+        )
+        
+        let notificationCenter = UNUserNotificationCenter.current()
+        notificationCenter.setNotificationCategories([callBookCategory])
     }
     
     func isLoggedInClientFunc(_ isLoggedIn: Bool) -> Bool {
