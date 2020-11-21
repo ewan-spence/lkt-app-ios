@@ -10,42 +10,52 @@ import SwiftUI
 
 struct CallRaterView: View {
     @Environment(\.presentationMode) var presentationMode
+    @Binding var hasRating: Bool
 
     @State var callId: String
     @State var rating: Float = 5
     @State var feedback: String = ""
     
-    @Binding var alert: Alert
-    @Binding var isAlerting: Bool
+    @State var alert: Alert = Alert(title: Text("Unknown Error"))
+    @State var isAlerting: Bool = false
     
-    @Binding var isLoading: Bool
+    @State var isLoading: Bool = false
     
     var body: some View {
-        VStack {
-            Text("Rate Call")
-                .font(.largeTitle)
-        Form {
-            Text("Please rate your call on a scale from 0 to 10\nWhere 0 is \"Not at all helpful\"\nAnd 10 is \"Extremely helpful\"")
-
-            Slider(value: $rating, in: 0...10, step: 1, minimumValueLabel: Text("0"), maximumValueLabel: Text("10")) {
+        ZStack {
+            VStack {
+                Text("Rate Call")
+                    .font(.largeTitle)
+                Form {
+                    Text("Please rate your call on a scale from 0 to 10\nWhere 0 is \"Not at all helpful\"\nAnd 10 is \"Extremely helpful\"")
+                    
+                    Slider(value: $rating, in: 0...10, step: 1, minimumValueLabel: Text("0"), maximumValueLabel: Text("10")) {
+                    }
+                    HStack {
+                        Spacer()
+                        Text(String(Int(rating)))
+                        Spacer()
+                    }
+                    
+                    Text("Please let us know any other feedback you have here:")
+                    
+                    TextEditor(text: $feedback)
+                        .foregroundColor(.gray)
+                    
+                    Button("Submit Feedback", action: {
+                        submitFeedback()
+                    })
+                    
+                }
             }
-            HStack {
-                Spacer()
-                Text(String(Int(rating)))
-                Spacer()
+            
+            if(isLoading) {
+                ProgressView()
             }
-            
-            Text("Please let us know any other feedback you have here:")
-            
-            TextEditor(text: $feedback)
-                .foregroundColor(.gray)
-            
-            Button("Submit Feedback", action: {
-                submitFeedback()
-            })
-
         }
-        }
+        .alert(isPresented: $isAlerting, content: {
+            alert
+        })
     }
     
     func submitFeedback() {
@@ -79,6 +89,7 @@ struct CallRaterView: View {
     func handleSubmitResponse(_ status: Bool, _ lineNo: Int?) {
         if(status) {
             alert = Alert(title: Text("Call Rating Submitted"), message: Text("Your feedback has been submitted. Thank you."), dismissButton: .default(Text("Okay"), action: {
+                hasRating = true
                 self.presentationMode.wrappedValue.dismiss()
             }))
         } else {
