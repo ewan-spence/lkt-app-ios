@@ -290,7 +290,6 @@ struct ClientLoginView: View {
                         self.calls = []
                         
                         isLoggedIn = true
-                        isLoading = false
                         
                     }
                     
@@ -303,6 +302,7 @@ struct ClientLoginView: View {
             loginError = true
             loginErrorText = message
         }
+        isLoading = false
     }
     
     func getCallInfo(_ clientId: String?) {
