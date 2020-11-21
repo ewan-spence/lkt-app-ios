@@ -16,8 +16,6 @@ struct CallerCallLogView: View {
     
     @Binding var isAlerting: Bool
     
-    @Binding var isAddingCallLength: Bool
-    @Binding var callLength: String?
     @Binding var callId: String
     
     @Binding var alert: Alert
@@ -75,14 +73,14 @@ struct CallerCallLogView: View {
                 ScrollView {
                     if(isOnAllCalls) {
                         ForEach(calls?.sorted(by: Helpers.sortCalls) ?? [], id: \.self) { call in
-                            AppointmentRowView(call: call, isClient: false, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: $isAddingCallLength, callLength: $callLength, callId: callId, isLoading: $isLoading, calls: $calls)
+                            AppointmentRowView(call: call, isClient: false, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, callId: callId, isLoading: $isLoading, calls: $calls)
                         }
                     }
                     if(isOnFutureCalls) {
                         ForEach(calls?.filter({ call in
                             Helpers.isInFuture(call["date"]!, call["time"]!)
                         }).sorted(by: Helpers.sortCalls).reversed() ?? [], id: \.self) { call in
-                            AppointmentRowView(call: call, isClient: false, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: .constant(false), callLength: .constant(""), callId: callId, isLoading: $isLoading, calls: $calls)
+                            AppointmentRowView(call: call, isClient: false, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, callId: callId, isLoading: $isLoading, calls: $calls)
                         }
                     }
                 }
