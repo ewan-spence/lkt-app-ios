@@ -36,7 +36,7 @@ struct CallerCallLogView: View {
                         HStack {
                             Spacer()
                             
-                            Text("Future Calls")
+                            Text("Past Calls")
                                 .onTapGesture(perform: {
                                     isOnPastCalls = true
                                     isOnFutureCalls = false
