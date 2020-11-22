@@ -18,8 +18,8 @@ struct ClientHomeScreenView: View {
     
     @Binding var calls: [[String: String]]?
     
-    @State var isAlerting: Bool = false
-    @State var alert: Alert?
+    @Binding var isAlerting: Bool
+    @Binding var alert: Alert
     
     @State var errorLine: Int?
     
@@ -75,13 +75,7 @@ struct ClientHomeScreenView: View {
             if(isLoading) {
                 ProgressView()
             }
-        }.alert(isPresented: $isAlerting, content: {
-            alert!
-        })
-        .onAppear(perform: {
-            
-        })
-        
+        }
     }
     
     func cancelCall() {
@@ -117,7 +111,7 @@ struct ClientHomeScreenView: View {
         func handleCancelResponse(_ status: Bool, _ line: Int?) {
             if(status) {
                 
-                let call = ["id" : callId, "date" : callDate, "time" : callTime, "callerName" : callCaller]
+                let call = ["id" : callId, "date" : callDate, "time" : callTime, "callerName" : callCaller, "hasRating" : "F"]
                 
                 calls?.remove(at: (calls?.firstIndex(of: call))!)
                 

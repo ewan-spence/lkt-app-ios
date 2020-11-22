@@ -153,7 +153,7 @@ struct AppointmentRowBookerView: View {
             nextCallTime = callTime
             nextCallCaller = callerName
             
-            calls?.append(["date" : callDate, "time" : callTime, "callerName" : callerName, "id" : callId])
+            calls?.append(["date" : callDate, "time" : callTime, "callerName" : callerName, "id" : callId, "hasRating" : "F"])
             
             self.presentationMode.wrappedValue.dismiss()
             
