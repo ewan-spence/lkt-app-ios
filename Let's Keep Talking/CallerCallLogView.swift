@@ -36,7 +36,7 @@ struct CallerCallLogView: View {
                         HStack {
                             Spacer()
                             
-                            Text("All Calls")
+                            Text("Future Calls")
                                 .onTapGesture(perform: {
                                     isOnAllCalls = true
                                     isOnFutureCalls = false
@@ -72,14 +72,16 @@ struct CallerCallLogView: View {
                 
                 ScrollView {
                     if(isOnAllCalls) {
-                        ForEach(calls?.sorted(by: Helpers.sortCalls) ?? [], id: \.self) { call in
+                        ForEach(calls?.filter({ call in
+                            !Helpers.isInFuture(call["date"]!, call["time"]!)
+                        }).sorted(by: Helpers.sortCalls) ?? [], id: \.self) { call in
                             AppointmentRowView(call: call, isClient: false, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, callId: callId, isLoading: $isLoading, calls: $calls)
                         }
                     }
                     if(isOnFutureCalls) {
                         ForEach(calls?.filter({ call in
                             Helpers.isInFuture(call["date"]!, call["time"]!)
-                        }).sorted(by: Helpers.sortCalls).reversed() ?? [], id: \.self) { call in
+                        }).sorted(by: Helpers.sortCalls) ?? [], id: \.self) { call in
                             AppointmentRowView(call: call, isClient: false, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, callId: callId, isLoading: $isLoading, calls: $calls)
                         }
                     }
