@@ -100,7 +100,7 @@ struct LandingView: View {
             }
             
         }
-        
+    
     }
     
     func isLoggedInClientFunc(_ isLoggedIn: Bool) -> Bool {

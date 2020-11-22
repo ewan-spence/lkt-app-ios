@@ -9,7 +9,7 @@ import Alamofire
 import SwiftUI
 
 struct ClientCallLogView: View {
-    @State var isOnAllCalls: Bool = true
+    @State var isOnPastCalls: Bool = true
     @State var isOnFutureCalls: Bool = false
     
     @State var isLoading: Bool = false
@@ -36,16 +36,16 @@ struct ClientCallLogView: View {
                             HStack {
                                 Spacer()
                                 
-                                Text("All Calls")
+                                Text("Past Calls")
                                     .onTapGesture(perform: {
-                                        isOnAllCalls = true
+                                        isOnPastCalls = true
                                         isOnFutureCalls = false
                                     })
                                 
                                 Spacer()
                             }
                             
-                            if(isOnAllCalls) {
+                            if(isOnPastCalls) {
                                 RoundedRectangle(cornerRadius: 15)
                                     .stroke(Color.green, lineWidth: 5)
                             }
@@ -57,7 +57,7 @@ struct ClientCallLogView: View {
                                 
                                 Text("Future Calls")
                                     .onTapGesture(perform: {
-                                        isOnAllCalls = false
+                                        isOnPastCalls = false
                                         isOnFutureCalls = true
                                     })
                                 
@@ -72,12 +72,11 @@ struct ClientCallLogView: View {
                     
                     ScrollView {
                         
-                        if(isOnAllCalls) {
-                            ForEach((calls ?? []).sorted(by: Helpers.sortCalls), id: \.self) { call in
-                                AppointmentRowView(call: call, isClient: true, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: .constant(false), callLength: .constant(""), callId: call["id"]!, isLoading: $isLoading, calls: $calls)
-                                    .alert(isPresented: $isAlerting, content: {
-                                        alert
-                                    })
+                        if(isOnPastCalls) {
+                            ForEach((calls ?? []).filter({ call in
+                                !Helpers.isInFuture(call["date"]!, call["time"]!)
+                            }).sorted(by: Helpers.sortCalls), id: \.self) { call in
+                                AppointmentRowView(call: call, isClient: true, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, callId: "", isLoading: $isLoading, calls: $calls)
                             }
                         }
                         
@@ -85,7 +84,7 @@ struct ClientCallLogView: View {
                             ForEach((calls ?? []).filter({call in
                                 Helpers.isInFuture(call["date"]!, call["time"]!)
                             }).sorted(by: Helpers.sortCalls), id: \.self) { call in
-                                AppointmentRowView(call: call, isClient: true, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, isAddingCallLength: .constant(false), callLength: .constant(""), callId: "", isLoading: $isLoading, calls: $calls)
+                                AppointmentRowView(call: call, isClient: true, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, callId: "", isLoading: $isLoading, calls: $calls)
                                     .alert(isPresented: $isAlerting, content: {
                                         alert
                                     })
@@ -99,10 +98,3 @@ struct ClientCallLogView: View {
             }
         }
     }
-
-//
-//struct ClientFragmentViewOne_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ClientCallLogView(calls: .constant([["date" : "10/10/2020", "time" : "14:00", "callerName" : "John Doe", "id" : ""]]))
-//    }
-//}

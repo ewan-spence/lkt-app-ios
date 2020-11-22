@@ -112,7 +112,6 @@ struct Helpers: View {
 struct LoginStruct: Encodable {
     let phoneNo: String
     let password: String
-    let devId: String = UIDevice.current.identifierForVendor?.uuidString ?? ""
 }
 
 struct CreateAccStruct: Encodable {
@@ -123,7 +122,6 @@ struct CreateAccStruct: Encodable {
     let genderPref: String
     let ethnicity: String
     let ethnicPref: Bool
-    let devId: String = UIDevice.current.identifierForVendor?.uuidString ?? ""
 }
 
 struct AvailStruct: Encodable {
