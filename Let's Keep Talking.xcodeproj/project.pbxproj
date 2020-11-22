@@ -71,7 +71,6 @@
 		94C1E8252516647C001654CD /* ClientLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientLoginView.swift; sourceTree = "<group>"; };
 		94C1E8282516652D001654CD /* CallerLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerLoginView.swift; sourceTree = "<group>"; };
 		94D5FC33253C4A33009F5E79 /* TextFieldAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlertViewController.swift; sourceTree = "<group>"; };
-		94E5CBE925617C01002C7C25 /* Let's Keep Talking.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Let's Keep Talking.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,7 +137,6 @@
 		949E614D2516386E0013690E /* Let's Keep Talking */ = {
 			isa = PBXGroup;
 			children = (
-				94E5CBE925617C01002C7C25 /* Let's Keep Talking.entitlements */,
 				94324F9D254AE0F300E113A5 /* LaunchScreen.storyboard */,
 				94D5FC33253C4A33009F5E79 /* TextFieldAlertViewController.swift */,
 				94B705B72519054E00972DEC /* APIEndpoints.swift */,
@@ -393,7 +391,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Let's Keep Talking/Let's Keep Talking.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Let's Keep Talking/Preview Content\"";
 				DEVELOPMENT_TEAM = 7M5B76294D;
@@ -417,7 +414,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Let's Keep Talking/Let's Keep Talking.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Let's Keep Talking/Preview Content\"";
 				DEVELOPMENT_TEAM = 7M5B76294D;
