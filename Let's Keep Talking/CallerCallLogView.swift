@@ -9,7 +9,7 @@ import SwiftUI
 import Alamofire
 
 struct CallerCallLogView: View {
-    @State var isOnAllCalls: Bool = true
+    @State var isOnPastCalls: Bool = true
     @State var isOnFutureCalls: Bool = false
     
     @State var isLoading: Bool = false
@@ -38,14 +38,14 @@ struct CallerCallLogView: View {
                             
                             Text("Future Calls")
                                 .onTapGesture(perform: {
-                                    isOnAllCalls = true
+                                    isOnPastCalls = true
                                     isOnFutureCalls = false
                                 })
                             
                             Spacer()
                         }
                         
-                        if(isOnAllCalls) {
+                        if(isOnPastCalls) {
                             RoundedRectangle(cornerRadius: 15)
                                 .stroke(Color.green, lineWidth: 5)
                         }
@@ -57,7 +57,7 @@ struct CallerCallLogView: View {
                             
                             Text("Future Calls")
                                 .onTapGesture(perform: {
-                                    isOnAllCalls = false
+                                    isOnPastCalls = false
                                     isOnFutureCalls = true
                                 })
                             
@@ -71,17 +71,17 @@ struct CallerCallLogView: View {
                 }
                 
                 ScrollView {
-                    if(isOnAllCalls) {
-                        ForEach(calls?.filter({ call in
+                    if(isOnPastCalls) {
+                        ForEach((calls ?? []).filter({ call in
                             !Helpers.isInFuture(call["date"]!, call["time"]!)
-                        }).sorted(by: Helpers.sortCalls) ?? [], id: \.self) { call in
+                        }).sorted(by: Helpers.sortCalls), id: \.self) { call in
                             AppointmentRowView(call: call, isClient: false, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, callId: callId, isLoading: $isLoading, calls: $calls)
                         }
                     }
                     if(isOnFutureCalls) {
-                        ForEach(calls?.filter({ call in
+                        ForEach((calls ?? []).filter({ call in
                             Helpers.isInFuture(call["date"]!, call["time"]!)
-                        }).sorted(by: Helpers.sortCalls) ?? [], id: \.self) { call in
+                        }).sorted(by: Helpers.sortCalls), id: \.self) { call in
                             AppointmentRowView(call: call, isClient: false, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, callId: callId, isLoading: $isLoading, calls: $calls)
                         }
                     }
