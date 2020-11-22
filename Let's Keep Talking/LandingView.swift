@@ -66,15 +66,41 @@ struct LandingView: View {
         isLoggedInClient = isLoggedInClientFunc(isLoggedIn)
         isLoggedInCaller = isLoggedInCallerFunc(isLoggedIn)
         
-        let callBookCategory = UNNotificationCategory(
-            identifier: "CALL_BOOK",
-            actions: [UNNotificationAction(identifier: "VIEW_CALL", title: "View Call", options: UNNotificationActionOptions(rawValue: 0))],
-            intentIdentifiers: [],
-            hiddenPreviewsBodyPlaceholder: "", options: .customDismissAction
-        )
-        
         let notificationCenter = UNUserNotificationCenter.current()
-        notificationCenter.setNotificationCategories([callBookCategory])
+        
+        
+        notificationCenter.getNotificationSettings{ settings in
+            if (settings.authorizationStatus == .authorized)  {
+                return
+            }
+
+            notificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+                if let _ = error {
+                    
+                } else if(granted){
+                    let callBookCategory = UNNotificationCategory(
+                        identifier: "CALL_BOOK",
+                        actions: [UNNotificationAction(identifier: "VIEW_CALL", title: "View Call", options: UNNotificationActionOptions(rawValue: 0))],
+                        intentIdentifiers: [],
+                        hiddenPreviewsBodyPlaceholder: "",
+                        options: .customDismissAction
+                    )
+                    
+                    let callCancelCategory = UNNotificationCategory(
+                        identifier: "CALL_CANCEL",
+                        actions: [UNNotificationAction(identifier: "DISMISS", title: "Dismiss Notification", options: UNNotificationActionOptions(rawValue: 0))],
+                        intentIdentifiers: [],
+                        hiddenPreviewsBodyPlaceholder: "",
+                        options: .customDismissAction
+                    )
+                    
+                    notificationCenter.setNotificationCategories([callBookCategory, callCancelCategory])
+                }
+                
+            }
+            
+        }
+        
     }
     
     func isLoggedInClientFunc(_ isLoggedIn: Bool) -> Bool {
