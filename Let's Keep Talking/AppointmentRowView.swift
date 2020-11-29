@@ -44,7 +44,7 @@ struct AppointmentRowView: View {
                     
                     if(!Helpers.isInFuture(call["date"]!, call["time"]!)) {
                         NavigationLink("Rate Call", destination: CallRaterView(hasRating: $hasRating, callId: callId))
-                            .disabled(!(call["hasRating"]!.isEmpty) || hasRating || isLoading)
+                            .disabled((call["hasRating"] == "T") || hasRating || isLoading)
                             .frame(minWidth: 0, maxWidth: .infinity)
                     } else {
                         Button("Cancel Call", action: {
