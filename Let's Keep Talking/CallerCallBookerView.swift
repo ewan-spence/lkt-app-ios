@@ -62,7 +62,7 @@ struct CallerCallBookerView: View {
                             }
                         }
                         .padding()
-                        .disabled(selectedMonth.isEmpty)
+                        .disabled(selectedMonth.isEmpty || isLoading)
                         
                         Picker("Select a Time", selection: $selectedTime) {
                             ForEach(possibleTimes, id: \.self) { time in
@@ -70,7 +70,7 @@ struct CallerCallBookerView: View {
                             }
                         }
                         .padding()
-                        .disabled(selectedDate.isEmpty)
+                        .disabled(selectedDate.isEmpty || isLoading)
                     }
                 }
                 
@@ -83,7 +83,7 @@ struct CallerCallBookerView: View {
                 })
                 
                 
-                .disabled(selectedClient.isEmpty || selectedMonth.isEmpty || selectedDate.isEmpty || selectedTime.isEmpty)
+                .disabled(selectedClient.isEmpty || selectedMonth.isEmpty || selectedDate.isEmpty || selectedTime.isEmpty || isLoading)
                 .padding()
                 
             }.onAppear(perform: getFormOptions)

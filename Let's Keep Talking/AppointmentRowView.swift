@@ -44,7 +44,7 @@ struct AppointmentRowView: View {
                     
                     if(!Helpers.isInFuture(call["date"]!, call["time"]!)) {
                         NavigationLink("Rate Call", destination: CallRaterView(hasRating: $hasRating, callId: callId))
-                            .disabled(!(call["hasRating"]!.isEmpty) || hasRating)
+                            .disabled(!(call["hasRating"]!.isEmpty) || hasRating || isLoading)
                             .frame(minWidth: 0, maxWidth: .infinity)
                     } else {
                         Button("Cancel Call", action: {
@@ -53,6 +53,7 @@ struct AppointmentRowView: View {
                             
                             isAlerting = true
                         })
+                        .disabled(isLoading)
                     }
                     
                     VStack {
@@ -78,6 +79,7 @@ struct AppointmentRowView: View {
                                         addCallLength()
                                     })
                                 })
+                                .disabled(isLoading)
                             } else {
                                 Button("Edit Call Length", action: {
                                     isAddingCallLength = true
@@ -91,6 +93,7 @@ struct AppointmentRowView: View {
                                 
                                 isAlerting = true
                             })
+                            .disabled(isLoading)
                         }
                     }.frame(minWidth: 0, maxWidth: .infinity)
                     
@@ -113,6 +116,7 @@ struct AppointmentRowView: View {
                             
                             UIApplication.shared.open(URL(string: formattedPhoneNo)!)
                         })
+                        .disabled(isLoading)
                     }.frame(minWidth: 0, maxWidth: .infinity)
                     
                     
