@@ -9,7 +9,6 @@ import Alamofire
 import SwiftUI
 
 struct CallerLandingView: View {
-    @State var menuShown = false
     
     @State var isOnViewOne = false
     @State var isOnViewTwo = true
@@ -53,7 +52,6 @@ struct CallerLandingView: View {
                             .font(.system(size: 30))
                             .padding()
                             .onTapGesture(perform: {
-                                menuShown.toggle()
                             })
                     })
                     
@@ -94,7 +92,6 @@ struct CallerLandingView: View {
                                 self.isOnViewOne = true
                                 self.isOnViewTwo = false
                                 self.isOnViewThree = false
-                                self.menuShown = false
                             })
                     }.padding()
                     
@@ -127,7 +124,6 @@ struct CallerLandingView: View {
                                     self.isOnViewOne = false
                                     self.isOnViewTwo = true
                                     self.isOnViewThree = false
-                                    self.menuShown = false
                                 }
                             })
                         
@@ -151,7 +147,6 @@ struct CallerLandingView: View {
                                 self.isOnViewOne = false
                                 self.isOnViewTwo = false
                                 self.isOnViewThree = true
-                                self.menuShown = false
                             })
                         
                     }.padding()

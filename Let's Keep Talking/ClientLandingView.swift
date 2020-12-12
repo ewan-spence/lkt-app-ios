@@ -13,7 +13,6 @@ struct ClientLandingView: View {
     @State var isOnView1 = false
     @State var isOnView2 = true
     
-    @State var menuShown = false
     
     @State var isLoading = false
     
@@ -44,9 +43,6 @@ struct ClientLandingView: View {
                             .foregroundColor(.primary)
                             .font(.system(size: 30))
                             .padding()
-                            .onTapGesture(perform: {
-                                menuShown.toggle()
-                            })
                     })
                     
                     Spacer()
@@ -84,7 +80,6 @@ struct ClientLandingView: View {
                             .onTapGesture(perform: {
                                 self.isOnView1 = true
                                 self.isOnView2 = false
-                                self.menuShown = false
                             })
                     }.padding()
                     
@@ -105,7 +100,6 @@ struct ClientLandingView: View {
                             .onTapGesture(perform: {
                                 self.isOnView1 = false
                                 self.isOnView2 = true
-                                self.menuShown = false
                             })
                         
                     }.padding()
