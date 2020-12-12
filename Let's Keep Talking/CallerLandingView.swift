@@ -35,26 +35,27 @@ struct CallerLandingView: View {
         ZStack {
             VStack {
                 HStack {
-                    Image(systemName: "gearshape").font(.system(size: 30))
-                        .padding()
-                        .onTapGesture(perform: {
-                            menuShown.toggle()
-                        })
                     
-                    if(menuShown) {
-                        Menu("Settings", content: {
-                            Button("Log Out", action: {
-                                UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
-                                UserDefaults.standard.removeObject(forKey: "userType")
-                                UserDefaults.standard.removeObject(forKey: "phoneNo")
-                                UserDefaults.standard.removeObject(forKey: "password")
-                                UserDefaults.standard.removeObject(forKey: "id")
-                                UserDefaults.standard.synchronize()
-                                
-                                isLoggedIn = false
-                            })
+                    Menu(content: {
+                        Button("Log Out", action: {
+                            UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+                            UserDefaults.standard.removeObject(forKey: "userType")
+                            UserDefaults.standard.removeObject(forKey: "phoneNo")
+                            UserDefaults.standard.removeObject(forKey: "password")
+                            UserDefaults.standard.removeObject(forKey: "id")
+                            UserDefaults.standard.synchronize()
+                            
+                            isLoggedIn = false
                         })
-                    }
+                    }, label: {
+                        Image(systemName: "gearshape")
+                            .foregroundColor(.primary)
+                            .font(.system(size: 30))
+                            .padding()
+                            .onTapGesture(perform: {
+                                menuShown.toggle()
+                            })
+                    })
                     
                     Spacer()
                     
@@ -69,7 +70,7 @@ struct CallerLandingView: View {
                 
                 if(isOnViewOne) {
                     CallerCallLogView(isAlerting: $isAlerting, callId: $callId, alert: $alert, calls: $calls)
-                        
+                    
                 }
                 
                 if(isOnViewTwo) {
@@ -79,7 +80,7 @@ struct CallerLandingView: View {
                 
                 if(isOnViewThree) {
                     CallerAvailabilityView(isOnViewTwo: $isOnViewTwo, isOnViewThree: $isOnViewThree, isAlerting: $isAlerting, alert: $alert)
-                 }
+                }
                 
                 Spacer()
                 
