@@ -86,6 +86,12 @@ struct AppointmentRowView: View {
                                     callLength = call["length"]
                                     callId = call["id"]!
                                 })
+                                .textFieldAlert(isPresented: $isAddingCallLength, content: {
+                                    TextFieldAlert(title: "Edit Call Length", message: "Please adjust the call length below", text: $callLength, action: {
+                                        addCallLength()
+                                    })
+                                })
+                                .disabled(isLoading)
                             }
                         } else {
                             Button("Cancel Call", action: {

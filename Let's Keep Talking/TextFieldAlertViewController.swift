@@ -61,7 +61,11 @@ class TextFieldAlertViewController: UIViewController {
             self?.isPresented?.wrappedValue = false
             self?.action()
         }
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+            self?.isPresented?.wrappedValue = false
+        }
         vc.addAction(action)
+        vc.addAction(cancel)
         present(vc, animated: true, completion: nil)
     }
     
