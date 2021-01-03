@@ -109,13 +109,6 @@ struct Helpers: View {
     }
 }
 
-struct LoginStruct: Encodable {
-    let phoneNo: String
-    let password: String
-    
-    let devID: String
-}
-
 struct CreateAccStruct: Encodable {
     let fullName: String
     let phoneNo: String
@@ -125,7 +118,7 @@ struct CreateAccStruct: Encodable {
     let ethnicity: String
     let ethnicPref: Bool
     
-    let devID: String
+    let devID: String?
 }
 
 struct AvailStruct: Encodable {

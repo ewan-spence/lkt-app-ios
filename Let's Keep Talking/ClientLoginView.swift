@@ -37,11 +37,7 @@ struct ClientLoginView: View {
     @State var loginError: Bool = false
     @State var loginErrorText: String = ""
     
-    @Binding var calls: [[String: String]]?
-    
-    @State var loginDetails: LoginStruct = LoginStruct(phoneNo: "", password: "", devID: "")
-    @State var createAccDetails: CreateAccStruct = CreateAccStruct(fullName: "", phoneNo: "", password: "", gender: "", genderPref: "", ethnicity: "", ethnicPref: false, devID: "")
-    
+    @Binding var calls: [[String: String]]?    
     @Binding var isLoggedIn: Bool
     
     var body: some View {
@@ -146,19 +142,23 @@ struct ClientLoginView: View {
         }
         
         if(isValidForm(requiredFields)) {
-            let devID = UserDefaults.standard.string(forKey: "devID") ?? ""
             
             if(isOn){
-                
-                
+                let devID = UserDefaults.standard.string(forKey: "devID")
+
                 let createAccStruct = CreateAccStruct(fullName: fullName, phoneNo: phoneNo, password: password, gender: gender, genderPref: genderPref, ethnicity: ethnicity, ethnicPref: ethnicPref, devID: devID)
                 
                 createAcc(createAccStruct)
                 
             } else {
-                let loginStruct = LoginStruct(phoneNo: phoneNo, password: password, devID: devID)
                 
-                login(loginStruct)
+                var creds = ["phoneNo" : phoneNo, "password" : password]
+                
+                if let devID = UserDefaults.standard.string(forKey: "devID") {
+                    creds["devID"] = devID
+                }
+
+                login(creds)
             }
         } else {
             formError = "Please fill all required fields"
@@ -212,7 +212,7 @@ struct ClientLoginView: View {
         }
     }
     
-    public func login(_ params: LoginStruct) -> Void{
+    public func login(_ params: [String: String]) -> Void{
         isLoading = true
         
         let url = APIEndpoints.CLIENT_LOGIN

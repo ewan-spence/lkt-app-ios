@@ -61,9 +61,12 @@ struct CallerLoginView: View {
     }
     
     func onClick() -> Void {
-        let devID = UserDefaults.standard.string(forKey: "devID") ?? ""
+        var creds = ["phoneNo" : phoneNo, "password": password]
         
-        let creds = LoginStruct(phoneNo: phoneNo, password: password, devID: devID)
+        if let devID = UserDefaults.standard.string(forKey: "devID") {
+            creds["devID"] = devID
+        }
+        
         let URL = APIEndpoints.CALLER_LOGIN
         
         isLoading = true
