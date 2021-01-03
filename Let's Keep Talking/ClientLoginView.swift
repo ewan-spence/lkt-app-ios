@@ -39,8 +39,8 @@ struct ClientLoginView: View {
     
     @Binding var calls: [[String: String]]?
     
-    @State var loginDetails: LoginStruct = LoginStruct(phoneNo: "", password: "")
-    @State var createAccDetails: CreateAccStruct = CreateAccStruct(fullName: "", phoneNo: "", password: "", gender: "", genderPref: "", ethnicity: "", ethnicPref: false)
+    @State var loginDetails: LoginStruct = LoginStruct(phoneNo: "", password: "", devID: "")
+    @State var createAccDetails: CreateAccStruct = CreateAccStruct(fullName: "", phoneNo: "", password: "", gender: "", genderPref: "", ethnicity: "", ethnicPref: false, devID: "")
     
     @Binding var isLoggedIn: Bool
     
@@ -146,12 +146,19 @@ struct ClientLoginView: View {
         }
         
         if(isValidForm(requiredFields)) {
+            let devID = UserDefaults.standard.string(forKey: "devID") ?? ""
             
             if(isOn){
-                createAcc()
+                
+                
+                let createAccStruct = CreateAccStruct(fullName: fullName, phoneNo: phoneNo, password: password, gender: gender, genderPref: genderPref, ethnicity: ethnicity, ethnicPref: ethnicPref, devID: devID)
+                
+                createAcc(createAccStruct)
                 
             } else {
-                login(phoneNo, password)
+                let loginStruct = LoginStruct(phoneNo: phoneNo, password: password, devID: devID)
+                
+                login(loginStruct)
             }
         } else {
             formError = "Please fill all required fields"
@@ -168,12 +175,10 @@ struct ClientLoginView: View {
         return true
     }
     
-    func createAcc() {
+    func createAcc(_ params: CreateAccStruct) {
         let url = APIEndpoints.CREATE_ACC
-        
-        let parameters = CreateAccStruct(fullName: fullName, phoneNo: phoneNo, password: password, gender: gender, genderPref: genderPref, ethnicity: ethnicity, ethnicPref: ethnicPref)
-        
-        AF.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).responseJSON { response in
+                
+        AF.request(url, method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseJSON { response in
             
             switch response.result {
             case let .success(value):
@@ -207,14 +212,12 @@ struct ClientLoginView: View {
         }
     }
     
-    public func login(_ phoneNo: String, _ password: String) -> Void{
+    public func login(_ params: LoginStruct) -> Void{
         isLoading = true
         
         let url = APIEndpoints.CLIENT_LOGIN
         
-        loginDetails = LoginStruct(phoneNo: phoneNo, password: password)
-        
-        AF.request(url, method: .post, parameters: loginDetails, encoder: JSONParameterEncoder.default).responseJSON { response in
+        AF.request(url, method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseJSON { response in
             
             switch response.result {
             case let .success(value):
