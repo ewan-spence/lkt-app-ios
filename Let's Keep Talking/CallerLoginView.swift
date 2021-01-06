@@ -63,8 +63,8 @@ struct CallerLoginView: View {
     func onClick() -> Void {
         var creds = ["phoneNo" : phoneNo, "password": password]
         
-        if let devID = UserDefaults.standard.string(forKey: "devID") {
-            creds["devID"] = devID
+        if let devToken = UserDefaults.standard.string(forKey: "devToken") {
+            creds["devToken"] = devToken
         }
         
         let URL = APIEndpoints.CALLER_LOGIN

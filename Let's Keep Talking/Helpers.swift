@@ -118,7 +118,7 @@ struct CreateAccStruct: Encodable {
     let ethnicity: String
     let ethnicPref: Bool
     
-    let devID: String?
+    let devToken: String?
 }
 
 struct AvailStruct: Encodable {

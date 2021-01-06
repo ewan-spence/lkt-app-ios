@@ -144,9 +144,9 @@ struct ClientLoginView: View {
         if(isValidForm(requiredFields)) {
             
             if(isOn){
-                let devID = UserDefaults.standard.string(forKey: "devID")
+                let devToken = UserDefaults.standard.string(forKey: "devToken")
 
-                let createAccStruct = CreateAccStruct(fullName: fullName, phoneNo: phoneNo, password: password, gender: gender, genderPref: genderPref, ethnicity: ethnicity, ethnicPref: ethnicPref, devID: devID)
+                let createAccStruct = CreateAccStruct(fullName: fullName, phoneNo: phoneNo, password: password, gender: gender, genderPref: genderPref, ethnicity: ethnicity, ethnicPref: ethnicPref, devToken: devToken)
                 
                 createAcc(createAccStruct)
                 
@@ -154,8 +154,8 @@ struct ClientLoginView: View {
                 
                 var creds = ["phoneNo" : phoneNo, "password" : password]
                 
-                if let devID = UserDefaults.standard.string(forKey: "devID") {
-                    creds["devID"] = devID
+                if let devToken = UserDefaults.standard.string(forKey: "devToken") {
+                    creds["devToken"] = devToken
                 }
 
                 login(creds)
