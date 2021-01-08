@@ -65,8 +65,9 @@ struct ClientLandingView: View {
                     let callTime = latestCall?["time"]
                     let callCaller = latestCall?["callerName"]
                     let callId = latestCall?["id"]
+                    let callNotifTime = latestCall?["notifTime"]
                     
-                    ClientHomeScreenView(callDate: latestCallDate ?? "", callTime: callTime ?? "", callCaller: callCaller ?? "", callId: callId ?? "", calls: $calls, isAlerting: $isAlerting, alert: $alert)
+                    ClientHomeScreenView(callDate: latestCallDate ?? "", callTime: callTime ?? "", callCaller: callCaller ?? "", callId: callId ?? "", callNotifTime: callNotifTime, calls: $calls, isAlerting: $isAlerting, alert: $alert)
                 }
                 
                 Spacer()
@@ -176,7 +177,21 @@ struct ClientLandingView: View {
                             hasRatingString = "F"
                         }
                         
-                        funcCalls.append(["date" : callDateString , "time" : callTimeString , "callerName" : callCallerString, "id" : callIdString, "hasRating" : hasRatingString])
+                        var funcCall = ["date" : callDateString , "time" : callTimeString , "callerName" : callCallerString, "id" : callIdString, "hasRating" : hasRatingString]
+                        
+                        if let hasNotif = callDict["hasNotif"] as? Bool {
+                            if hasNotif {
+                                guard let notifTime = callDict["notifTime"] else {
+                                    return handleGetCallsResponse(false, #line, nil)
+                                }
+                                
+                                if "\(notifTime)" != "<null>" {
+                                    funcCall["notifTime"] = "\(notifTime)"
+                                }
+                            }
+                        }
+                        
+                        funcCalls.append(funcCall)
                     }
                     
                     handleGetCallsResponse(true, nil, funcCalls)

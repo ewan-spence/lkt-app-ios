@@ -20,6 +20,7 @@ public class APIEndpoints {
     public static var CLIENT_BOOK_CALL = CLIENT_ROOT + "book/"
     public static var RATE_CALL = CLIENT_ROOT + "rate/"
     public static var GET_CLIENT_CALLS = CLIENT_ROOT + "get-calls/"
+    public static var CLIENT_NOTIF = CLIENT_ROOT + "add-notif/"
     
     public static var CALLER_LOGIN = CALLER_ROOT + "login/"
     public static var GET_CALLER_CALLS = CALLER_ROOT + "get-calls/"

@@ -54,6 +54,9 @@ struct AppointmentRowView: View {
                             isAlerting = true
                         })
                         .disabled(isLoading)
+                        .alert(isPresented: $isAlerting) {
+                            alert
+                        }
                     }
                     
                     VStack {

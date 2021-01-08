@@ -360,7 +360,19 @@ struct ClientLoginView: View {
                         } else {
                             hasRatingString = "T"
                         }
-                        let call = ["date" : callDateString , "time" : callTimeString , "callerName" : callCallerString, "id" : callIdString, "hasRating" : hasRatingString]
+                        var call = ["date" : callDateString , "time" : callTimeString , "callerName" : callCallerString, "id" : callIdString, "hasRating" : hasRatingString]
+                        
+                        if let hasNotif = callDict["hasNotif"] as? Bool {
+                            if hasNotif {
+                                if let notifTime = callDict["notifTime"] {
+                                    if "\(notifTime)" != "<null>" {
+                                        call["notifTime"] = "\(notifTime)"
+                                    }
+                                }
+                                
+                                
+                            }
+                        }
                         
                         funcCalls.append(call)
                     }
@@ -389,11 +401,3 @@ struct ClientLoginView: View {
     
     
 }
-
-
-
-//struct ClientLoginView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ClientLoginView(phoneNo: "", password: "", isLoggedIn: .constant(false))
-//    }
-//}

@@ -9,8 +9,7 @@ import Alamofire
 import SwiftUI
 
 struct ClientCallBookerView: View {
-    @State var rangeSelected: String = ""
-    @State var callerSelected: String = ""
+    @State var selectedCaller: String = ""
     
     @State var callers: [String] = ["No Preference"]
     
@@ -40,7 +39,7 @@ struct ClientCallBookerView: View {
                 Spacer()
                 
                 Form {
-                    Picker("Pick a Caller", selection: $callerSelected, content: {
+                    Picker("Pick a Caller", selection: $selectedCaller, content: {
                         ForEach(callers, id: \.self) { caller in
                             Text(caller)
                         }
@@ -65,7 +64,7 @@ struct ClientCallBookerView: View {
                     Alert(title: Text("Error"), message: Text(alertText), dismissButton: .default(Text("Okay")))
                 }
                 .padding(.top, 30)
-                .disabled(callerSelected.isEmpty || isLoading)
+                .disabled(selectedCaller.isEmpty || isLoading)
             }
             
             if(isLoading) {
@@ -173,7 +172,7 @@ struct ClientCallBookerView: View {
         
         let url = APIEndpoints.GET_APPOINTMENTS
         
-        let parameters = AvailStruct(callerSelected : !(callerSelected.isEmpty || callerSelected.elementsEqual("No Preference")), callerName : callerSelected, clientId : UserDefaults.standard.string(forKey: "id") ?? "")
+        let parameters = AvailStruct(callerSelected : !(selectedCaller.isEmpty || selectedCaller.elementsEqual("No Preference")), callerName : selectedCaller, clientId : UserDefaults.standard.string(forKey: "id") ?? "")
         
         AF.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).responseJSON { response in
             

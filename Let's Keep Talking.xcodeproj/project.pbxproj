@@ -11,6 +11,7 @@
 		9407CAA425310BF700708B79 /* CallRaterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9407CAA325310BF700708B79 /* CallRaterView.swift */; };
 		9414AAA0254B1691004D9E8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9414AA9F254B1691004D9E8F /* Assets.xcassets */; };
 		94324F9E254AE0F300E113A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94324F9D254AE0F300E113A5 /* LaunchScreen.storyboard */; };
+		9457018525A880F1000C1CA0 /* AlertPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9457018425A880F1000C1CA0 /* AlertPicker.swift */; };
 		9457BF582521531A0039A3B4 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9457BF572521531A0039A3B4 /* Helpers.swift */; };
 		9459E4F7254B312100AF135B /* CallerCallBookerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459E4F6254B312100AF135B /* CallerCallBookerView.swift */; };
 		945A0F222534B4FF00C2AF0F /* CallerCallLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945A0F212534B4FF00C2AF0F /* CallerCallLogView.swift */; };
@@ -44,6 +45,7 @@
 		9407CAA325310BF700708B79 /* CallRaterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallRaterView.swift; sourceTree = "<group>"; };
 		9414AA9F254B1691004D9E8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		94324F9D254AE0F300E113A5 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9457018425A880F1000C1CA0 /* AlertPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPicker.swift; sourceTree = "<group>"; };
 		9457BF572521531A0039A3B4 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		9459E4F6254B312100AF135B /* CallerCallBookerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerCallBookerView.swift; sourceTree = "<group>"; };
 		945A0F212534B4FF00C2AF0F /* CallerCallLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerCallLogView.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 		949E614D2516386E0013690E /* Let's Keep Talking */ = {
 			isa = PBXGroup;
 			children = (
+				9457018425A880F1000C1CA0 /* AlertPicker.swift */,
 				94A0AF1025A20A5900232263 /* Let's Keep Talking.entitlements */,
 				94324F9D254AE0F300E113A5 /* LaunchScreen.storyboard */,
 				94D5FC33253C4A33009F5E79 /* TextFieldAlertViewController.swift */,
@@ -240,6 +243,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9457018525A880F1000C1CA0 /* AlertPicker.swift in Sources */,
 				94B8E2922538F11C0092E247 /* WeekView.swift in Sources */,
 				94B8E28F2538E64E0092E247 /* AvailabilityColView.swift in Sources */,
 				94B8E2852538D69D0092E247 /* CallerAvailabilityView.swift in Sources */,
@@ -393,6 +397,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION = YES;
 				CODE_SIGN_ENTITLEMENTS = "Let's Keep Talking/Let's Keep Talking.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Let's Keep Talking/Preview Content\"";
@@ -417,6 +422,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION = YES;
 				CODE_SIGN_ENTITLEMENTS = "Let's Keep Talking/Let's Keep Talking.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Let's Keep Talking/Preview Content\"";
