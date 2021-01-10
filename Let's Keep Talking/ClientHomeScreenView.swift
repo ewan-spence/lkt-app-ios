@@ -185,7 +185,7 @@ struct ClientHomeScreenView: View {
             callNotifTime = nil
             chosen = 0
         } else {
-            alert = Alert(title: Text("Error"), message: Text("There was an error setting this reminder.\nTry again or contact support with error code \(lineNo!)"), dismissButton: .default(Text("Okay")))
+            alert = Alert(title: Text("Error"), message: Text("There was an error setting this reminder.\nTry again or contact support with error code  11\(lineNo!)"), dismissButton: .default(Text("Okay")))
         }
         
         isAlerting = true
@@ -194,7 +194,7 @@ struct ClientHomeScreenView: View {
     
     func minutesToReadable(_ minutes: Int) -> String{
         if minutes < 60 {
-            return "\(minutes)"
+            return "\(minutes) minutes"
         } else if minutes < 120 {
             return "1 hour and \(minutes-60) minutes"
         } else {

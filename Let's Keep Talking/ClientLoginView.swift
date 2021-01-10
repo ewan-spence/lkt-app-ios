@@ -187,27 +187,27 @@ struct ClientLoginView: View {
                     if let status = JSON["status"] as? Bool {
                         if(status) {
                             if let client = JSON["result"] as? [String: Any] {
-                                handleNetworkResponse(true, "", client)
+                                handleLoginResponse(true, "", client)
                             } else {
-                                handleNetworkResponse(false, "Error \(#line)", NSNull())
+                                handleLoginResponse(false, "Error \(#line)", NSNull())
                             }
                         } else {
                             if let error = JSON["error"] as? String {
                                 if(error.elementsEqual("ExistingUserError")) {
-                                    handleNetworkResponse(false, "A User with phone number already exists. Please sign in or contact support", NSNull())
+                                    handleLoginResponse(false, "A User with phone number already exists. Please sign in or contact support", NSNull())
                                 }
                             } else {
-                                handleNetworkResponse(false, "Error \(#line)", NSNull())
+                                handleLoginResponse(false, "Error \(#line)", NSNull())
                             }
                         }
                     } else {
-                        handleNetworkResponse(false, "Error \(#line)", NSNull())
+                        handleLoginResponse(false, "Error \(#line)", NSNull())
                     }
                 } else {
-                    handleNetworkResponse(false, "Error \(#line)", NSNull())
+                    handleLoginResponse(false, "Error \(#line)", NSNull())
                 }
             case let .failure(error):
-                handleNetworkResponse(false, "Network Error \(#line)", error)
+                handleLoginResponse(false, "Network Error \(#line)", error)
             }
         }
     }
@@ -230,45 +230,45 @@ struct ClientLoginView: View {
                         
                         if(status) {
                             if let client = JSON["result"] as? [String: Any] {
-                                handleNetworkResponse(true, "", client)
+                                handleLoginResponse(true, "", client)
                             } else {
-                                handleNetworkResponse(false, "Error \(#line)", NSNull())
+                                handleLoginResponse(false, "Error \(#line)", NSNull())
                             }
                         } else {
                             if let error = JSON["error"] as? String {
                                 if(error.elementsEqual("IncorrectPassword")) {
-                                    handleNetworkResponse(false, "Incorrect Password. Please try again", NSNull())
+                                    handleLoginResponse(false, "Incorrect Password. Please try again", NSNull())
                                 } else if(error.elementsEqual("NoUser")) {
-                                    handleNetworkResponse(false, "No user exists with that phone number, please create an account", NSNull())
+                                    handleLoginResponse(false, "No user exists with that phone number, please create an account", NSNull())
                                 }
                             } else {
-                                handleNetworkResponse(false, "Error \(#line)", NSNull())
+                                handleLoginResponse(false, "Error \(#line)", NSNull())
                             }
                         }
                     }
                 } else {
-                    handleNetworkResponse(false, "Error \(#line)", NSNull())
+                    handleLoginResponse(false, "Error \(#line)", NSNull())
                 }
                 
                 
                 
             case let .failure(error):
-                handleNetworkResponse(false, "Network Error \(#line)", error)
+                handleLoginResponse(false, "Network Error \(#line)", error)
             }
         }
     }
     
     
-    func handleNetworkResponse(_ status: Bool, _ message: String, _ result: Any?) -> Void{
+    func handleLoginResponse(_ status: Bool, _ message: String, _ result: Any?) -> Void{
         if(status) {
             
             if let client = result as? [String: Any] {
                 guard let clientId = client["_id"] as? String else {
-                    return handleNetworkResponse(false, "Error \(#line)", nil)
+                    return handleLoginResponse(false, "Error \(#line)", nil)
                 }
                 
                 guard let clientName = client["fullName"] as? String else {
-                    return handleNetworkResponse(false, "Error \(#line)", nil)
+                    return handleLoginResponse(false, "Error \(#line)", nil)
                 }
                 
                 UserDefaults.standard.set(clientId, forKey: "id")
@@ -278,11 +278,10 @@ struct ClientLoginView: View {
                 UserDefaults.standard.set(password, forKey: "password")
                 UserDefaults.standard.set("client", forKey: "userType")
                 
-                if let calls = client["calls"] as? [String] {
+                if let callIds = client["calls"] as? [String] {
                     
-                    if(!calls.isEmpty) {
+                    if(!callIds.isEmpty) {
                         UserDefaults.standard.set(true, forKey: "hasCalls")
-                        
                         
                         getCallInfo(clientId)
                         
@@ -298,7 +297,7 @@ struct ClientLoginView: View {
                     
                 }
             } else {
-                handleNetworkResponse(false, "Error \(#line)", NSNull())
+                handleLoginResponse(false, "Error \(#line)", NSNull())
             }
             
         } else {
@@ -369,8 +368,6 @@ struct ClientLoginView: View {
                                         call["notifTime"] = "\(notifTime)"
                                     }
                                 }
-                                
-                                
                             }
                         }
                         
