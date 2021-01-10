@@ -54,9 +54,6 @@ struct AppointmentRowView: View {
                             isAlerting = true
                         })
                         .disabled(isLoading)
-                        .alert(isPresented: $isAlerting) {
-                            alert
-                        }
                     }
                     
                     VStack {
@@ -182,7 +179,7 @@ struct AppointmentRowView: View {
             
             calls?.remove(at: (calls?.firstIndex(of: call))!)
             
-            alert = Alert(title: Text("Call Cancelled"), message: Text("Your call with " + call["clientName"]! + " has been cancelled."), dismissButton: .default(Text("Okay")))
+            alert = Alert(title: Text("Call Cancelled"), message: Text("Your call with " + (call["clientName"] ?? call["callerName"]!) + " has been cancelled."), dismissButton: .default(Text("Okay")))
         } else {
             alert = Alert(title: Text("Error"), message: Text("Error cancelling call. Please reload app and try again.\nIf this problem persists, contact support with error code 5" + String(line)), dismissButton: .default(Text("Okay")))
         }

@@ -55,7 +55,7 @@ struct ClientLandingView: View {
                 }
                                 
                 if(isOnView1) {
-                    ClientCallLogView(calls: $calls)
+                    ClientCallLogView(isAlerting: $isAlerting, alert: $alert, calls: $calls)
                 }
                 
                 if(isOnView2) {

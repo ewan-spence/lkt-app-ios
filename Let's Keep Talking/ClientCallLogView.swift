@@ -14,8 +14,8 @@ struct ClientCallLogView: View {
     
     @State var isLoading: Bool = false
     
-    @State var isAlerting: Bool = false
-    @State var alert: Alert = Alert(title: Text("Unknown Error"))
+    @Binding var isAlerting: Bool
+    @Binding var alert: Alert
             
     // Assume call is a dictionary of strings with keys: date, time, callerName, id, hasRating
     @Binding var calls: [[String: String]]?
@@ -85,10 +85,6 @@ struct ClientCallLogView: View {
                                 Helpers.isInFuture(call["date"]!, call["time"]!)
                             }).sorted(by: Helpers.sortCalls), id: \.self) { call in
                                 AppointmentRowView(call: call, isClient: true, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, callId: "", isLoading: $isLoading, calls: $calls)
-                                    .alert(isPresented: $isAlerting, content: {
-                                        alert
-                                    })
-                                
                             }
                         }
                     }.padding()

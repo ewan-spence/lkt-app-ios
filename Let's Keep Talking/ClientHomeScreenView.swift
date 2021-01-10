@@ -79,7 +79,6 @@ struct ClientHomeScreenView: View {
                         AlertPicker(chosenNumMinutes: $chosen)
                         
                         Button("Submit Alert", action: submitAlert)
-                            .alert(isPresented: $isAlerting, content: {alert})
                             .disabled(isLoading)
                     }
                     
