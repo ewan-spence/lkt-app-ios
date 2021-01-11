@@ -99,6 +99,7 @@ struct ClientLoginView: View {
                 .alert(isPresented: $loginError) {
                     Alert(title: Text("Error"), message: Text(loginErrorText), dismissButton: .default(Text("Got it!")))
                 }
+                .disabled(isLoading)
                 
                 Spacer()
                 
@@ -354,7 +355,7 @@ struct ClientLoginView: View {
                         
                         var hasRatingString = ""
                         
-                        if callDict["rating"] == nil {
+                        if Helpers.isInFuture(callDateString, callTimeString) || callDict["rating"] == nil {
                             hasRatingString = "F"
                         } else {
                             hasRatingString = "T"

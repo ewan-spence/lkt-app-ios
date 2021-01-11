@@ -11,12 +11,6 @@ import Alamofire
 struct ClientHomeScreenView: View {
     @State var userHasCalls: Bool = UserDefaults.standard.bool(forKey: "hasCalls")
     
-    @State var callDate: String
-    @State var callTime: String
-    @State var callCaller: String
-    @State var callId: String
-    @State var callNotifTime: String?
-    
     @Binding var calls: [[String: String]]?
     
     @Binding var isAlerting: Bool
@@ -38,10 +32,17 @@ struct ClientHomeScreenView: View {
                     .padding()
                 
                 Spacer()
-                if(userHasCalls && Helpers.isInFuture(callDate, callTime)) {
-                    let displayText1 = "Your next call is booked for " + (callTime)
-                    let displayText2 = " on " + Helpers.dateReadable(callDate)
-                    let displayText3 = " with " + (callCaller)
+                let latestCall = calls!.last
+                let latestCallDate = latestCall!["date"]!
+                let latestCallTime = latestCall!["time"]!
+                let latestCallCaller = latestCall!["callerName"]!
+                
+                let latestCallNotifTime = latestCall?["notifTime"]
+                
+                if(userHasCalls && Helpers.isInFuture(latestCallDate, latestCallTime)) {
+                    let displayText1 = "Your next call is booked for " + (latestCallTime)
+                    let displayText2 = " on " + Helpers.dateReadable(latestCallDate)
+                    let displayText3 = " with " + (latestCallCaller)
                     
                     let displayText = displayText1 + displayText2 + displayText3
                     Text(displayText)
@@ -60,7 +61,7 @@ struct ClientHomeScreenView: View {
                     
                     Divider()
                     
-                    if let notifTime = callNotifTime {
+                    if let notifTime = latestCallNotifTime {
                         Text("You have a reminder set for \(minutesToReadable(Int(notifTime)!)) before this call")
                             .multilineTextAlignment(.center)
                             .padding()
@@ -70,6 +71,7 @@ struct ClientHomeScreenView: View {
                             UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
                             submitToDb(false)
                         })
+                        .disabled(isLoading)
                         
                     } else {
                         Text("Please select how long before this call you would like to be reminded (optional)")
@@ -88,7 +90,7 @@ struct ClientHomeScreenView: View {
                         .multilineTextAlignment(.center)
                         .padding(30)
                     
-                    NavigationLink(destination: ClientCallBookerView(userHasCalls: $userHasCalls, callDate: $callDate, callTime: $callTime, callCaller: $callCaller, userCalls: $calls)) {
+                    NavigationLink(destination: ClientCallBookerView(userHasCalls: $userHasCalls, userCalls: $calls)) {
                         Text("Book Call")
                     }
                     .padding()
@@ -114,7 +116,13 @@ struct ClientHomeScreenView: View {
         df.dateFormat = "dd/MM/yyyy HH:mm"
         df.locale = Locale(identifier: "en_GB")
         
-        let callDateObject = df.date(from: "\(callDate) \(callTime)")!
+        let latestCall = calls!.last!
+        
+        let latestCallDate = latestCall["date"]!
+        let latestCallTime = latestCall["time"]!
+        let latestCallCaller = latestCall["callerName"]!
+        
+        let callDateObject = df.date(from: "\(latestCallDate) \(latestCallTime)")!
         
         let alertDate = cal.date(byAdding: .minute, value: -chosen, to: callDateObject)!
         let alertDateComponents = cal.dateComponents([.day, .month, .year, .hour, .minute], from: alertDate)
@@ -124,7 +132,7 @@ struct ClientHomeScreenView: View {
         let content = UNMutableNotificationContent()
         
         content.title = "Call Reminder"
-        content.body = "Your call with \(callCaller) is in \(minutesToReadable(chosen)) minutes"
+        content.body = "Your call with \(latestCallCaller) is in \(minutesToReadable(chosen)) minutes"
         
         let notifRequest = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(notifRequest, withCompletionHandler: {error in
@@ -146,7 +154,9 @@ struct ClientHomeScreenView: View {
     func submitToDb(_ notif: Bool) {
         let url = APIEndpoints.CLIENT_NOTIF
         
-        var params = ["_id": callId, "hasNotif": String(notif)]
+        let latestCallId = calls?.last!["id"]
+        
+        var params = ["_id": latestCallId, "hasNotif": String(notif)]
 
         if notif {
             params["notifTime"] = String(chosen)
@@ -178,14 +188,24 @@ struct ClientHomeScreenView: View {
         if(status && intended) {
             alert = Alert(title: Text("Reminder Set"), message: Text("Reminder set for \(minutesToReadable(chosen)) before your call"), dismissButton: .default(Text("Okay")))
             
-            callNotifTime = String(chosen)
+            var latestCall = calls!.removeLast()
+            
+            latestCall["notifTime"] = String(chosen)
+            
+            calls?.append(latestCall)
+            
         } else if status {
             alert = Alert(title: Text("Reminder Removed"), message: Text("Your call reminder has been removed"), dismissButton: .default(Text("Okay")))
             
-            callNotifTime = nil
+            var latestCall = calls!.removeLast()
+            
+            latestCall.removeValue(forKey: "notifTime")
+            
+            calls?.append(latestCall)
+            
             chosen = 0
         } else {
-            alert = Alert(title: Text("Error"), message: Text("There was an error setting this reminder.\nTry again or contact support with error code  11\(lineNo!)"), dismissButton: .default(Text("Okay")))
+            alert = Alert(title: Text("Error"), message: Text("There was an error setting this reminder.\nTry again or contact support with error code 11\(lineNo!)"), dismissButton: .default(Text("Okay")))
         }
         
         isAlerting = true
@@ -208,7 +228,7 @@ struct ClientHomeScreenView: View {
         
         let url = APIEndpoints.CANCEL_CALL
         
-        let call = ["id" : callId, "date" : callDate, "time" : callTime, "callerName" : callCaller]
+        let call = calls?.last
         
         AF.request(url, method: .post, parameters: call, encoder: JSONParameterEncoder.default).responseJSON { response in
             
@@ -237,14 +257,9 @@ struct ClientHomeScreenView: View {
     func handleCancelResponse(_ status: Bool, _ line: Int?) {
         if(status) {
             
-            let call = ["id" : callId, "date" : callDate, "time" : callTime, "callerName" : callCaller, "hasRating" : "F"]
+            let call = calls!.last!
             
             calls?.remove(at: (calls?.firstIndex(of: call))!)
-            
-            callDate = ""
-            callTime = ""
-            callId = ""
-            callCaller = ""
             
             alert = Alert(title: Text("Call Cancelled"), message: Text("Your call has successfully been cancelled"), dismissButton: .default(Text("Okay")))
             

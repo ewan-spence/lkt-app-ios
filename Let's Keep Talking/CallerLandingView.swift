@@ -46,6 +46,7 @@ struct CallerLandingView: View {
                             
                             isLoggedIn = false
                         })
+                        .disabled(isLoading)
                     }, label: {
                         Image(systemName: "gearshape")
                             .foregroundColor(.primary)
@@ -54,6 +55,7 @@ struct CallerLandingView: View {
                             .onTapGesture(perform: {
                             })
                     })
+                    .disabled(isLoading)
                     
                     Spacer()
                     

@@ -81,6 +81,7 @@ struct CallerCallBookerView: View {
                 .alert(isPresented: $isAlerting, content: {
                     alert
                 })
+                .disabled(isLoading)
                 
                 
                 .disabled(selectedClient.isEmpty || selectedMonth.isEmpty || selectedDate.isEmpty || selectedTime.isEmpty || isLoading)

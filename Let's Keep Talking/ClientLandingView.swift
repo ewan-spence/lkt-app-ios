@@ -13,7 +13,6 @@ struct ClientLandingView: View {
     @State var isOnView1 = false
     @State var isOnView2 = true
     
-    
     @State var isLoading = false
     
     @Binding var calls: [[String: String]]?
@@ -38,12 +37,14 @@ struct ClientLandingView: View {
                             
                             isLoggedIn = false
                         })
+                        .disabled(isLoading)
                     }, label: {
                         Image(systemName: "gearshape")
                             .foregroundColor(.primary)
                             .font(.system(size: 30))
                             .padding()
                     })
+                    .disabled(isLoading)
                     
                     Spacer()
                     
@@ -59,15 +60,7 @@ struct ClientLandingView: View {
                 }
                 
                 if(isOnView2) {
-                    let latestCall = calls?.last
-                    
-                    let latestCallDate = latestCall?["date"]
-                    let callTime = latestCall?["time"]
-                    let callCaller = latestCall?["callerName"]
-                    let callId = latestCall?["id"]
-                    let callNotifTime = latestCall?["notifTime"]
-                    
-                    ClientHomeScreenView(callDate: latestCallDate ?? "", callTime: callTime ?? "", callCaller: callCaller ?? "", callId: callId ?? "", callNotifTime: callNotifTime, calls: $calls, isAlerting: $isAlerting, alert: $alert)
+                    ClientHomeScreenView(calls: $calls, isAlerting: $isAlerting, alert: $alert)
                 }
                 
                 Spacer()
@@ -173,8 +166,10 @@ struct ClientLandingView: View {
                         
                         var hasRatingString = ""
                         
-                        if callDict["rating"] != nil {
+                        if Helpers.isInFuture(callDateString, callTimeString) || callDict["rating"] == nil {
                             hasRatingString = "F"
+                        } else {
+                            hasRatingString = "T"
                         }
                         
                         var funcCall = ["date" : callDateString , "time" : callTimeString , "callerName" : callCallerString, "id" : callIdString, "hasRating" : hasRatingString]

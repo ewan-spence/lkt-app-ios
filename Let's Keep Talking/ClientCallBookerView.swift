@@ -24,10 +24,6 @@ struct ClientCallBookerView: View {
     
     @Binding var userHasCalls: Bool
     
-    @Binding var callDate: String
-    @Binding var callTime: String
-    @Binding var callCaller: String
-    
     @Binding var userCalls: [[String: String]]?
     
     var body: some View {
@@ -50,7 +46,7 @@ struct ClientCallBookerView: View {
                 
                 if(apptsShown && (!appointments.isEmpty)) {
                     List(appointments, id: \.self) { call in
-                        AppointmentRowBookerView(call: call, isLoading: $isLoading, loadingText: $loadingText, userHasCalls: $userHasCalls, nextCallDate: $callDate, nextCallTime: $callTime, nextCallCaller: $callCaller, calls: $userCalls)
+                        AppointmentRowBookerView(call: call, isLoading: $isLoading, loadingText: $loadingText, userHasCalls: $userHasCalls, calls: $userCalls)
                     }
                     
                 }
@@ -264,12 +260,5 @@ struct ClientCallBookerView: View {
         let today = Date(timeIntervalSinceNow: 0)
         
         return dateAsObj?.timeIntervalSince(today) ?? 0 > 0
-    }
-}
-
-
-struct ClientCallBookerView_Previews: PreviewProvider {
-    static var previews: some View {
-        ClientCallBookerView(userHasCalls: .constant(false), callDate: .constant(""), callTime: .constant(""), callCaller: .constant(""), userCalls: .constant([]))
     }
 }

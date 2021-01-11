@@ -23,11 +23,7 @@ struct AppointmentRowBookerView: View {
     @Binding var isLoading: Bool
     @Binding var loadingText: String
     @Binding var userHasCalls: Bool
-    
-    @Binding var nextCallDate: String
-    @Binding var nextCallTime: String
-    @Binding var nextCallCaller: String
-    
+        
     @Binding var calls: [[String : String]]?
         
     var body: some View {
@@ -44,6 +40,7 @@ struct AppointmentRowBookerView: View {
                 Button("Book Call", action: bookCall).alert(isPresented: $isAlerting) {
                     Alert(title: Text(alertTitle), message: Text(alertText), dismissButton: .default(Text(alertButton)))
                 }.foregroundColor(.blue)
+                .disabled(isLoading)
                 
                 Spacer()
                 
@@ -149,10 +146,6 @@ struct AppointmentRowBookerView: View {
             UserDefaults.standard.synchronize()
             userHasCalls = true
             
-            nextCallDate = callDate
-            nextCallTime = callTime
-            nextCallCaller = callerName
-            
             calls?.append(["date" : callDate, "time" : callTime, "callerName" : callerName, "id" : callId, "hasRating" : "F"])
             
             self.presentationMode.wrappedValue.dismiss()
@@ -167,10 +160,3 @@ struct AppointmentRowBookerView: View {
         isAlerting = true
     }
 }
-
-struct AppointmentRowBookerView_Previews: PreviewProvider {
-    static var previews: some View {
-        AppointmentRowBookerView(call: ["date": "02/11/2020", "time": "12:30", "callerName" : "John Doe", "id" : ""], isLoading: .constant(false), loadingText: .constant(""), userHasCalls: .constant(false), nextCallDate: .constant("02/11/2020"), nextCallTime: .constant("12:30"), nextCallCaller: .constant("John Doe"), calls: .constant([]))
-    }
-}
-

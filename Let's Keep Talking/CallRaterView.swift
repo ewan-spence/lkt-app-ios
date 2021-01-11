@@ -45,6 +45,7 @@ struct CallRaterView: View {
                     Button("Submit Feedback", action: {
                         submitFeedback()
                     })
+                    .disabled(isLoading)
                     
                 }
             }

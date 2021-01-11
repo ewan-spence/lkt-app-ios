@@ -34,10 +34,10 @@ struct CallerAvailabilityView: View {
                 
                 let weekOneTab = Button("Week 1", action: {
                     isOnWeek1 = true
-                })
+                }).disabled(isLoading)
                 let weekTwoTab = Button("Week 2", action: {
                     isOnWeek1 = false
-                })
+                }).disabled(isLoading)
                 
                 HStack {
                     if(isOnWeek1) {
@@ -95,6 +95,7 @@ struct CallerAvailabilityView: View {
                 Spacer()
                 
                 Button("Submit", action: setAvailability)
+                    .disabled(isLoading)
             }
             
             if(isLoading) {
