@@ -32,70 +32,74 @@ struct ClientHomeScreenView: View {
                     .padding()
                 
                 Spacer()
-                let latestCall = calls!.last
-                let latestCallDate = latestCall!["date"]!
-                let latestCallTime = latestCall!["time"]!
-                let latestCallCaller = latestCall!["callerName"]!
                 
-                let latestCallNotifTime = latestCall?["notifTime"]
                 
-                if(userHasCalls && Helpers.isInFuture(latestCallDate, latestCallTime)) {
-                    let displayText1 = "Your next call is booked for " + (latestCallTime)
-                    let displayText2 = " on " + Helpers.dateReadable(latestCallDate)
-                    let displayText3 = " with " + (latestCallCaller)
+                if(userHasCalls) {
+                    let latestCall = calls!.last
+                    let latestCallDate = latestCall!["date"]!
+                    let latestCallTime = latestCall!["time"]!
+                    let latestCallCaller = latestCall!["callerName"]!
                     
-                    let displayText = displayText1 + displayText2 + displayText3
-                    Text(displayText)
-                        .multilineTextAlignment(.center)
-                        .padding(30)
-                    
-                    Button("Cancel Call", action: {
-                        alert = Alert(title: Text("Confirmation"), message: Text("Are you sure you want to cancel this call?"), primaryButton: .destructive(Text("Cancel Call")) {
-                            cancelCall()
-                        }, secondaryButton: .cancel(Text("Back")))
+                    if(Helpers.isInFuture(latestCallDate, latestCallTime)) {
                         
-                        isAlerting = true
-                    })
-                    .disabled(isLoading)
-                    .padding()
-                    
-                    Divider()
-                    
-                    if let notifTime = latestCallNotifTime {
-                        Text("You have a reminder set for \(minutesToReadable(Int(notifTime)!)) before this call")
+                        let latestCallNotifTime = latestCall?["notifTime"]
+                        
+                        let displayText1 = "Your next call is booked for " + (latestCallTime)
+                        let displayText2 = " on " + Helpers.dateReadable(latestCallDate)
+                        let displayText3 = " with " + (latestCallCaller)
+                        
+                        let displayText = displayText1 + displayText2 + displayText3
+                        Text(displayText)
                             .multilineTextAlignment(.center)
-                            .padding()
+                            .padding(30)
                         
-                        Button("Remove Reminder", action: {
-                            isLoading = true
-                            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-                            submitToDb(false)
+                        Button("Cancel Call", action: {
+                            alert = Alert(title: Text("Confirmation"), message: Text("Are you sure you want to cancel this call?"), primaryButton: .destructive(Text("Cancel Call")) {
+                                cancelCall()
+                            }, secondaryButton: .cancel(Text("Back")))
+                            
+                            isAlerting = true
                         })
                         .disabled(isLoading)
+                        .padding()
                         
-                    } else {
-                        Text("Please select how long before this call you would like to be reminded (optional)")
-                            .multilineTextAlignment(.center)
-                            .padding()
+                        Divider()
                         
-                        AlertPicker(chosenNumMinutes: $chosen)
-                        
-                        Button("Submit Alert", action: submitAlert)
+                        if let notifTime = latestCallNotifTime {
+                            Text("You have a reminder set for \(minutesToReadable(Int(notifTime)!)) before this call")
+                                .multilineTextAlignment(.center)
+                                .padding()
+                            
+                            Button("Remove Reminder", action: {
+                                isLoading = true
+                                UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+                                submitToDb(false)
+                            })
                             .disabled(isLoading)
+                            
+                        } else {
+                            Text("Please select how long before this call you would like to be reminded (optional)")
+                                .multilineTextAlignment(.center)
+                                .padding()
+                            
+                            AlertPicker(chosenNumMinutes: $chosen)
+                            
+                            Button("Submit Alert", action: submitAlert)
+                                .disabled(isLoading)
+                        }
+                        
+                    }} else {
+                        
+                        Text("You have no future calls booked, would you like to book one now?")
+                            .multilineTextAlignment(.center)
+                            .padding(30)
+                        
+                        NavigationLink(destination: ClientCallBookerView(userHasCalls: $userHasCalls, userCalls: $calls)) {
+                            Text("Book Call")
+                        }
+                        .padding()
+                        
                     }
-                    
-                } else {
-                    
-                    Text("You have no future calls booked, would you like to book one now?")
-                        .multilineTextAlignment(.center)
-                        .padding(30)
-                    
-                    NavigationLink(destination: ClientCallBookerView(userHasCalls: $userHasCalls, userCalls: $calls)) {
-                        Text("Book Call")
-                    }
-                    .padding()
-                    
-                }
                 
                 Spacer()
                 
@@ -143,7 +147,7 @@ struct ClientHomeScreenView: View {
                 
                 isAlerting = true
                 isLoading = false
-
+                
             } else {
                 
                 submitToDb(true)
@@ -157,7 +161,7 @@ struct ClientHomeScreenView: View {
         let latestCallId = calls?.last!["id"]
         
         var params = ["_id": latestCallId, "hasNotif": String(notif)]
-
+        
         if notif {
             params["notifTime"] = String(chosen)
         }
