@@ -88,18 +88,18 @@ struct ClientHomeScreenView: View {
                                 .disabled(isLoading)
                         }
                         
-                    }} else {
-                        
-                        Text("You have no future calls booked, would you like to book one now?")
-                            .multilineTextAlignment(.center)
-                            .padding(30)
-                        
-                        NavigationLink(destination: ClientCallBookerView(userHasCalls: $userHasCalls, userCalls: $calls)) {
-                            Text("Book Call")
-                        }
-                        .padding()
-                        
                     }
+                    
+                }
+                
+                Text("You have no future calls booked, would you like to book one now?")
+                    .multilineTextAlignment(.center)
+                    .padding(30)
+                
+                NavigationLink(destination: ClientCallBookerView(userHasCalls: $userHasCalls, userCalls: $calls)) {
+                    Text("Book Call")
+                }
+                .padding()
                 
                 Spacer()
                 
