@@ -157,14 +157,15 @@ struct CallerAvailabilityView: View {
             
             let day = Date()
             
-            let midDate = Calendar.current.date(byAdding: .day, value: 7, to: day)!
+            let midDate1 = Calendar.current.date(byAdding: .day, value: 6, to: day)!
+            let midDate2 = Calendar.current.date(byAdding: .day, value: 1, to: midDate1)!
             
-            let endDate = Calendar.current.date(byAdding: .day, value: 14, to: day)!
+            let endDate = Calendar.current.date(byAdding: .day, value: 13, to: day)!
             
-            guard let availOne = getWeekAvailability(day, midDate, dbAvailability, dbCallsInFuture) else {
+            guard let availOne = getWeekAvailability(day, midDate1, dbAvailability, dbCallsInFuture) else {
                 return handleAvailGetResponse(false, #line, nil)
             }
-            guard let availTwo = getWeekAvailability(midDate, endDate, dbAvailability, dbCallsInFuture) else {
+            guard let availTwo = getWeekAvailability(midDate2, endDate, dbAvailability, dbCallsInFuture) else {
                 return handleAvailGetResponse(false, #line, nil)
             }
             
@@ -199,7 +200,7 @@ struct CallerAvailabilityView: View {
         
         let cal = Calendar(identifier: .gregorian)
         
-        var date1Var = Calendar.current.date(byAdding: .day, value: 1, to: date1)!
+        var date1Var = date1
         
         while date1Var <= date2 {            
             var dayAvail: [String: [String: Bool]] = [:]
