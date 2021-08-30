@@ -110,7 +110,7 @@ struct ClientCallBookerView: View {
                     handleCallerResponse(false, "Error \(#line)", NSNull())
                     return
                 }
-                
+                 
                 // Try casting the "status" field to a boolean (if this fails, the response is from AWS, not the API)
                 guard let status = jsonBody["status"] as? Bool else {
                     handleCallerResponse(false, "Network Error \(#line)", NSNull())

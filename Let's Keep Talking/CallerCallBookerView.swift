@@ -101,7 +101,6 @@ struct CallerCallBookerView: View {
                 selectedTime = ""
             })
             
-            
             if(isLoading) {
                 ProgressView()
             }
