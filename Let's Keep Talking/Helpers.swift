@@ -12,7 +12,7 @@ struct Helpers: View {
         EmptyView()
     }
     
-    public static func sortCalls(call1: [String: String], call2: [String: String]) -> Bool{
+    public static func callSorter(call1: [String: String], call2: [String: String]) -> Bool{
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_GB")
         dateFormatter.dateFormat = "dd/MM/yyyy"

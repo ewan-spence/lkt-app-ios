@@ -81,7 +81,7 @@ struct CallerHomeScreenView: View {
             
         }.onAppear(perform: {
             todayCalls = calls?.filter { callIsToday($0) }
-            todayCalls?.sort(by: Helpers.sortCalls)
+            todayCalls?.sort(by: Helpers.callSorter)
         })
     }
     

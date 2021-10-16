@@ -75,7 +75,7 @@ struct ClientCallLogView: View {
                         if(isOnPastCalls) {
                             ForEach((calls ?? []).filter({ call in
                                 !Helpers.isInFuture(call["date"]!, call["time"]!)
-                            }).sorted(by: Helpers.sortCalls), id: \.self) { call in
+                            }).sorted(by: Helpers.callSorter), id: \.self) { call in
                                 AppointmentRowView(call: call, isClient: true, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, callId: "", isLoading: $isLoading, calls: $calls)
                             }
                         }
@@ -83,7 +83,7 @@ struct ClientCallLogView: View {
                         if(isOnFutureCalls) {
                             ForEach((calls ?? []).filter({call in
                                 Helpers.isInFuture(call["date"]!, call["time"]!)
-                            }).sorted(by: Helpers.sortCalls), id: \.self) { call in
+                            }).sorted(by: Helpers.callSorter), id: \.self) { call in
                                 AppointmentRowView(call: call, isClient: true, isOnCallLog: true, isAlerting: $isAlerting, alert: $alert, callId: "", isLoading: $isLoading, calls: $calls)
                             }
                         }
