@@ -25,9 +25,12 @@ struct CallRaterView: View {
         ZStack {
             VStack {
                 Text("Rate Call")
-                    .font(.largeTitle)
+                    .font(Helpers.brandFont(size: 40))
+                    .foregroundColor(Color("text"))
                 Form {
                     Text("Please rate your call on a scale from 0 to 10\nWhere 0 is \"Not at all helpful\"\nAnd 10 is \"Extremely helpful\"")
+                        .font(Helpers.brandFont(size: 20))
+                        .foregroundColor(Color("text"))
                     
                     Slider(value: $rating, in: 0...10, step: 1, minimumValueLabel: Text("0"), maximumValueLabel: Text("10")) {
                     }
@@ -38,6 +41,8 @@ struct CallRaterView: View {
                     }
                     
                     Text("Please let us know any other feedback you have here:")
+                        .font(Helpers.brandFont(size: 20))
+                        .foregroundColor(Color("text"))
                     
                     TextEditor(text: $feedback)
                         .foregroundColor(.gray)
@@ -46,7 +51,6 @@ struct CallRaterView: View {
                         submitFeedback()
                     })
                     .disabled(isLoading)
-                    
                 }
             }
             

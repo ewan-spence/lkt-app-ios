@@ -9,6 +9,8 @@ import Alamofire
 import SwiftUI
 
 struct AppointmentListView: View {
+    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
+    
     var selectedCaller: String
     
     @State var appointments: [[String: String]]
@@ -21,7 +23,7 @@ struct AppointmentListView: View {
     @Binding var alertText: String
     
     var body: some View {
-        if appointments.isEmpty {
+        if appointments.isEmpty && isLoading {
             ProgressView(loadingText)
         }
         List(appointments, id: \.self) { call in
@@ -84,9 +86,7 @@ struct AppointmentListView: View {
             if(dates.count == 0) {
                 return handleGetApptResponse(false, "There are no calls available with that caller in the next week", nil)
             }
-            
-            appointments = []
-            
+                        
             dates.forEach { date in
                 guard let callersAvail = result![date] as? [String: [String]] else {
                     return handleGetApptResponse(false, "Error \(#line)", [String: Any]())
@@ -110,9 +110,11 @@ struct AppointmentListView: View {
         } else {
             isAlerting = true
             alertText = message!
+            mode.wrappedValue.dismiss()
         }
         
         isLoading = false
+        loadingText = ""
     }
     
     func isInFuture(_ date: String, _ time: String) -> Bool {

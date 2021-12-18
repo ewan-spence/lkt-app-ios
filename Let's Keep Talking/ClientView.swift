@@ -17,16 +17,17 @@ struct ClientView: View {
     
     @State var alert: Alert = Alert(title: Text("Unknown Error"))
     @State var isAlerting: Bool = false
-    
+        
     var body: some View {
         if(isLoggedIn) {
             ClientLandingView(calls: $calls, isLoggedIn: $isLoggedIn, alert: $alert, isAlerting: $isAlerting)
-                .navigationBarHidden(true)
-                .navigationTitle("")
                 .alert(isPresented: $isAlerting, content: {
                     alert
                 })
-            
+                .navigationBarTitle("", displayMode: .inline)
+                .navigationBarHidden(true)
+                .navigationBarBackButtonHidden(true)
+ 
         } else {
             ClientLoginView(hasDetailsSaved: hasDetailsSaved, calls: $calls, isLoggedIn: $isLoggedIn)
         }
@@ -35,6 +36,6 @@ struct ClientView: View {
 
 struct ClientView_Previews: PreviewProvider {
     static var previews: some View {
-        ClientView(isLoggedIn: true, hasDetailsSaved: false)
+        ClientView(hasDetailsSaved: false)
     }
 }

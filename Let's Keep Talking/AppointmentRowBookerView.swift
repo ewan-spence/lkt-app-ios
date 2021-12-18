@@ -31,8 +31,11 @@ struct AppointmentRowBookerView: View {
             HStack{
                 VStack {
                     Text(Helpers.getDayOfWeek(dateString: call["date"]!))
+                        .font(Helpers.brandFont(size: 20)).foregroundColor(Color("text"))
                     Text(call["date"] ?? "")
+                        .font(Helpers.brandFont(size: 20)).foregroundColor(Color("text"))
                     Text(call["time"] ?? "")
+                        .font(Helpers.brandFont(size: 20)).foregroundColor(Color("text"))
                 }.padding()
                 
                 Spacer()
@@ -44,9 +47,9 @@ struct AppointmentRowBookerView: View {
                 
                 Spacer()
                 
-                Text(call["callerName"] ?? "").padding(.trailing)
-                
-                
+                Text(call["callerName"] ?? "")
+                    .font(Helpers.brandFont(size: 20)).foregroundColor(Color("text"))
+                    .padding(.trailing)
             }
         }
     }

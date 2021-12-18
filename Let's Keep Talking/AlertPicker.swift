@@ -20,22 +20,26 @@ struct AlertPicker: View {
                     ForEach(0..<4, content: {hour in
                         if hour == 1 {
                             Text("\(hour) hour")
+                                .font(Helpers.brandFont(size: 20)).foregroundColor(Color("text"))
                         } else {
                             Text("\(hour) hours")
+                                .font(Helpers.brandFont(size: 20)).foregroundColor(Color("text"))
                         }
                     })
                 })
-                .frame(width:geo.size.width/2)
+                    .frame(width:geo.size.width/2)
                 Picker("Minute", selection: $minutes, content: {
                     ForEach(Array(stride(from: 0, to: 60, by: 5)), id: \.self, content: {minute in
                         if minute == 1 {
                             Text("\(minute) minute")
+                                .font(Helpers.brandFont(size: 20)).foregroundColor(Color("text"))
                         } else {
                             Text("\(minute) minutes")
+                                .font(Helpers.brandFont(size: 20)).foregroundColor(Color("text"))
                         }
                     })
                 })
-                .frame(width:geo.size.width/2)
+                    .frame(width:geo.size.width/2)
             }
         }
         .pickerStyle(WheelPickerStyle())

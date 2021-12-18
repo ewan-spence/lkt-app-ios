@@ -215,4 +215,19 @@ struct ClientLandingView: View {
         isLoading = false
         isAlerting = true
     }
+    
+    struct ClientLandingView_Previews: PreviewProvider {
+        static var previews: some View {
+            Group {
+                ClientLandingView(calls: .constant([]), isLoggedIn: .constant(true), alert: .constant(Alert(title: Text("Alert"))), isAlerting: .constant(false))
+                    .previewDevice(PreviewDevice(rawValue: "iPhone 7"))
+                    .previewDisplayName("iPhone 7")
+                
+                ClientLandingView(calls: .constant([]), isLoggedIn: .constant(true), alert: .constant(Alert(title: Text("Alert"))), isAlerting: .constant(false))
+                    .previewDevice(PreviewDevice(rawValue: "iPhone 12"))
+                    .previewDisplayName("iPhone 12")
+            }
+        }
+    }
+
 }

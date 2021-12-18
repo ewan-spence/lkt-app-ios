@@ -29,15 +29,16 @@ struct ClientCallBookerView: View {
                     .padding()
                 
                 List(callers, id: \.self) { caller in
-                    NavigationLink(caller, destination: AppointmentListView(selectedCaller: caller, appointments: [], isLoading: $isLoading, loadingText: $loadingText, userHasCalls: $userHasCalls, userCalls: $userCalls, isAlerting: $isAlerting, alertText: $alertText))
-                }
+                    NavigationLink(caller, destination: AppointmentListView(selectedCaller: caller, appointments: [], isLoading: $isLoading, loadingText: $loadingText, userHasCalls: $userHasCalls, userCalls: $userCalls, isAlerting: $isAlerting, alertText: $alertText)
+                                    .alert(isPresented: $isAlerting, content: {
+                        Alert(title: Text("No Appointments"), message: Text(alertText),
+                              dismissButton: .default(Text("OK")))
+                    }
+                ))}
             }
-            
             if(isLoading) {
                 ProgressView(loadingText)
             }
-            
-            
         }.onAppear(perform: {
             getCallers()
         })

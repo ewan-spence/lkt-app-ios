@@ -18,10 +18,11 @@ struct CallerView: View {
     var body: some View {
         if(isLoggedIn) {
             CallerLandingView(isLoggedIn: $isLoggedIn, calls: $calls, availability: $availability)
+                .navigationBarTitle("", displayMode: .inline)
                 .navigationBarHidden(true)
+                .navigationBarBackButtonHidden(true)
         } else {
             CallerLoginView(hasDetailsSaved: hasDetailsSaved, isLoggedIn: $isLoggedIn, calls: $calls, availability: $availability)
-                .navigationBarHidden(false)
         }
     }
 }

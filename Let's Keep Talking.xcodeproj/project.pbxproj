@@ -12,22 +12,24 @@
 		9414AAA0254B1691004D9E8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9414AA9F254B1691004D9E8F /* Assets.xcassets */; };
 		94324F9E254AE0F300E113A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94324F9D254AE0F300E113A5 /* LaunchScreen.storyboard */; };
 		94457FED26ECCCB500C27467 /* AppointmentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94457FEC26ECCCB500C27467 /* AppointmentListView.swift */; };
+		944A0380271C92EF008728CB /* nevis-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 944A037F271C92EF008728CB /* nevis-bold.ttf */; };
 		9457018525A880F1000C1CA0 /* AlertPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9457018425A880F1000C1CA0 /* AlertPicker.swift */; };
 		9457BF582521531A0039A3B4 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9457BF572521531A0039A3B4 /* Helpers.swift */; };
 		9459E4F7254B312100AF135B /* CallerCallBookerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459E4F6254B312100AF135B /* CallerCallBookerView.swift */; };
 		945A0F222534B4FF00C2AF0F /* CallerCallLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945A0F212534B4FF00C2AF0F /* CallerCallLogView.swift */; };
 		945A0F252535FFF200C2AF0F /* CallerHomeScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945A0F242535FFF200C2AF0F /* CallerHomeScreenView.swift */; };
+		946A4C1B272470100078D698 /* Europa Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 946A4C1A272470100078D698 /* Europa Regular.ttf */; };
 		946D4C03251EB25200371E8A /* ClientLandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D4C02251EB25200371E8A /* ClientLandingView.swift */; };
 		946D4C0A251EB32700371E8A /* ClientCallLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D4C09251EB32700371E8A /* ClientCallLogView.swift */; };
 		946D4C0E251EB35E00371E8A /* ClientHomeScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D4C0D251EB35E00371E8A /* ClientHomeScreenView.swift */; };
 		947D13FC252388DE00D6E77B /* CallerLandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947D13FB252388DE00D6E77B /* CallerLandingView.swift */; };
+		947FB143276BC2E300ACCE70 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 947FB142276BC2E300ACCE70 /* Alamofire */; };
 		949ADD1525239D1E006A40A2 /* ClientCallBookerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949ADD1425239D1E006A40A2 /* ClientCallBookerView.swift */; };
 		949ADD1C2524BB81006A40A2 /* CreateAccFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949ADD1B2524BB81006A40A2 /* CreateAccFormView.swift */; };
 		949E614F2516386E0013690E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949E614E2516386E0013690E /* AppDelegate.swift */; };
 		949E61512516386E0013690E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949E61502516386E0013690E /* SceneDelegate.swift */; };
 		949E61532516386E0013690E /* LandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949E61522516386E0013690E /* LandingView.swift */; };
 		949E61582516386F0013690E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 949E61572516386F0013690E /* Preview Assets.xcassets */; };
-		94B705B52518FBC600972DEC /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 94B705B42518FBC600972DEC /* Alamofire */; };
 		94B705B82519054E00972DEC /* APIEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B705B72519054E00972DEC /* APIEndpoints.swift */; };
 		94B87D71252C8B72004A3E54 /* AppointmentRowBookerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B87D70252C8B72004A3E54 /* AppointmentRowBookerView.swift */; };
 		94B8E2852538D69D0092E247 /* CallerAvailabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8E2842538D69D0092E247 /* CallerAvailabilityView.swift */; };
@@ -47,11 +49,13 @@
 		9414AA9F254B1691004D9E8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		94324F9D254AE0F300E113A5 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		94457FEC26ECCCB500C27467 /* AppointmentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentListView.swift; sourceTree = "<group>"; };
+		944A037F271C92EF008728CB /* nevis-bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "nevis-bold.ttf"; sourceTree = "<group>"; };
 		9457018425A880F1000C1CA0 /* AlertPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPicker.swift; sourceTree = "<group>"; };
 		9457BF572521531A0039A3B4 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		9459E4F6254B312100AF135B /* CallerCallBookerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerCallBookerView.swift; sourceTree = "<group>"; };
 		945A0F212534B4FF00C2AF0F /* CallerCallLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerCallLogView.swift; sourceTree = "<group>"; };
 		945A0F242535FFF200C2AF0F /* CallerHomeScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerHomeScreenView.swift; sourceTree = "<group>"; };
+		946A4C1A272470100078D698 /* Europa Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Europa Regular.ttf"; sourceTree = "<group>"; };
 		946D4C02251EB25200371E8A /* ClientLandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientLandingView.swift; sourceTree = "<group>"; };
 		946D4C09251EB32700371E8A /* ClientCallLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientCallLogView.swift; sourceTree = "<group>"; };
 		946D4C0D251EB35E00371E8A /* ClientHomeScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientHomeScreenView.swift; sourceTree = "<group>"; };
@@ -83,19 +87,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				94B705B52518FBC600972DEC /* Alamofire in Frameworks */,
+				947FB143276BC2E300ACCE70 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		944A037C271C9296008728CB /* fonts */ = {
+			isa = PBXGroup;
+			children = (
+				944A037F271C92EF008728CB /* nevis-bold.ttf */,
+				946A4C1A272470100078D698 /* Europa Regular.ttf */,
+			);
+			path = fonts;
+			sourceTree = "<group>";
+		};
 		947D13F62523881C00D6E77B /* Caller Screens */ = {
 			isa = PBXGroup;
 			children = (
 				945A0F212534B4FF00C2AF0F /* CallerCallLogView.swift */,
-				94BFEC2B2520C88500DABF79 /* CallerView.swift */,
 				947D13FB252388DE00D6E77B /* CallerLandingView.swift */,
+				94BFEC2B2520C88500DABF79 /* CallerView.swift */,
 				945A0F242535FFF200C2AF0F /* CallerHomeScreenView.swift */,
 				9459E4F6254B312100AF135B /* CallerCallBookerView.swift */,
 				94C1E8282516652D001654CD /* CallerLoginView.swift */,
@@ -111,11 +124,11 @@
 			isa = PBXGroup;
 			children = (
 				94B87D70252C8B72004A3E54 /* AppointmentRowBookerView.swift */,
+				946D4C02251EB25200371E8A /* ClientLandingView.swift */,
 				9407CAA325310BF700708B79 /* CallRaterView.swift */,
 				949ADD1B2524BB81006A40A2 /* CreateAccFormView.swift */,
 				94C1E8252516647C001654CD /* ClientLoginView.swift */,
 				94BFEC27251FF0BD00DABF79 /* ClientView.swift */,
-				946D4C02251EB25200371E8A /* ClientLandingView.swift */,
 				946D4C09251EB32700371E8A /* ClientCallLogView.swift */,
 				946D4C0D251EB35E00371E8A /* ClientHomeScreenView.swift */,
 				949ADD1425239D1E006A40A2 /* ClientCallBookerView.swift */,
@@ -129,6 +142,7 @@
 			children = (
 				949E614D2516386E0013690E /* Let's Keep Talking */,
 				949E614C2516386E0013690E /* Products */,
+				94B5C159276B99BA00DB2274 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -143,6 +157,7 @@
 		949E614D2516386E0013690E /* Let's Keep Talking */ = {
 			isa = PBXGroup;
 			children = (
+				944A037C271C9296008728CB /* fonts */,
 				9457018425A880F1000C1CA0 /* AlertPicker.swift */,
 				94A0AF1025A20A5900232263 /* Let's Keep Talking.entitlements */,
 				94324F9D254AE0F300E113A5 /* LaunchScreen.storyboard */,
@@ -153,8 +168,8 @@
 				9414AA9F254B1691004D9E8F /* Assets.xcassets */,
 				947D140025238A6400D6E77B /* Client Screens */,
 				947D13F62523881C00D6E77B /* Caller Screens */,
-				949E61522516386E0013690E /* LandingView.swift */,
 				949E61502516386E0013690E /* SceneDelegate.swift */,
+				949E61522516386E0013690E /* LandingView.swift */,
 				9457BF572521531A0039A3B4 /* Helpers.swift */,
 				949E615C2516386F0013690E /* Info.plist */,
 				949E61562516386F0013690E /* Preview Content */,
@@ -168,6 +183,13 @@
 				949E61572516386F0013690E /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		94B5C159276B99BA00DB2274 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -187,7 +209,7 @@
 			);
 			name = "Let's Keep Talking";
 			packageProductDependencies = (
-				94B705B42518FBC600972DEC /* Alamofire */,
+				947FB142276BC2E300ACCE70 /* Alamofire */,
 			);
 			productName = "Let's Keep Talking";
 			productReference = 949E614B2516386E0013690E /* Let's Keep Talking.app */;
@@ -217,7 +239,7 @@
 			);
 			mainGroup = 949E61422516386E0013690E;
 			packageReferences = (
-				94B705B32518FBC600972DEC /* XCRemoteSwiftPackageReference "Alamofire" */,
+				947FB141276BC2E300ACCE70 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 949E614C2516386E0013690E /* Products */;
 			projectDirPath = "";
@@ -234,7 +256,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				949E61582516386F0013690E /* Preview Assets.xcassets in Resources */,
+				944A0380271C92EF008728CB /* nevis-bold.ttf in Resources */,
 				9414AAA0254B1691004D9E8F /* Assets.xcassets in Resources */,
+				946A4C1B272470100078D698 /* Europa Regular.ttf in Resources */,
 				94324F9E254AE0F300E113A5 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -413,7 +437,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.26;
+				MARKETING_VERSION = 2.00;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ptu.Let-s-Keep-Talking";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -438,7 +462,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.26;
+				MARKETING_VERSION = 2.00;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ptu.Let-s-Keep-Talking";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -470,20 +494,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		94B705B32518FBC600972DEC /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+		947FB141276BC2E300ACCE70 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.2.2;
+				minimumVersion = 5.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		94B705B42518FBC600972DEC /* Alamofire */ = {
+		947FB142276BC2E300ACCE70 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94B705B32518FBC600972DEC /* XCRemoteSwiftPackageReference "Alamofire" */;
+			package = 947FB141276BC2E300ACCE70 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */

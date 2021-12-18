@@ -26,7 +26,8 @@ struct ClientCallLogView: View {
                 
                 VStack {
                     Text("Call Log")
-                        .font(.title)
+                        .font(Helpers.brandFont(size: 40))
+                        .foregroundColor(Color("text"))
                         .padding()
                     
                     Spacer()

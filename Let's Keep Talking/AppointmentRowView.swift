@@ -17,13 +17,13 @@ struct AppointmentRowView: View {
     
     @State var isClient: Bool
     @State var isOnCallLog: Bool
-        
+    
     @Binding var isAlerting: Bool
     @Binding var alert: Alert
     
     @State var callId: String
     @State var hasRating: Bool = false
-        
+    
     @Binding var isLoading: Bool
     
     @Binding var calls: [[String: String]]?
@@ -33,12 +33,15 @@ struct AppointmentRowView: View {
             HStack(spacing: 0) {
                 VStack {
                     Text(Helpers.getDayOfWeek(dateString: call["date"]!))
+                        .font(Helpers.brandFont(size: 20)).foregroundColor(Color("text"))
                     Text(call["date"] ?? "")
+                        .font(Helpers.brandFont(size: 20)).foregroundColor(Color("text"))
                         .minimumScaleFactor(0.5)
                         .lineLimit(1)
                     Text(call["time"] ?? "")
+                        .font(Helpers.brandFont(size: 20)).foregroundColor(Color("text"))
                 }.padding()
-                .frame(minWidth: 0, maxWidth: .infinity)
+                    .frame(minWidth: 0, maxWidth: .infinity)
                 
                 if(isClient) {
                     
@@ -53,11 +56,13 @@ struct AppointmentRowView: View {
                             
                             isAlerting = true
                         })
-                        .disabled(isLoading)
+                            .disabled(isLoading)
                     }
                     
                     VStack {
-                        Text(call["callerName"]!).padding(.trailing)
+                        Text(call["callerName"]!)
+                            .font(Helpers.brandFont(size: 20)).foregroundColor(Color("text"))
+                            .padding(.trailing)
                     }.frame(minWidth: 0, maxWidth: .infinity)
                     
                     
@@ -74,24 +79,24 @@ struct AppointmentRowView: View {
                                     callLength = call["length"] ?? ""
                                     callId = call["id"]!
                                 })
-                                .textFieldAlert(isPresented: $isAddingCallLength, content: {
-                                    TextFieldAlert(title: "Add Call Length", message: "Please enter the call length below", text: $callLength, action: {
-                                        addCallLength()
+                                    .textFieldAlert(isPresented: $isAddingCallLength, content: {
+                                        TextFieldAlert(title: "Add Call Length", message: "Please enter the call length below", text: $callLength, action: {
+                                            addCallLength()
+                                        })
                                     })
-                                })
-                                .disabled(isLoading)
+                                    .disabled(isLoading)
                             } else {
                                 Button("Edit Call Length", action: {
                                     isAddingCallLength = true
                                     callLength = call["length"]
                                     callId = call["id"]!
                                 })
-                                .textFieldAlert(isPresented: $isAddingCallLength, content: {
-                                    TextFieldAlert(title: "Edit Call Length", message: "Please adjust the call length below", text: $callLength, action: {
-                                        addCallLength()
+                                    .textFieldAlert(isPresented: $isAddingCallLength, content: {
+                                        TextFieldAlert(title: "Edit Call Length", message: "Please adjust the call length below", text: $callLength, action: {
+                                            addCallLength()
+                                        })
                                     })
-                                })
-                                .disabled(isLoading)
+                                    .disabled(isLoading)
                             }
                         } else {
                             Button("Cancel Call", action: {
@@ -99,16 +104,20 @@ struct AppointmentRowView: View {
                                 
                                 isAlerting = true
                             })
-                            .disabled(isLoading)
+                                .disabled(isLoading)
                         }
                     }.frame(minWidth: 0, maxWidth: .infinity)
                     
                     
                     VStack {
-                        Text(call["clientName"]!).padding(.trailing)
+                        Text(call["clientName"]!)
+                            .font(Helpers.brandFont(size: 20)).foregroundColor(Color("text"))
+                            .padding(.trailing)
                         
                         if(call["length"] != nil && !(call["length"] == "")){
-                            Text(call["length"]! + " mins").padding(.trailing)
+                            Text(call["length"]! + " mins")
+                                .font(Helpers.brandFont(size: 20)).foregroundColor(Color("text"))
+                                .padding(.trailing)
                         }
                     }.frame(minWidth: 0, maxWidth: .infinity)
                     
@@ -122,12 +131,14 @@ struct AppointmentRowView: View {
                             
                             UIApplication.shared.open(URL(string: formattedPhoneNo)!)
                         })
-                        .disabled(isLoading)
+                            .disabled(isLoading)
                     }.frame(minWidth: 0, maxWidth: .infinity)
                     
                     
                     VStack {
-                        Text(call["clientName"]!).padding(.trailing)
+                        Text(call["clientName"]!)
+                            .font(Helpers.brandFont(size: 20)).foregroundColor(Color("text"))
+                            .padding(.trailing)
                     }.frame(minWidth: 0, maxWidth: .infinity)
                 }
                 

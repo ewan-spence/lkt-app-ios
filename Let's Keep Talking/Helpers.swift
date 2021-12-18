@@ -107,6 +107,10 @@ struct Helpers: View {
             }
         }
     }
+    
+    public static func brandFont(size: CGFloat) -> Font {
+        return Font.custom("Europa-Regular", size: size)
+    }
 }
 
 struct CreateAccStruct: Encodable {

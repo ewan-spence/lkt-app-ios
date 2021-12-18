@@ -22,13 +22,22 @@ struct ClientHomeScreenView: View {
     
     @State var isLoading: Bool = false
     
+    func heading() -> String {
+        if let name = UserDefaults.standard.string(forKey: "fullName") {
+            return "Welcome to the Let's Keep Talking App, " + name.split(separator: " ").first!
+        } else {
+            return "Welcome to the Let's Keep Talking App"
+        }
+    }
+    
     var body: some View {
         ZStack {
             VStack {
-                Text("Welcome to the Let's Keep Talking App, " + UserDefaults.standard.string(forKey: "fullName")!.split(separator: " ").first!)
+                Text(heading())
                     .minimumScaleFactor(0.5)
                     .multilineTextAlignment(.center)
-                    .font(.title)
+                    .font(Helpers.brandFont(size: 40))
+                    .foregroundColor(Color("text"))
                     .padding()
                 
                 Spacer()
@@ -67,6 +76,8 @@ struct ClientHomeScreenView: View {
                         
                         if let notifTime = latestCallNotifTime {
                             Text("You have a reminder set for \(minutesToReadable(Int(notifTime)!)) before this call")
+                                .font(Helpers.brandFont(size: 18))
+                                .foregroundColor(Color("text"))
                                 .multilineTextAlignment(.center)
                                 .padding()
                             
@@ -93,6 +104,8 @@ struct ClientHomeScreenView: View {
                 }
                 
                 Text("You have no future calls booked, would you like to book one now?")
+                    .font(Helpers.brandFont(size: 18))
+                    .foregroundColor(Color("text"))
                     .multilineTextAlignment(.center)
                     .padding(30)
                 
