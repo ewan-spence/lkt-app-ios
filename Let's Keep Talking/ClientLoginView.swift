@@ -82,7 +82,7 @@ struct ClientLoginView: View {
                         .padding()
                         .keyboardType(.numberPad)
                     
-                    SecureField("Password", text: $password)
+                    SecureFieldToggle("Password", text: $password)
                         .padding()
                     
                 }
@@ -396,6 +396,11 @@ struct ClientLoginView: View {
         isLoggedIn = true
         isLoading = false
     }
-    
-    
+}
+
+struct Previews_ClientLoginView_Previews: PreviewProvider {
+    static var previews: some View {
+        ClientLoginView(hasDetailsSaved: false, calls: .constant([]), isLoggedIn: .constant(false))
+            .previewDevice(.init(rawValue: "iPhone 13"))
+    }
 }
