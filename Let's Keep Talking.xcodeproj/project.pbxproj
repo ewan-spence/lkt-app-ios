@@ -16,6 +16,7 @@
 		9457018525A880F1000C1CA0 /* AlertPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9457018425A880F1000C1CA0 /* AlertPicker.swift */; };
 		9457BF582521531A0039A3B4 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9457BF572521531A0039A3B4 /* Helpers.swift */; };
 		9459E4F7254B312100AF135B /* CallerCallBookerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459E4F6254B312100AF135B /* CallerCallBookerView.swift */; };
+		945A0B30277106FE00968584 /* SecureFieldToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945A0B2F277106FE00968584 /* SecureFieldToggle.swift */; };
 		945A0F222534B4FF00C2AF0F /* CallerCallLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945A0F212534B4FF00C2AF0F /* CallerCallLogView.swift */; };
 		945A0F252535FFF200C2AF0F /* CallerHomeScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945A0F242535FFF200C2AF0F /* CallerHomeScreenView.swift */; };
 		946A4C1B272470100078D698 /* Europa Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 946A4C1A272470100078D698 /* Europa Regular.ttf */; };
@@ -53,6 +54,7 @@
 		9457018425A880F1000C1CA0 /* AlertPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPicker.swift; sourceTree = "<group>"; };
 		9457BF572521531A0039A3B4 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		9459E4F6254B312100AF135B /* CallerCallBookerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerCallBookerView.swift; sourceTree = "<group>"; };
+		945A0B2F277106FE00968584 /* SecureFieldToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureFieldToggle.swift; sourceTree = "<group>"; };
 		945A0F212534B4FF00C2AF0F /* CallerCallLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerCallLogView.swift; sourceTree = "<group>"; };
 		945A0F242535FFF200C2AF0F /* CallerHomeScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallerHomeScreenView.swift; sourceTree = "<group>"; };
 		946A4C1A272470100078D698 /* Europa Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Europa Regular.ttf"; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 				94A0AF1025A20A5900232263 /* Let's Keep Talking.entitlements */,
 				94324F9D254AE0F300E113A5 /* LaunchScreen.storyboard */,
 				94D5FC33253C4A33009F5E79 /* TextFieldAlertViewController.swift */,
+				945A0B2F277106FE00968584 /* SecureFieldToggle.swift */,
 				94B705B72519054E00972DEC /* APIEndpoints.swift */,
 				949E614E2516386E0013690E /* AppDelegate.swift */,
 				9407CAA025310AEC00708B79 /* AppointmentRowView.swift */,
@@ -287,6 +290,7 @@
 				947D13FC252388DE00D6E77B /* CallerLandingView.swift in Sources */,
 				949ADD1525239D1E006A40A2 /* ClientCallBookerView.swift in Sources */,
 				94B705B82519054E00972DEC /* APIEndpoints.swift in Sources */,
+				945A0B30277106FE00968584 /* SecureFieldToggle.swift in Sources */,
 				94C1E8262516647C001654CD /* ClientLoginView.swift in Sources */,
 				9407CAA425310BF700708B79 /* CallRaterView.swift in Sources */,
 				9459E4F7254B312100AF135B /* CallerCallBookerView.swift in Sources */,

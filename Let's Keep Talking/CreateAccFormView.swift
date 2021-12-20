@@ -48,10 +48,10 @@ struct CreateAccFormView: View {
                     .keyboardType(.numberPad)
                 
                 
-                SecureField("Password *", text: $password)
+                SecureFieldToggle("Password *", text: $password)
                     .padding()
                 
-                SecureField("Confirm Password *", text: $passwordConf)
+                SecureFieldToggle("Confirm Password *", text: $passwordConf)
                     .padding()
                 
                 

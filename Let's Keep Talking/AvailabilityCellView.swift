@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct AvailabilityCellView: View {
-    
     @State var day: String
     @State var time: String
     
@@ -28,7 +27,6 @@ struct AvailabilityCellView: View {
                     Text("Call Booked")
                 } else {
                     Text("Add Availability")
-
                 }
             })
             .disabled(isDisabled)

@@ -32,7 +32,7 @@ struct CallerLoginView: View {
                 TextField("Phone Number", text: $phoneNo).padding()
                     .keyboardType(.numberPad)
                     .disabled(isLoading)
-                SecureField("Password", text: $password).padding()
+                SecureFieldToggle("Password", text: $password).padding()
                     .disabled(isLoading)
                 
                 
