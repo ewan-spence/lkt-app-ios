@@ -22,20 +22,22 @@ struct ClientCallBookerView: View {
     @Binding var userCalls: [[String: String]]?
     
     var body: some View {
-        ZStack {
-            VStack {
-                
-                Text("Book a call").font(.title)
-                    .padding()
-                
-                List(callers, id: \.self) { caller in
-                    NavigationLink(caller, destination: AppointmentListView(selectedCaller: caller, appointments: [], isLoading: $isLoading, loadingText: $loadingText, userHasCalls: $userHasCalls, userCalls: $userCalls, isAlerting: $isAlerting, alertText: $alertText)
-                                    .alert(isPresented: $isAlerting, content: {
-                        Alert(title: Text("No Appointments"), message: Text(alertText),
-                              dismissButton: .default(Text("OK")))
-                    }
-                ))}
-            }
+        VStack {
+            
+            Text("Book a call").font(.title)
+                .padding()
+            
+            List(callers, id: \.self) { caller in
+                NavigationLink(caller, destination:
+                                ZStack {
+                    Color("background").ignoresSafeArea()
+                    AppointmentListView(selectedCaller: caller, appointments: [], isLoading: $isLoading, loadingText: $loadingText, userHasCalls: $userHasCalls, userCalls: $userCalls, isAlerting: $isAlerting, alertText: $alertText)
+                        .alert(isPresented: $isAlerting) {
+                            Alert(title: Text("No Appointments"), message: Text(alertText), dismissButton: .default(Text("OK")))
+                        }
+                }
+                )}
+            .background(Color("background").opacity(0))
             if(isLoading) {
                 ProgressView(loadingText)
             }
@@ -132,5 +134,11 @@ struct ClientCallBookerView: View {
         }
         isLoading = false
         
+    }
+}
+
+struct Previews_ClientCallBookerView_Previews: PreviewProvider {
+    static var previews: some View {
+        ClientCallBookerView(callers: [], isAlerting: false, alertText: "", isLoading: false, loadingText: "", userHasCalls: .constant(false), userCalls: .constant([]))
     }
 }

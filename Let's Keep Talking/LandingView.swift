@@ -69,6 +69,7 @@ struct LandingView: View {
                 }
             }
             .onAppear(perform: update)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
     

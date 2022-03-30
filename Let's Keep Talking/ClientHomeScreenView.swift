@@ -109,7 +109,10 @@ struct ClientHomeScreenView: View {
                     .multilineTextAlignment(.center)
                     .padding(30)
                 
-                NavigationLink(destination: ClientCallBookerView(userHasCalls: $userHasCalls, userCalls: $calls)) {
+                NavigationLink(destination: ZStack {
+                    Color("background").ignoresSafeArea()
+                    ClientCallBookerView(userHasCalls: $userHasCalls, userCalls: $calls)
+                }) {
                     Text("Book Call")
                 }
                 .padding()
